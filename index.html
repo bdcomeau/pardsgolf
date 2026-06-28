@@ -4865,7 +4865,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.32</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.34</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5528,7 +5528,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.32</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.34</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -5872,7 +5872,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.32</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.34</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -6109,7 +6109,8 @@ function renderMatchScorecard(m){
     // Only actually BUCKET games (remove from normal settlement) once International is active.
     const bucketed = intlActive && intl17 ? intl17.bucketedLabels : new Set();
     // Preview-only set, used purely for the marker when not yet active.
-    const previewBucketed = intl17 ? intl17.bucketedLabels : new Set();
+    // Never show preview hints once round is complete and International was not called.
+    const previewBucketed = (intl17 && !intlActive && !isRoundComplete()) ? intl17.bucketedLabels : new Set();
 
     // Per-game totals — bucketed games show as part of the large press, not their own amount
     let grandTotalA=0;
@@ -6218,14 +6219,17 @@ function buildInternationalPanel(m){
 
     if(!intl){
       // H17 complete but the match is perfectly tied overall — no losing team to offer it to
+      if(isRoundComplete()) return '';
       return `<div class="intl-panel"><div class="intl-txt" style="opacity:.7">Match is tied through 17 — no International available.</div></div>`;
     }
     if(intl.largePress<=0){
       // H17 complete, one side is down money, but nothing is out-of-band to bundle yet
+      if(isRoundComplete()) return '';
       const callerLbl0 = intl.internationaleeSide==='A' ? m.labelA : m.labelB;
       return `<div class="intl-panel"><div class="intl-txt" style="opacity:.7">${callerLbl0} ${(m.type==='2v2-combined')?'are':'is'} down after 17, but every game is still close — nothing to press yet.</div></div>`;
     }
     // Show the offer — available to the losing team after H17, with full payout scenarios.
+    if(isRoundComplete()) return '';
     const callerLbl = intl.internationaleeSide==='A' ? m.labelA : m.labelB;
     const pot = intl.largePress;
     const is2v2 = (m.type==='2v2-combined');
@@ -6441,7 +6445,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.32</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.34</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9001,7 +9005,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.32</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.34</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9440,7 +9444,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.32</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.34</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -9713,7 +9717,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.32</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.34</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -9850,7 +9854,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v11.32');
+  lines.push('— Pards Golf · v11.34');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -10546,7 +10550,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v11.32 · ${dateStr}</div>
+<div class="foot">Pards Golf · v11.34 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12708,7 +12712,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v11.32';
+const CURRENT_VERSION = 'pards-v11.34';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13137,7 +13141,7 @@ window.addEventListener('focus', syncBottomBars);
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v11.32';
+const CACHE='pards-v11.34';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pards-golf-manual-v11.html','gc_id.jpg']))
