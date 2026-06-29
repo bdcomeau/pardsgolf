@@ -521,7 +521,7 @@ input::placeholder{color:#bbb}
 
 <!-- ══════════ SETUP ══════════ -->
 <div class="screen active" id="screen-setup">
-<div class="setup">
+<div class="setup" style="padding-bottom:72px">
 
   <!-- ══ COURSE PICKER ══ -->
   <div class="card" style="background:var(--gd);border:1.5px solid rgba(201,168,76,.4);margin-bottom:14px">
@@ -606,6 +606,13 @@ input::placeholder{color:#bbb}
         </div>
         <input type="hidden" id="scorecardOnly">
         <input type="hidden" id="autoAdvanceEnabled">
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">🍺 Birdie Juice Tracking</div>
+          <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
+            <button id="segBJOn" onclick="setBirdieJuice(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ ON</button>
+            <button id="segBJOff" onclick="setBirdieJuice(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">OFF</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -627,7 +634,7 @@ input::placeholder{color:#bbb}
     <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
   </div>
   <div id="snakeSection">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px 8px 0 0;padding:10px 14px;margin:0;cursor:pointer"><span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#9b59b6;margin:0;padding:0;background:none;font-size:13px">🐍 Snake 3-Putt Game</span></span><span class="sc" style="color:#9b59b6;font-size:12px">▶</span></div>
+  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px 8px 0 0;padding:10px 14px;margin:0;cursor:pointer"><span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#9b59b6;margin:0;padding:0;background:none;font-size:13px">🐍 Snake 3-Putt Game</span><span id="activeLabelSnake" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#9b59b6;font-size:12px">▶</span></div>
   <div style="display:none;margin-bottom:8px">
   <div class="card" style="background:#ede8f5;border:1.5px solid #6c3483;border-top:none;border-radius:0 0 8px 8px">
     <div style="font-size:12px;color:#3a2a4a;margin:0 0 10px">Whoever holds the 3-putt snake after your 3rd, 6th, 9th, 12th, 15th and 18th holes pays each other participant the selected wager. The Snake resets after each settlement hole.</div>
@@ -657,7 +664,7 @@ input::placeholder{color:#bbb}
 
   <div id="teamSection">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">2v2 Nassau Games (High-Low)</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">2v2 Nassau Games (High-Low)</span><span id="activeLabel2v2" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="teamGamesCard" style="background:#e8eef5">
@@ -670,7 +677,7 @@ input::placeholder{color:#bbb}
   </div>
 
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">1v1 Nassau Games</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">1v1 Nassau Games</span><span id="activeLabel1v1" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="singlesCard" style="background:#e8eef5">
@@ -683,7 +690,7 @@ input::placeholder{color:#bbb}
 
   <div id="sixPointSection">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎯 6-Point Game</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎯 6-Point Game</span><span id="activeLabel6pt" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="sixPointCard" style="background:#e8eef5">
@@ -699,7 +706,7 @@ input::placeholder{color:#bbb}
 
   <div id="stablefordSetupWrap">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🏆 Stableford</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🏆 Stableford</span><span id="activeLabelSF" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="stablefordSetupCard" style="background:#e8eef5">
@@ -713,7 +720,7 @@ input::placeholder{color:#bbb}
 
   <div id="skinsSetupWrap">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">💰 Skins</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">💰 Skins</span><span id="activeLabelSkins" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="skinsSetupCard" style="background:#e8eef5">
@@ -727,7 +734,7 @@ input::placeholder{color:#bbb}
 
   <div id="vegasSetupWrap">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎲 Vegas</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎲 Vegas</span><span id="activeLabelVegas" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="vegasSetupCard" style="background:#e8eef5">
@@ -741,7 +748,7 @@ input::placeholder{color:#bbb}
 
   <div id="matchCardsSetupWrap">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1px solid rgba(154,108,201,.4);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span class="slabel" style="color:#b389d4;margin:0;padding:0;background:none;font-size:13px">⚔️ Match Cards</span><span class="sc" style="color:#b389d4;font-size:12px">▶</span>
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#b389d4;margin:0;padding:0;background:none;font-size:13px">⚔️ Match Cards</span><span id="activeLabelMC" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#b389d4;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="matchCardsSetupCard" style="background:#efe8f5">
@@ -1995,7 +2002,7 @@ const G = {
   stablefordGames:[], // [{players:[i,i,i], perPoint:1}]
   skinsGames:[], // [{players:[i,...], perSkin:5, mode:'net'|'gross', carry:true}] — winner-take-hole, ties carry
   vegasGames:[], // [{teamA:[i,i], teamB:[i,i], perPoint:1, mode:'gross'|'net', flip:true}] — 2v2 combine low-digit-first, play the difference
-  birdieJuice:{ earned:[], redeemed:0 }, // earned:[{pi,h,actualHole,playerName}], redeemed:int
+  birdieJuice:{ earned:[], redeemed:0, enabled:true }, // earned:[{pi,h,actualHole,playerName}], redeemed:int
   snake:{ enabled:false, holder:null, history:[], bet:5, settlements:[], participants:[], h18confirmed:false },
   matchCards:{ enabled:false, opponents:[] }, // [{name,golfId,idx,hdcpBaseline,deck,bet}] — up to 2, scorekeeper plays 1v1 Nassau vs each
   autoAdvance: true,
@@ -2061,7 +2068,8 @@ function loadG(){
     if(!Array.isArray(G.stablefordGames)) G.stablefordGames = [];
     if(!Array.isArray(G.skinsGames)) G.skinsGames = [];
     if(!Array.isArray(G.vegasGames)) G.vegasGames = [];
-    if(!G.birdieJuice || !Array.isArray(G.birdieJuice.earned)) G.birdieJuice = {earned:[], redeemed:0};
+    if(!G.birdieJuice || !Array.isArray(G.birdieJuice.earned)) G.birdieJuice = {earned:[], redeemed:0, enabled:true};
+    if(G.birdieJuice.enabled===undefined) G.birdieJuice.enabled=true;
     if(G.weatherStart===undefined) G.weatherStart=null;
     if(G.weatherEnd===undefined) G.weatherEnd=null;
     if(G.scorecardOnly===undefined) G.scorecardOnly=false;
@@ -2597,6 +2605,8 @@ function initSetup(){
   renderFavPreview();
   initAdvanceMode();
   setScorecardMode(false);
+  setBirdieJuice(!(G.birdieJuice && G.birdieJuice.enabled===false));
+  updateActiveLabels();
   // If Player 1 is empty and there's a "Me" contact, pre-fill it
   const meContact = loadContacts().find(c=>c.me);
   if(meContact){
@@ -3410,6 +3420,21 @@ function stopNamesPoll(){ clearInterval(_namesPoll); _namesPoll=null; }
 
 
 
+function updateActiveLabels(){
+  function mark(id, active){
+    const el=document.getElementById(id);
+    if(el) el.style.display=active?'inline':'none';
+  }
+  mark('activeLabel2v2',  G.teamGames&&G.teamGames.length>0&&G.teamGames.some(function(g){return g.bet>0;}));
+  mark('activeLabel1v1',  G.singleGames&&G.singleGames.length>0&&G.singleGames.some(function(g){return g.bet>0;}));
+  mark('activeLabel6pt',  G.sixPointGames&&G.sixPointGames.length>0);
+  mark('activeLabelSF',   G.stablefordGames&&G.stablefordGames.length>0&&G.stablefordGames[0].players&&G.stablefordGames[0].players.length>0);
+  mark('activeLabelSkins',G.skinsGames&&G.skinsGames.length>0&&G.skinsGames[0].players&&G.skinsGames[0].players.length>0);
+  mark('activeLabelVegas',G.vegasGames&&G.vegasGames.length>0);
+  mark('activeLabelSnake',(G.snake&&G.snake.enabled)||(document.getElementById('snakeEnabled')&&document.getElementById('snakeEnabled').checked));
+  mark('activeLabelMC',(G.matchCards&&G.matchCards.enabled)||(document.getElementById('mcEnable')&&document.getElementById('mcEnable').checked));
+}
+
 function renderAllPairOptions(){
   renderTeamOptions();
   renderSinglesOptions();
@@ -3426,6 +3451,7 @@ function renderAllPairOptions(){
   renderMatchCardsSetupVisibility();
   renderMatchCardsConfig();
   renderGameSectionsVisibility();
+  updateActiveLabels();
 }
 
 function renderTeamOptions(){
@@ -3437,7 +3463,7 @@ function renderTeamOptions(){
   combos.forEach((c,i)=>{
     const already=G.teamGames.some(g=>JSON.stringify(g.a)===JSON.stringify(c.a)&&JSON.stringify(g.b)===JSON.stringify(c.b));
     h+=`<div class="pbtn${already?' sel':''}" onclick="addTeamGame(${i})">`+
-       `${nm[c.a[0]]} & ${nm[c.a[1]]}<div class="pn-vs">vs</div><div class="pn">${nm[c.b[0]]} & ${nm[c.b[1]]}</div></div>`;
+       `${nm[c.a[0]]} & ${nm[c.a[1]]}<div class="pn-vs">vs</div><div class="pn">${nm[c.b[0]]} & ${nm[c.b[1]]}</div>${G.teamGames.find(function(g){return JSON.stringify(g.a)===JSON.stringify(c.a)&&JSON.stringify(g.b)===JSON.stringify(c.b);})?'<div style="font-size:9px;font-weight:800;color:#1a3a2a;background:rgba(26,58,42,.12);border-radius:4px;padding:1px 5px;margin-top:2px">'+'2v2 · $'+G.teamGames.find(function(g){return JSON.stringify(g.a)===JSON.stringify(c.a)&&JSON.stringify(g.b)===JSON.stringify(c.b);}).bet+'/side</div>':''}</div>`;
   });
   h+='</div>';
   if(!combos.length) h='<div class="add-hint">Need 4 players</div>';
@@ -3450,7 +3476,7 @@ function renderTeamGamesList(){
   G.teamGames.forEach((g,i)=>{
     h+=`<div class="game-item">
       <div class="game-item-label">${nm[g.a[0]]} & ${nm[g.a[1]]} vs ${nm[g.b[0]]} & ${nm[g.b[1]]}
-        <div class="game-item-sub">High-Low Nassau</div></div>
+        <div class="game-item-sub">2v2 Nassau · $${g.bet}/side</div></div>
       <div class="bet-picker">${BET_OPTIONS.map(v=>`<button class="bp-btn${g.bet===v?' sel':''}" onclick="setTeamBet(${i},${v})">$${v}</button>`).join('')}</div>
       <button class="game-del" onclick="removeTeamGame(${i})">×</button>
     </div>`;
@@ -3465,17 +3491,17 @@ function addTeamGame(ci){
   const already=G.teamGames.findIndex(g=>JSON.stringify(g.a)===JSON.stringify(c.a)&&JSON.stringify(g.b)===JSON.stringify(c.b));
   if(already>=0){G.teamGames.splice(already,1);}
   else{G.teamGames.push({a:c.a,b:c.b,bet:2});}
-  renderTeamOptions();renderTeamGamesList();
+  renderTeamOptions();renderTeamGamesList();updateActiveLabels();
 }
-function setTeamBet(i,v){G.teamGames[i].bet=v;renderTeamGamesList();}
-function removeTeamGame(i){G.teamGames.splice(i,1);renderTeamOptions();renderTeamGamesList();}
+function setTeamBet(i,v){G.teamGames[i].bet=v;renderTeamGamesList();renderTeamOptions();updateActiveLabels();}
+function removeTeamGame(i){G.teamGames.splice(i,1);renderTeamOptions();renderTeamGamesList();updateActiveLabels();}
 
 function renderSinglesOptions(){
   const nm=names();
   let h='<div class="pair-grid">';
   for(let a=0;a<G.n;a++)for(let b=a+1;b<G.n;b++){
     const already=G.singleGames.some(s=>s.p1===a&&s.p2===b);
-    h+=`<div class="pbtn${already?' sel':''}" onclick="addSingleGame(${a},${b})">${nm[a]}<div class="pn-vs">vs</div><div class="pn">${nm[b]}</div></div>`;
+    h+=`<div class="pbtn${already?' sel':''}" onclick="addSingleGame(${a},${b})">${nm[a]}<div class="pn-vs">vs</div><div class="pn">${nm[b]}</div>${G.singleGames.find(function(s){return s.p1===a&&s.p2===b;})?'<div style="font-size:9px;font-weight:800;color:#1a3a2a;background:rgba(26,58,42,.12);border-radius:4px;padding:1px 5px;margin-top:2px">'+'1v1 · $'+G.singleGames.find(function(s){return s.p1===a&&s.p2===b;}).bet+'/side</div>':''}</div>`;
   }
   h+='</div>';
   document.getElementById('singlesGrid').innerHTML=h;
@@ -3487,7 +3513,7 @@ function renderSingleGamesList(){
   G.singleGames.forEach((s,i)=>{
     h+=`<div class="game-item">
       <div class="game-item-label">${nm[s.p1]} vs ${nm[s.p2]}
-        <div class="game-item-sub">1v1 Nassau</div></div>
+        <div class="game-item-sub">1v1 Nassau · $${s.bet}/side</div></div>
       <div class="bet-picker">${BET_OPTIONS.map(v=>`<button class="bp-btn${s.bet===v?' sel':''}" onclick="setSingleBet(${i},${v})">$${v}</button>`).join('')}</div>
       <button class="game-del" onclick="removeSingleGame(${i})">×</button>
     </div>`;
@@ -3500,10 +3526,10 @@ function addSingleGame(a,b){
   const already=G.singleGames.findIndex(s=>s.p1===a&&s.p2===b);
   if(already>=0){G.singleGames.splice(already,1);}
   else{G.singleGames.push({p1:a,p2:b,bet:2});}
-  renderSinglesOptions();renderSingleGamesList();
+  renderSinglesOptions();renderSingleGamesList();updateActiveLabels();
 }
-function setSingleBet(i,v){G.singleGames[i].bet=v;renderSingleGamesList();}
-function removeSingleGame(i){G.singleGames.splice(i,1);renderSinglesOptions();renderSingleGamesList();}
+function setSingleBet(i,v){G.singleGames[i].bet=v;renderSingleGamesList();renderSinglesOptions();updateActiveLabels();}
+function removeSingleGame(i){G.singleGames.splice(i,1);renderSinglesOptions();renderSingleGamesList();updateActiveLabels();}
 
 /* ═══════════════════════════════════════════════
    6-POINT GAME SETUP
@@ -3524,7 +3550,8 @@ function renderSixPointOptions(){
   let h='<div class="pair-grid">';
   threeCombos().forEach(combo=>{
     const already=G.sixPointGames.some(g=>JSON.stringify(g.players)===JSON.stringify(combo));
-    h+=`<div class="pbtn${already?' sel':''}" onclick="addSixPointGame(${JSON.stringify(combo)})">${combo.map((pi,j)=>(j===0?nm[pi]:`<div class="pn">${nm[pi]}</div>`)).join('<div class="pn-vs">·</div>')}</div>`;
+    const _sp6=G.sixPointGames.find(function(g){return JSON.stringify(g.players)===JSON.stringify(combo);});
+    h+=`<div class="pbtn${already?' sel':''}" onclick="addSixPointGame(${JSON.stringify(combo)})">${combo.map((pi,j)=>(j===0?nm[pi]:`<div class="pn">${nm[pi]}</div>`)).join('<div class="pn-vs">·</div>')}${_sp6?'<div style="font-size:9px;font-weight:800;color:#1a3a2a;background:rgba(26,58,42,.12);border-radius:4px;padding:1px 5px;margin-top:2px">6-Point · $'+_sp6.perPoint+'/pt</div>':''}</div>`;
   });
   h+='</div>';
   document.getElementById('sixPointGrid').innerHTML=h;
@@ -3549,10 +3576,10 @@ function addSixPointGame(players){
   const already=G.sixPointGames.findIndex(g=>JSON.stringify(g.players)===JSON.stringify(players));
   if(already>=0){G.sixPointGames.splice(already,1);}
   else{G.sixPointGames.push({players,perPoint:1});}
-  renderSixPointOptions();renderSixPointGamesList();
+  renderSixPointOptions();renderSixPointGamesList();updateActiveLabels();
 }
-function setSixPointValue(i,v){G.sixPointGames[i].perPoint=v;renderSixPointGamesList();}
-function removeSixPointGame(i){G.sixPointGames.splice(i,1);renderSixPointOptions();renderSixPointGamesList();}
+function setSixPointValue(i,v){G.sixPointGames[i].perPoint=v;renderSixPointGamesList();renderSixPointOptions();updateActiveLabels();}
+function removeSixPointGame(i){G.sixPointGames.splice(i,1);renderSixPointOptions();renderSixPointGamesList();updateActiveLabels();}
 
 /* ═══════════════════════════════════════════════
    START ROUND
@@ -3667,6 +3694,23 @@ function mmSetAdvanceMode(autoAdv){
   // Sync setup screen segmented control too
   setAdvanceMode(autoAdv);
   renderCard();
+}
+
+function setBirdieJuice(enabled){
+  if(!G.birdieJuice) G.birdieJuice={earned:[],redeemed:0};
+  G.birdieJuice.enabled = enabled;
+  const on=document.getElementById('segBJOn');
+  const off=document.getElementById('segBJOff');
+  if(on&&off){
+    if(enabled){
+      on.style.background='var(--gp)';on.style.color='var(--gd)';on.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
+      off.style.background='transparent';off.style.color='rgba(255,255,255,.4)';off.style.boxShadow='';
+    }else{
+      off.style.background='#c9a84c';off.style.color='#1a3a2a';off.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
+      on.style.background='transparent';on.style.color='rgba(255,255,255,.4)';on.style.boxShadow='';
+    }
+  }
+  saveG();
 }
 
 function setScorecardMode(scoresOnly){
@@ -3793,6 +3837,7 @@ function startRound(){
   G.roundEnd=null;
   G.weatherStart=null; G.weatherEnd=null; // fresh weather snapshots for this round
   G.internationals={}; // reset any leftover International state from a previous round
+  updateActiveLabels();
   const snakeBox=document.getElementById('snakeEnabled');
   G.snake={ enabled: !!(snakeBox && snakeBox.checked), holder:null, history:[], bet:G.snake&&G.snake.bet||5, settlements:[], participants:G.snake&&G.snake.participants||[], h18confirmed:false };
   const aaBox=document.getElementById('autoAdvanceEnabled');
@@ -4564,7 +4609,13 @@ function renderVegasOptions(){
   let h = '<div style="font-size:11px;color:#888;margin-bottom:6px">Tap to add/remove matchups — select as many as you like:</div><div class="pair-grid">';
   combos.forEach((c,i)=>{
     const sel = comboActive(c);
-    h += `<div class="pbtn${sel?' sel':''}" onclick="toggleVegasTeams(${i})">${nm[c.a[0]]} & ${nm[c.a[1]]}<div class="pn-vs">vs</div><div class="pn">${nm[c.b[0]]} & ${nm[c.b[1]]}</div></div>`;
+    const aKey=JSON.stringify([...c.a].sort()),bKey=JSON.stringify([...c.b].sort());
+    const _vg=G.vegasGames.find(function(g){
+      if(!g||!g.teamA||!g.teamB) return false;
+      const gA=JSON.stringify([...g.teamA].sort()),gB=JSON.stringify([...g.teamB].sort());
+      return (gA===aKey&&gB===bKey)||(gA===bKey&&gB===aKey);
+    });
+    h += `<div class="pbtn${sel?' sel':''}" onclick="toggleVegasTeams(${i})">${nm[c.a[0]]} & ${nm[c.a[1]]}<div class="pn-vs">vs</div><div class="pn">${nm[c.b[0]]} & ${nm[c.b[1]]}</div>${_vg?'<div style="font-size:9px;font-weight:800;color:#1a3a2a;background:rgba(26,58,42,.12);border-radius:4px;padding:1px 5px;margin-top:2px">Vegas · $'+_vg.perPoint+'/pt</div>':''}</div>`;
   });
   h += '</div>';
   el.innerHTML = h;
@@ -4591,6 +4642,7 @@ function toggleVegasTeams(i){
   saveG();
   renderVegasOptions();
   renderVegasGamesList();
+  updateActiveLabels();
 }
 
 function renderVegasGamesList(){
@@ -4612,7 +4664,7 @@ function renderVegasGamesList(){
     const modeBtn=(m,label)=>`<button onclick="setVegasMode(${gIdx},'${m}')" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid ${g.mode===m?'#1a3a2a':'#ccc'};background:${g.mode===m?'#1a3a2a':'#fff'};color:${g.mode===m?'#c9a84c':'#555'};font-size:12px;font-weight:700;cursor:pointer">${label}</button>`;
     const flipBtn=(f,label)=>`<button onclick="setVegasFlip(${gIdx},${f})" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid ${g.flip===f?'#1a3a2a':'#ccc'};background:${g.flip===f?'#1a3a2a':'#fff'};color:${g.flip===f?'#c9a84c':'#555'};font-size:12px;font-weight:700;cursor:pointer">${label}</button>`;
     html += `<div style="background:#fff;border-radius:8px;padding:10px 12px;border:1px solid #ddd;margin-top:8px">`;
-    html += `<div style="font-size:12px;font-weight:700;color:#1a3a2a;margin-bottom:8px">🎲 ${nm[g.teamA[0]]} & ${nm[g.teamA[1]]} <span style="color:#999">vs</span> ${nm[g.teamB[0]]} & ${nm[g.teamB[1]]}</div>`;
+    html += `<div style="font-size:12px;font-weight:700;color:#1a3a2a;margin-bottom:2px">🎲 ${nm[g.teamA[0]]} & ${nm[g.teamA[1]]} <span style="color:#999">vs</span> ${nm[g.teamB[0]]} & ${nm[g.teamB[1]]}</div><div style="font-size:10px;font-weight:700;color:#4a7a5a;margin-bottom:8px">Vegas · $${g.perPoint}/pt · ${g.mode}</div>`;
     html += `<div style="font-size:11px;color:#888;margin-bottom:6px">Dollar per point:</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">${ptRow}</div>`;
     html += `<div style="font-size:11px;color:#888;margin-bottom:6px">Scoring:</div><div style="display:flex;gap:6px;margin-bottom:12px">${modeBtn('gross','Gross')}${modeBtn('net','Net (handicap)')}</div>`;
     html += `<div style="font-size:11px;color:#888;margin-bottom:6px">Flip on opponent birdie:</div><div style="display:flex;gap:6px">${flipBtn(true,'Flip on')}${flipBtn(false,'No flip')}</div>`;
@@ -4621,7 +4673,7 @@ function renderVegasGamesList(){
   el.innerHTML = html;
 }
 
-function setVegasPoint(gi,v){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].perPoint=v; saveG(); renderVegasGamesList(); }
+function setVegasPoint(gi,v){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].perPoint=v; saveG(); renderVegasGamesList(); renderVegasOptions(); }
 function setVegasMode(gi,m){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].mode=m; saveG(); renderVegasGamesList(); }
 function setVegasFlip(gi,f){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].flip=f; saveG(); renderVegasGamesList(); }
 
@@ -4662,6 +4714,7 @@ function toggleMatchCards(){
   document.getElementById('mcConfig').style.display = G.matchCards.enabled ? 'block' : 'none';
   saveG();
   renderMatchCardsConfig();
+  updateActiveLabels();
 }
 
 function mcAddOpponent(){
@@ -4864,6 +4917,7 @@ function toggleStablefordPlayer(pi){
   saveG();
   renderStablefordOptions();
   renderStablefordGamesList();
+  updateActiveLabels();
 }
 
 function renderStablefordGamesList(){
@@ -5200,7 +5254,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.70</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.82</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5613,6 +5667,7 @@ const BJ_CREDITS={birdie:1, eagle:2, albatross:4, 'hole-in-one':5};
 // Called after any score change. Logs/un-logs entries and shows appropriate popup.
 function checkBirdieJuice(pi, h, prevGross){
   if(!G.birdieJuice) G.birdieJuice={earned:[],redeemed:0};
+  if(G.birdieJuice.enabled===false) return;
   const par=G.par[h];
   const newGross=G.scores[pi][h];
   const wasType = birdieJuiceType(prevGross, par);
@@ -5863,7 +5918,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.70</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.82</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6315,7 +6370,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.70</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.82</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -6888,7 +6943,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.70</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.82</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9450,7 +9505,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.70</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.82</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9889,7 +9944,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.70</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.82</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10162,7 +10217,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.70</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.82</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10302,7 +10357,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v11.70');
+  lines.push('— Pards Golf · v11.82');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -10998,7 +11053,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v11.70 · ${dateStr}</div>
+<div class="foot">Pards Golf · v11.82 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12831,6 +12886,7 @@ function renderSnakeSetupOptions(){
         +`<span style="font-size:13px;color:#f0c040">${name}</span></label>`;
   }
   listEl.innerHTML=html;
+  updateActiveLabels();
 }
 
 const SNAKE_SETTLE_HOLES=[2,5,8,11,14,17];
@@ -13215,7 +13271,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v11.70';
+const CURRENT_VERSION = 'pards-v11.82';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13652,7 +13708,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v11.70';
+const CACHE='pards-v11.82';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pards-golf-manual-v11.html','gc_id.jpg']))
