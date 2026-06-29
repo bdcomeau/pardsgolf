@@ -2383,6 +2383,9 @@ function _updateCourseWeatherSpan(courseId, wx){
     const wxEl = document.getElementById('coursePickerWx');
     if(wxEl) wxEl.textContent = wxStr;
   }
+  // If no coursePickerWx yet populated, try now
+  const wxMain = document.getElementById('coursePickerWx');
+  if(wxMain && !wxMain.textContent && ac && ac.id === courseId) wxMain.textContent = wxStr;
 }
 
 
@@ -2611,7 +2614,7 @@ function _updateCourseDetail(){
   const c = activeCourse();
   const par = c.par.reduce((a,b)=>a+b,0);
   const teeList = c.tees.map(t=>`${t.name} (${t.slope}/${t.rating})`).join('  ·  ');
-  det.innerHTML = `<span>${c.location || ''}  ·  Par ${par}  ·  ${teeList}</span>`;
+  det.innerHTML = `<span>Par ${par}  ·  ${teeList}</span>`;
 }
 function _refreshHeaderSub(){
   const el = document.getElementById('hdrCourseSub');
@@ -2624,6 +2627,8 @@ function onCoursePicked(){
 
 function initSetup(){
   renderCoursePicker();
+  // Show cached weather in picker button immediately
+  _updateCoursePickerBtn();
   renderPlayers();
   renderFavPreview();
   initAdvanceMode();
@@ -5312,7 +5317,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.94</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.95</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5977,7 +5982,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.94</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.95</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6432,7 +6437,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.94</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.95</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7005,7 +7010,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.94</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.95</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9567,7 +9572,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.94</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.95</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10006,7 +10011,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.94</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.95</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10279,7 +10284,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.94</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.95</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10419,7 +10424,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v11.94');
+  lines.push('— Pards Golf · v11.95');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11115,7 +11120,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v11.94 · ${dateStr}</div>
+<div class="foot">Pards Golf · v11.95 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13351,7 +13356,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v11.94';
+const CURRENT_VERSION = 'pards-v11.95';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13701,12 +13706,12 @@ async function checkForUpdate(){
 }
 
 setTimeout(checkForUpdate,30000);
-// Pre-fetch course weather on load, refresh every 30 minutes
+// Pre-fetch course weather on load, refresh every 5 minutes
 setTimeout(function(){
-  fetchAllCourseWeather();
+  fetchAllCourseWeather().then(function(){ _updateCoursePickerBtn(); });
   setInterval(function(){
     window._courseWeatherCache = {};
-    fetchAllCourseWeather();
+    fetchAllCourseWeather().then(function(){ _updateCoursePickerBtn(); });
   }, 5 * 60 * 1000);
 }, 3000);
 setInterval(checkForUpdate,90000);
@@ -13796,7 +13801,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v11.94';
+const CACHE='pards-v11.95';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
