@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pards Golf User Manual v11.84</title>
+<style>
+  :root { --green:#1a3a2a; --gold:#c9a84c; --lgold:#f5e6b8; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family: -apple-system, Arial, sans-serif; font-size:16px; line-height:1.6; color:#222; background:#f9f9f7; }
+  .cover { background:linear-gradient(160deg,var(--green),#0d1f15); color:#fff; text-align:center; padding:80px 20px; }
+  .cover .emoji { font-size:72px; display:block; margin-bottom:16px; }
+  .cover h1 { font-size:48px; color:var(--gold); margin-bottom:8px; }
+  .cover .sub { font-size:18px; color:rgba(255,255,255,.7); margin-bottom:6px; }
+  .cover .games { font-size:14px; color:rgba(255,255,255,.5); margin-top:12px; }
+  .toc { background:#fff; max-width:700px; margin:32px auto; border-radius:12px; padding:32px; box-shadow:0 2px 12px rgba(0,0,0,.08); }
+  .toc h2 { color:var(--green); font-size:20px; margin-bottom:16px; }
+  .toc ol { padding-left:24px; }
+  .toc li { margin-bottom:6px; }
+  .toc a { color:var(--green); text-decoration:none; font-weight:500; }
+  .toc a:hover { text-decoration:underline; }
+  .section { max-width:700px; margin:0 auto 48px; background:#fff; border-radius:12px; padding:40px 36px; box-shadow:0 2px 12px rgba(0,0,0,.08); }
+  h1.sec { font-size:28px; color:var(--green); border-bottom:3px solid var(--gold); padding-bottom:12px; margin-bottom:24px; }
+  h2.sub { font-size:20px; color:var(--green); margin:28px 0 12px; }
+  h3.sub3 { font-size:16px; color:#333; font-weight:700; margin:20px 0 8px; }
+  p { margin-bottom:14px; }
+  ul, ol { margin:0 0 14px 24px; }
+  li { margin-bottom:6px; }
+  .tip { background:rgba(26,58,42,.07); border-left:4px solid var(--green); border-radius:0 8px 8px 0; padding:12px 16px; margin:16px 0; font-size:15px; color:#1a3a2a; }
+  .tip::before { content:'💡 Tip: '; font-weight:700; }
+  .warn { background:rgba(192,57,43,.07); border-left:4px solid #c0392b; border-radius:0 8px 8px 0; padding:12px 16px; margin:16px 0; font-size:15px; color:#c0392b; }
+  .warn::before { content:'⚠️ '; font-weight:700; }
+  .note { background:rgba(0,0,0,.04); border-left:4px solid #aaa; border-radius:0 8px 8px 0; padding:12px 16px; margin:16px 0; font-size:15px; color:#555; font-style:italic; }
+  .note::before { content:'📌 '; }
+  table { width:100%; border-collapse:collapse; margin:16px 0 24px; font-size:15px; }
+  th { background:var(--green); color:#fff; padding:10px 12px; text-align:left; }
+  td { padding:9px 12px; border-bottom:1px solid #e5e5e5; }
+  tr:nth-child(even) td { background:#f7f7f5; }
+  .step { display:flex; gap:12px; margin-bottom:12px; align-items:flex-start; }
+  .step-num { background:var(--green); color:var(--gold); font-weight:800; font-size:14px; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+  .footer { text-align:center; padding:48px 20px 64px; color:#888; font-size:14px; }
+  .footer .emoji { font-size:40px; display:block; margin-bottom:12px; }
+  .footer .tagline { font-style:italic; color:#555; margin-top:8px; }
+  @media (max-width:600px) {
+    .section { padding:24px 18px; border-radius:0; }
+    h1.sec { font-size:22px; }
+    .cover h1 { font-size:36px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <span class="emoji">⛳</span>
+  <h1>Pards Golf</h1>
+  <div class="sub">User Manual &nbsp;·&nbsp; Version 11.84</div>
+  <div class="sub">A mobile scorecard, betting tracker, and Birdie Juice ledger</div>
+  <div class="games">Nassau &nbsp;·&nbsp; 6-Point &nbsp;·&nbsp; Stableford &nbsp;·&nbsp; Skins &nbsp;·&nbsp; Vegas &nbsp;·&nbsp; Snake &nbsp;·&nbsp; Match Cards &nbsp;·&nbsp; The International</div>
+</div>
+
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#privacy">Privacy &amp; Data Security</a></li>
+    <li><a href="#install">Installing Pards Golf on Your iPhone</a></li>
+    <li><a href="#setup">Setting Up a Round</a></li>
+    <li><a href="#scoring">Scoring — The Scorecard Screen</a></li>
+    <li><a href="#nassau">Nassau Games</a></li>
+    <li><a href="#sixpoint">The 6-Point Game</a></li>
+    <li><a href="#stableford">Stableford</a></li>
+    <li><a href="#skins">Skins</a></li>
+    <li><a href="#vegas">Vegas</a></li>
+    <li><a href="#snake">The Snake 3-Putt Money Game</a></li>
+    <li><a href="#matchcards">Match Cards</a></li>
+    <li><a href="#bj">Birdie Juice</a></li>
+    <li><a href="#coursepicker">The Course Picker</a></li>
+    <li><a href="#history">Round History</a></li>
+    <li><a href="#backup">Backup &amp; Restore</a></li>
+    <li><a href="#newround">Starting a New Round</a></li>
+    <li><a href="#players">Manage My Players</a></li>
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+  </ol>
+</div>
+
+<div class="section" id="privacy">
+  <h1 class="sec">Privacy &amp; Data Security</h1>
+  <h2 class="sub">Everything stays on your device</h2>
+  <p>All round data, player names, handicaps, betting results, and Golf Canada member IDs are stored exclusively in your iPhone's browser storage (localStorage). This data never leaves your device and is never sent to any server, cloud service, or third party. There is no Pards Golf database or backend — the app is a single HTML file that runs entirely on your phone.</p>
+  <h2 class="sub">Golf Canada Member ID &amp; Password</h2>
+  <p>When you enter your Golf Canada credentials, they are used only to fetch your current handicap index directly from Golf Canada's API. Your credentials are:</p>
+  <ul>
+    <li>Stored only in your device's local browser storage</li>
+    <li>Never transmitted to any server other than Golf Canada's own secure API</li>
+    <li>Never shared with other players, the developer, or any third party</li>
+    <li>Never included in round history exports or backups</li>
+  </ul>
+  <p>Once saved, your handicap refreshes automatically every 3 hours in the background.</p>
+  <div class="note">Pards Golf does not collect analytics, does not serve ads, has no user accounts, and has no server. Your data is yours alone.</div>
+</div>
+
+<div class="section" id="install">
+  <h1 class="sec">1. Installing Pards Golf on Your iPhone</h1>
+  <p>Pards Golf is a Progressive Web App (PWA). It is not downloaded from the App Store — you add it to your Home Screen directly from Safari. Once installed, it opens full-screen like any other app, works without internet during your round, and keeps your data saved on your device.</p>
+  <div class="warn">You MUST install the app to your Home Screen before your data will be reliably saved. If you only open the web address in a browser tab, your saved players and round history can be cleared by the browser at any time.</div>
+  <div class="warn">Do NOT use the "Remove App" option on the Home Screen icon — on iOS this permanently wipes all local data including your players and round history.</div>
+  <h2 class="sub">Step-by-Step Installation</h2>
+  <div class="step"><div class="step-num">1</div><div>Open <strong>Safari</strong> on your iPhone. Installation must be done in Safari — it will not work in Chrome or other browsers.</div></div>
+  <div class="step"><div class="step-num">2</div><div>Go to: <strong>https://bdcomeau.github.io/pardsgolf/pards-golf.html</strong></div></div>
+  <div class="step"><div class="step-num">3</div><div>Tap the <strong>Share button</strong> — the square icon with an arrow pointing up, in the bottom toolbar.</div></div>
+  <div class="step"><div class="step-num">4</div><div>Scroll down the Share menu and tap <strong>"Add to Home Screen."</strong></div></div>
+  <div class="step"><div class="step-num">5</div><div>Optionally rename the app, then tap <strong>"Add"</strong> in the top-right corner.</div></div>
+  <div class="step"><div class="step-num">6</div><div>A Pards Golf icon now appears on your Home Screen. <strong>Always launch from this icon</strong> — not from a Safari bookmark.</div></div>
+  <div class="tip">Always launch from the Home Screen icon. The icon runs in standalone mode, which gives you the full-screen experience and is required for the app to work correctly.</div>
+  <h2 class="sub">Keeping the App Current</h2>
+  <p>Pards Golf updates automatically in the background. To check manually, tap <strong>Update App</strong> in the bottom action bar on the Setup screen.</p>
+  <p>If you think you're on an old version:</p>
+  <ul>
+    <li>Tap <strong>Update App</strong> in the bottom bar.</li>
+    <li><strong>Force-close and reopen</strong> — swipe the app up in the iOS app switcher, then tap the Home Screen icon with Wi-Fi or cell signal.</li>
+    <li><strong>Clear Safari site data</strong> — Settings → Safari → Advanced → Website Data, find bdcomeau.github.io, swipe left and tap Delete. Force-close and reopen. This does NOT delete your saved players or round history.</li>
+  </ul>
+  <div class="warn">Do NOT delete the Home Screen icon and reinstall. On iOS, removing a PWA icon permanently erases all local data. Always use Update App, force-close, or the Safari data method above.</div>
+</div>
+
+<div class="section" id="setup">
+  <h1 class="sec">2. Setting Up a Round</h1>
+  <p>When you open Pards Golf, you land on the Setup screen. This is where you choose your course, add players, set handicaps, pick your starting hole, and configure the betting games.</p>
+  <h2 class="sub">Step 1 — Choose Your Course</h2>
+  <p>Tap the course picker button at the top of the screen. Courses are grouped by facility — tap a group header to expand it. Derrick Golf &amp; Winter Club is always first.</p>
+  <div class="tip">Tap the 📋 Info button on any course row to see a full preview: live weather, your round history at that course, and the full scorecard with all tee yardages.</div>
+  <h2 class="sub">Step 2 — Set the Number of Players</h2>
+  <p>Use the + and − buttons to set how many players are in your group (1 to 5).</p>
+  <h2 class="sub">Step 3 — Load Your Favourites</h2>
+  <p>If you've played before, tap <strong>⭐ Load My Favourites</strong>. Your saved players fill in automatically — names, handicaps, and tee preferences.</p>
+  <div class="tip">If everyone in today's group is already saved, Load My Favourites is the only step you need for players.</div>
+  <h2 class="sub">Step 4 — Adding a New Player</h2>
+  <ul>
+    <li>Tap the name field and type the player's name.</li>
+    <li>Enter their handicap index (e.g. 8.4).</li>
+    <li>Tap the tee selector and choose their tee. Split colours (like Black/Gold) mean a combo tee.</li>
+    <li>(Optional) Enter their 10-digit Golf Canada Member ID.</li>
+    <li>Tap the <strong>💾 Save</strong> pill to save them as a contact.</li>
+  </ul>
+  <h2 class="sub">Step 5 — Fetching Handicaps from Golf Canada</h2>
+  <p>If a player has a Golf Canada Member ID entered, tap the <strong>Fetch</strong> button (Golf Canada logo) on their row to pull their current handicap automatically.</p>
+  <ul>
+    <li>First fetch: a prompt asks for their Golf Canada password. Enter it once — the app remembers it.</li>
+    <li>A green status line confirms the update: "🟢 Handicap current as of Jun 28, 10:15."</li>
+  </ul>
+  <div class="warn">Your Golf Canada password is stored only on your device and is only ever sent to Golf Canada's own secure API. It is never visible to other players.</div>
+  <h2 class="sub">Step 6 — Set the Starting Hole</h2>
+  <p>Defaults to Hole 1. For a shotgun start, change it to your assigned starting hole.</p>
+  <h2 class="sub">Step 7 — Scores Only or With Games?</h2>
+  <ul>
+    <li><strong>With Games (default)</strong> — all betting games are available.</li>
+    <li><strong>Scores Only</strong> — scores tracked, no betting games.</li>
+  </ul>
+  <h2 class="sub">Step 8 — Birdie Juice Tracking</h2>
+  <p>The Birdie Juice Tracking toggle turns automatic Birdie Juice credits on or off. Turn it off for rounds where players prefer not to track drinks.</p>
+  <h2 class="sub">Step 9 — Configure Betting Games</h2>
+  <p>Scroll down to the <strong>Betting Games</strong> section. Tap any accordion header to expand it. A green <strong>✓ Active</strong> label appears on headers where a game has been configured.</p>
+  <div class="tip">The pairing pills in each game show the full game detail — e.g. "Nassau 2v2 · $2/$2/$2 + $4 Auto Press" — so you always know what each matchup is playing for.</div>
+  <h2 class="sub">Step 10 — Start the Round</h2>
+  <p>Tap the gold <strong>Start Round →</strong> button (pinned to the bottom of the screen).</p>
+  <div class="tip">Changed your mind at the first tee? Before any score is entered, the button at the bottom of the scorecard says "✏️ Edit Round Settings" — tap it to go back to Setup.</div>
+</div>
+
+<div class="section" id="scoring">
+  <h1 class="sec">3. Scoring — The Scorecard Screen</h1>
+  <h2 class="sub">Entering Scores</h2>
+  <p>Each player has a score entry wheel. Scroll up/down to set the score, then tap the centre to confirm. A birdie or better triggers a Birdie Juice popup (if enabled).</p>
+  <div class="tip">If you entered a wrong score, just scroll the wheel again to correct it — all game totals and Birdie Juice credits recalculate instantly.</div>
+  <h2 class="sub">Navigating Holes</h2>
+  <p>Once all scores are confirmed, the app advances to the next hole (if Auto-Advance is on). You can also use the ← → arrows to move between holes manually.</p>
+  <h2 class="sub">The Settings Button</h2>
+  <ul>
+    <li><strong>"✏️ Edit Round Settings"</strong> — appears before any score is entered. Returns to Setup.</li>
+    <li><strong>"⚙️ Mid-Round Match &amp; Player Settings"</strong> — appears once any score is entered. Opens mid-round overlay.</li>
+  </ul>
+  <h2 class="sub">Mid-Round Match &amp; Player Settings</h2>
+  <p>Tap ⚙️ to:</p>
+  <ul>
+    <li>Change a player's handicap index (recalculates strokes immediately).</li>
+    <li>Switch a player's tee box — tap their tee pill to open the coloured tee picker.</li>
+    <li>Add or remove players from the group.</li>
+    <li>Add, remove, or adjust any betting game.</li>
+    <li>Change the starting hole or toggle Auto-Advance.</li>
+  </ul>
+  <div class="tip">You can add a Nassau match or any other game mid-round and it will back-calculate results for holes already played.</div>
+  <h2 class="sub">The Master Scorecard</h2>
+  <p>Scroll down past the score wheels to see the full 18-hole master scorecard — all tee decks, yardages, par, handicap stroke index, gross scores, net scores, and +/- to par.</p>
+</div>
+
+<div class="section" id="nassau">
+  <h1 class="sec">4. Nassau Games</h1>
+  <p>Nassau is a three-part bet: Front 9, Back 9, and Total 18 — each worth one bet unit. The app tracks all presses and auto-presses automatically.</p>
+  <h2 class="sub">2v2 Nassau (High-Low)</h2>
+  <p>Two teams of two. Each team contributes their Low ball (better net score) and High ball (worse net score). Select a pairing from the 2v2 Nassau Games accordion and set the dollar amount per side.</p>
+  <div class="tip">With four players you can have up to three simultaneous 2v2 pairings active at once.</div>
+  <h2 class="sub">1v1 Nassau</h2>
+  <p>One player against another. Multiple 1v1 matchups can run simultaneously.</p>
+  <h2 class="sub">Auto-Press</h2>
+  <p>When a game reaches −2 margin, a press is automatically declared from the next hole. Presses can themselves be pressed. All press history shows in the Games tab.</p>
+  <h2 class="sub">The International (The Big I)</h2>
+  <p>Available after Hole 17 to the losing team — a single Hole 18 that can cancel, double, or leave unchanged the entire pot.</p>
+  <ul>
+    <li>Losing team wins Hole 18 → pot is voided.</li>
+    <li>Leading team wins Hole 18 → pot doubles.</li>
+    <li>Hole is halved → pot stays.</li>
+  </ul>
+</div>
+
+<div class="section" id="sixpoint">
+  <h1 class="sec">5. The 6-Point Game</h1>
+  <p>A three-player game. Each hole, 6 points are distributed: low net wins 4, second wins 2, third wins 0. Points convert to dollars at the end of the round. A tie for low gives 3 points each.</p>
+  <div class="tip">6-Point keeps every player engaged on every hole regardless of the team matchups.</div>
+</div>
+
+<div class="section" id="stableford">
+  <h1 class="sec">6. Stableford</h1>
+  <p>Points-based scoring where you earn points based on your net score vs par. Higher is better. One bad hole can't ruin a Stableford round.</p>
+  <table>
+    <thead><tr><th>Net Score</th><th>Points</th></tr></thead>
+    <tbody>
+      <tr><td>Double Bogey or worse</td><td>0</td></tr>
+      <tr><td>Bogey</td><td>1</td></tr>
+      <tr><td>Par</td><td>2</td></tr>
+      <tr><td>Birdie</td><td>3</td></tr>
+      <tr><td>Eagle</td><td>4</td></tr>
+      <tr><td>Albatross</td><td>5</td></tr>
+    </tbody>
+  </table>
+  <p>Set dollars per point to settle money, or leave at $0 for points-only.</p>
+</div>
+
+<div class="section" id="skins">
+  <h1 class="sec">7. Skins</h1>
+  <p>Each hole is its own contest worth one skin. Win outright and you win the skin. Tie and the skin carries over — pots can build fast.</p>
+  <ul>
+    <li>Select players (two or more), set dollars per skin, choose Gross or Net.</li>
+    <li>Carry-over (default on): tied holes roll forward.</li>
+    <li>After 18: Void (unclaimed skins vanish) or Last Hole Sweeps (sweeps the pot).</li>
+  </ul>
+  <div class="tip">With five players at $5 a skin, three skins carried into a hole is worth $15 to the winner.</div>
+</div>
+
+<div class="section" id="vegas">
+  <h1 class="sec">8. Vegas</h1>
+  <p>A two-against-two game where each team's scores combine into a two-digit number (low digit first). Teams play the difference between their numbers per point.</p>
+  <p><strong>The Flip:</strong> A gross birdie by the opposing team flips your number so the high digit leads (45 → 54). Only one flip applies.</p>
+  <ul>
+    <li>Requires 4 or 5 players. Multiple pairings can be active simultaneously.</li>
+    <li>Set dollars per point: 25¢, 50¢, $1, $2, or $5.</li>
+    <li>Choose Gross or Net scoring.</li>
+  </ul>
+  <div class="tip">A blow-up + opponent birdie is the classic Vegas disaster. Your 4 and 10 become 410, flip to 104 against their 34 — at $1/pt that's a $70 hole.</div>
+</div>
+
+<div class="section" id="snake">
+  <h1 class="sec">9. The Snake 3-Putt Money Game</h1>
+  <p>A money game that settles every 3 holes. Whoever holds the snake at holes 3, 6, 9, 12, 15, and 18 pays each other participant the bet amount.</p>
+  <ul>
+    <li>Enable in the 🐍 Snake 3-Putt Game accordion.</li>
+    <li>Set bet per player per settlement ($1–$20) and select participants.</li>
+    <li>A compact bar on each hole records 3-putts and shows the current stretch holder.</li>
+  </ul>
+  <div class="tip">Tap the 🐍 Snake tab to see all six settlement stretches, running totals, and the current holder.</div>
+</div>
+
+<div class="section" id="matchcards">
+  <h1 class="sec">10. Match Cards</h1>
+  <p>Play a 1v1 Nassau against golfers in OTHER groups. Your scores are tracked live; opponents' scores are entered later in the clubhouse.</p>
+  <ul>
+    <li>Enable Match Cards on Setup. Tap + Add Opponent (up to two opponents).</li>
+    <li>Set the Nassau bet per side for each opponent.</li>
+    <li>When your round finishes, a ⚔️ Match Cards round lands in History with a purple border and a 📝 Score Round pill.</li>
+    <li>Tap Score Round to enter opponents' scores hole by hole.</li>
+  </ul>
+</div>
+
+<div class="section" id="bj">
+  <h1 class="sec">11. Birdie Juice</h1>
+  <p>Automatic tracking of gross birdies, eagles, and holes-in-one — each earns Birdie Juice credits for the group. Toggle on/off via the Birdie Juice Tracking switch on the Setup screen.</p>
+  <table>
+    <thead><tr><th>Score</th><th>Credits Earned</th></tr></thead>
+    <tbody>
+      <tr><td>Gross Birdie</td><td>1 credit</td></tr>
+      <tr><td>Gross Eagle</td><td>2 credits — pour a double!</td></tr>
+      <tr><td>Albatross</td><td>4 credits — the bar is yours!</td></tr>
+      <tr><td>Hole-in-One</td><td>5 credits — the whole group owes a round</td></tr>
+    </tbody>
+  </table>
+  <h2 class="sub">Birdie Streaks</h2>
+  <table>
+    <thead><tr><th>Consecutive Birdies</th><th>Name</th></tr></thead>
+    <tbody>
+      <tr><td>3</td><td>🦃 Turkey</td></tr>
+      <tr><td>4</td><td>⚾ Four-Bagger</td></tr>
+      <tr><td>5</td><td>🦡 Badger</td></tr>
+      <tr><td>6</td><td>🍺 Six-Pack</td></tr>
+      <tr><td>7+</td><td>👑 Legend</td></tr>
+    </tbody>
+  </table>
+  <p>Tap the 🐦🥃 icon to open the Birdie Juice tracker. A red badge shows remaining credits. Tap 🍻 Redeem each time a round is poured.</p>
+</div>
+
+<div class="section" id="coursepicker">
+  <h1 class="sec">12. The Course Picker</h1>
+  <h2 class="sub">📋 Course Info</h2>
+  <p>Tap the 📋 Info button on any course row to open a full preview:</p>
+  <ul>
+    <li>Live weather — temperature, wind speed and direction.</li>
+    <li>My History — rounds played there (best, average, lifetime money, last 12 scores vs par).</li>
+    <li>Full scorecard — all tee boxes, 18-hole yardages, ratings and slopes.</li>
+  </ul>
+  <h2 class="sub">Tee Colours</h2>
+  <p>Tee selector pills are colour-coded. Combo tees (like Black/Gold or Blue/White) show as a split diagonal gradient so you always know which tee is selected.</p>
+  <h2 class="sub">Round History on Course Rows</h2>
+  <p>Each course row shows how many rounds you've played there and your last 3 gross scores — visible before you even select the course.</p>
+</div>
+
+<div class="section" id="history">
+  <h1 class="sec">13. Round History</h1>
+  <p>Tap 📜 Round / History in the bottom nav. A floating ‹ Return button appears as you scroll.</p>
+  <h2 class="sub">Saving a Round</h2>
+  <p>Once all 18 holes are scored, a 💾 Save Round button appears. Rounds also save automatically when you start a New Round.</p>
+  <h2 class="sub">Round Locking</h2>
+  <ul>
+    <li>🔓 Unlocked — tap to lock immediately.</li>
+    <li>🔒 Locked — hold for 2 seconds to unlock (icon fades as you hold).</li>
+    <li>Locked rounds cannot be deleted until unlocked.</li>
+  </ul>
+  <h2 class="sub">Editing a Round</h2>
+  <p>Open any completed round and tap ✏️ Edit. All scores are editable. Tap 💾 Update History when done.</p>
+  <h2 class="sub">Paused Rounds</h2>
+  <p>Tap ⚙️ End Round Early → 💾 Save &amp; Pause Round to save a partial round. Tap ▶ Resume Round in History to continue.</p>
+</div>
+
+<div class="section" id="backup">
+  <h1 class="sec">14. Backup &amp; Restore</h1>
+  <p>Tap 💾 Backup / Data in the bottom action bar.</p>
+  <ul>
+    <li><strong>📤 Export Backup</strong> — opens the iOS share sheet. Save to Files, iCloud, or email yourself. File is named like "Pards-Golf-Backup-Jun-28-2026.json."</li>
+    <li><strong>📥 Import Backup</strong> — reads a previously exported file and restores everything.</li>
+  </ul>
+  <p>After every round you save, the app keeps an automatic safety copy on the device — but this is not a substitute for exporting a real backup off the device.</p>
+  <div class="warn">iOS can wipe a PWA's local storage when you remove the Home Screen icon, run low on device storage, or in some iOS update scenarios. Export a backup regularly.</div>
+</div>
+
+<div class="section" id="newround">
+  <h1 class="sec">15. Starting a New Round</h1>
+  <p>Tap 🔄 New Round in the bottom nav:</p>
+  <ul>
+    <li>Round complete and saved → green ✅ dialog. Hold for 2 seconds to confirm.</li>
+    <li>Round complete, not saved → saved automatically before clearing.</li>
+    <li>Round in progress → red ⚠️ dialog. Hold for 2 seconds to confirm.</li>
+    <li>Blocked on hole 18 if scores are still missing.</li>
+  </ul>
+</div>
+
+<div class="section" id="players">
+  <h1 class="sec">16. Manage My Players</h1>
+  <p>Tap ⚙️ Manage My Players (below Load My Favourites on Setup) to:</p>
+  <ul>
+    <li>Mark yourself as "Me" — auto-fills Player 1 on every future round.</li>
+    <li>Star (☆) players to mark them as Favourites.</li>
+    <li>Set each player's typical score (Par, Bogey, or Double) — centres the score wheel.</li>
+    <li>Edit saved names, handicaps, Golf Canada IDs, and tee preferences.</li>
+    <li>Delete contacts you no longer need.</li>
+  </ul>
+</div>
+
+<div class="section" id="courses">
+  <h1 class="sec">17. Courses</h1>
+  <p>60 courses built in across four regions. All tees, par, stroke index, slope, and rating are pre-loaded — no internet required.</p>
+  <h2 class="sub">Edmonton &amp; Area, AB</h2>
+  <p>Derrick Golf &amp; Winter Club, Windermere G&amp;CC, Edmonton Country Club, Glendale G&amp;CC, Royal Mayfair Golf Club, Edmonton Petroleum G&amp;CC, Mill Woods Golf Club, Blackhawk Golf Club, Highlands Golf Club, RedTail Landing Golf Club, Jagare Ridge Golf Club.</p>
+  <h2 class="sub">Alberta</h2>
+  <p>Jasper Park Lodge, Banff Springs, Stewart Creek, Kananaskis (Mt Kidd &amp; Mt Lorette), Silvertip, Willow Park, Eagle Ranch, Greywolf, Copper Point (The Point &amp; The Ridge), Glencoe Golf &amp; Country Club (4 nine combinations).</p>
+  <h2 class="sub">Scottsdale / Phoenix, AZ</h2>
+  <p>Troon North (Monument &amp; Pinnacle), Kierland Golf Club (6 nine combinations), Pinnacle Peak CC, Mesa CC, Las Sendas, Boulders (North &amp; South), Eagle Mountain, The Phoenician, Longbow, Lookout Mountain.</p>
+  <h2 class="sub">Palm Springs / Palm Desert &amp; La Quinta, CA</h2>
+  <p>Palm Valley CC, Indian Ridge CC, Desert Willow, Shadow Ridge, The Lakes CC (3 combinations), Desert Springs (Palm &amp; Valley), PGA West — 8 courses including TPC Stadium, Nicklaus Tournament, Arnold Palmer, Nicklaus Private, Greg Norman, Tom Weiskopf, Mountain, and Dunes.</p>
+</div>
+
+<div class="section" id="trouble">
+  <h1 class="sec">18. Troubleshooting</h1>
+
+  <h2 class="sub">My round disappeared 🏌️</h2>
+  <p>Use 💾 Save &amp; Pause Round before ending a round early. If you abandoned without saving, the data cannot be recovered — this is why we have backups (Section 14).</p>
+
+  <h2 class="sub">The app looks outdated 🤔</h2>
+  <p>Tap Update App in the Setup action bar. If that doesn't work, clear Safari site data for bdcomeau.github.io, force-close, and reopen from the Home Screen icon (Section 1).</p>
+
+  <h2 class="sub">Pop-ups aren't appearing 😶</h2>
+  <p>Make sure you're running from the Home Screen icon, not a Safari tab. Some dialogs only work correctly in standalone (installed) mode.</p>
+
+  <h2 class="sub">My player data or history disappeared 😱</h2>
+  <p>This can happen if you used "Remove App" on the Home Screen icon. If you have a backup, use 📥 Import Backup to restore it. Always export backups regularly and never use "Remove App."</p>
+
+  <h2 class="sub">A player left mid-round 🚑</h2>
+  <p>Tap ⚙️ Mid-Round Match &amp; Player Settings on the scorecard. Remove them there — this also drops them from active games.</p>
+
+  <h2 class="sub">A score or game looks wrong 🧮</h2>
+  <ul>
+    <li>Handicaps can be edited mid-round in ⚙️ Mid-Round Match &amp; Player Settings.</li>
+    <li>Scores can be corrected at any time using the scroll wheel — all totals recalculate instantly.</li>
+    <li>Wrong tee auto-selected — go to Manage My Players → edit the contact → set their preferred tee.</li>
+  </ul>
+
+  <h2 class="sub">The tee box button isn't responding 📱</h2>
+  <p>If the tee picker doesn't respond, tap anywhere on the dark overlay to dismiss it, then try again. Starting the round also clears any stale pickers.</p>
+
+  <h2 class="sub">Weather isn't showing 🌦️</h2>
+  <p>Edmonton-area courses use a local weather station (WeatherLink). All other courses use the Open-Meteo API. If weather isn't showing, you may be offline — the app works fine without it.</p>
+
+  <h2 class="sub">Handicap strokes showing incorrectly ✏️</h2>
+  <p>Check: (1) handicap index is correct, (2) correct tee is selected, (3) you're on the right course. Formula: Index × (Slope ÷ 113) + (Course Rating − Par), rounded to nearest whole number.</p>
+
+  <h2 class="sub">The lock icon on history isn't working 🔒</h2>
+  <p>Hold for the full 2 seconds and watch the icon fade out — when fully faded it unlocks. Make sure you're not moving your finger during the hold.</p>
+</div>
+
+<div class="footer">
+  <span class="emoji">⛳</span>
+  <strong>Pards Golf &nbsp;·&nbsp; Version 11.84 &nbsp;·&nbsp; Edmonton, AB</strong>
+  <div class="tagline">
+    Thanks for playing.<br>
+    May your drives be long, your putts be true,<br>
+    and your Birdie Juice credits never run dry.
+  </div>
+</div>
+
+</body>
+</html>
