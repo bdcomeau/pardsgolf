@@ -2771,8 +2771,9 @@ function renderPlayers(){
     h+=`<div class="p-row" id="prow${i}">
   <div class="p-row-label">PLAYER ${i+1}</div>
   <div class="p-col1">
-    <button class="contact-select-btn" id="contactBtn${i}" onclick="openContactPickerModal(${i})" style="width:100%;text-align:left;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:8px 10px;color:rgba(255,255,255,.7);font-size:13px;cursor:pointer;-webkit-tap-highlight-color:transparent;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-      ${nm || '\u2014 saved players \u2014'}
+    <button class="contact-select-btn" id="contactBtn${i}" onclick="openContactPickerModal(${i})" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:6px;background:rgba(0,0,0,.3);border:1.5px solid rgba(201,168,76,.4);border-radius:8px;padding:8px 10px;color:rgba(255,255,255,.55);font-size:12px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;letter-spacing:.2px">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:${nm?'#f5e6b8':'rgba(255,255,255,.4)'}">👤 ${nm || 'Select Saved Player'}</span>
+      <span style="font-size:10px;color:rgba(201,168,76,.7);flex-shrink:0">TAP ▼</span>
     </button>
     <select class="contact-select" id="contact${i}" onchange="selectContact(${i})" style="display:none">${contactOpts}</select>
     <input type="text" id="pn${i}" placeholder="Player ${i+1}" value="${nm}" oninput="renderAllPairOptions();highlightDuplicateRows();renderSnakeSetupOptions()" style="margin-top:3px">
@@ -5328,7 +5329,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.01</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.02</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5993,7 +5994,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.01</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.02</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6448,7 +6449,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.01</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.02</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7021,7 +7022,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.01</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.02</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9583,7 +9584,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.01</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.02</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10022,7 +10023,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.01</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.02</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10295,7 +10296,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.01</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.02</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10435,7 +10436,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.01');
+  lines.push('— Pards Golf · v12.02');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11131,7 +11132,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.01 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.02 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12907,7 +12908,11 @@ function selectContactFromModal(i, name){
   if(sel){ sel.value = name; }
   // Update button label
   const btn = document.getElementById('contactBtn'+i);
-  if(btn) btn.textContent = name || '\u2014 saved players \u2014';
+  if(btn){
+    btn.innerHTML = name
+      ? '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f5e6b8">👤 '+name+'</span><span style="font-size:10px;color:rgba(201,168,76,.7);flex-shrink:0">TAP ▼</span>'
+      : '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,.4)">Select Saved Player</span><span style="font-size:10px;color:rgba(201,168,76,.7);flex-shrink:0">TAP ▼</span>';
+  }
   if(!name){
     // Clear the row
     const pn = document.getElementById('pn'+i);
@@ -12967,7 +12972,11 @@ function selectContact(i){
   if(!sel||!sel.value) return;
   // Update button label
   const btn = document.getElementById('contactBtn'+i);
-  if(btn) btn.textContent = sel.value || '\u2014 saved players \u2014';
+  if(btn){
+    btn.innerHTML = sel.value
+      ? '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f5e6b8">👤 '+sel.value+'</span><span style="font-size:10px;color:rgba(201,168,76,.7);flex-shrink:0">TAP ▼</span>'
+      : '<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:rgba(255,255,255,.4)">Select Saved Player</span><span style="font-size:10px;color:rgba(201,168,76,.7);flex-shrink:0">TAP ▼</span>';
+  }
   const contacts = loadContacts();
   const c = contacts.find(c=>c.name===sel.value);
   if(!c) return;
@@ -13501,7 +13510,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.01';
+const CURRENT_VERSION = 'pards-v12.02';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13946,7 +13955,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.01';
+const CACHE='pards-v12.02';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
