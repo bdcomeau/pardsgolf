@@ -627,7 +627,7 @@ input::placeholder{color:#bbb}
     <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
   </div>
   <div id="snakeSection">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px 8px 0 0;padding:10px 14px;margin:0;cursor:pointer"><span class="slabel" style="color:#9b59b6;margin:0;padding:0;background:none;font-size:13px">🐍 Snake 3-Putt Game</span><span class="sc" style="color:#9b59b6;font-size:12px">▶</span></div>
+  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px 8px 0 0;padding:10px 14px;margin:0;cursor:pointer"><span class="slabel" style="color:#9b59b6;margin:0;padding:0;background:none;font-size:13px">🐍 Snake 3-Putt Game</span><span id="badgeSnake" style="font-size:10px;font-weight:800;color:#52b788;margin-left:8px;display:none">✓ Game Set</span><span class="sc" style="color:#9b59b6;font-size:12px">▶</span></div>
   <div style="display:none;margin-bottom:8px">
   <div class="card" style="background:#ede8f5;border:1.5px solid #6c3483;border-top:none;border-radius:0 0 8px 8px">
     <div style="font-size:12px;color:#3a2a4a;margin:0 0 10px">Whoever holds the 3-putt snake after your 3rd, 6th, 9th, 12th, 15th and 18th holes pays each other participant the selected wager. The Snake resets after each settlement hole.</div>
@@ -657,39 +657,39 @@ input::placeholder{color:#bbb}
 
   <div id="teamSection">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">2v2 Nassau Games (High-Low)</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">2v2 Nassau Games (High-Low)</span><span id="badge2v2" style="font-size:10px;font-weight:800;color:#52b788;margin-left:8px;display:none">✓ Game Set</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="teamGamesCard" style="background:#e8eef5">
       <div style="font-size:12px;color:#666;margin:0 0 8px">Select as many pairings as you wish — Pards Golf will score all of them. Tap a pairing to add it, then set the bet amount.</div>
-      <div id="pairGrid"></div>
       <div id="teamGamesList"></div>
+      <div id="pairGrid"></div>
       <button onclick="this.closest('div[style*=display]').style.display='none';this.closest('div[style*=display]').previousElementSibling.querySelector('.sc').textContent='▶'" style="width:100%;margin-top:8px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
     </div>
   </div>
   </div>
 
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">1v1 Nassau Games</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">1v1 Nassau Games</span><span id="badge1v1" style="font-size:10px;font-weight:800;color:#52b788;margin-left:8px;display:none">✓ Game Set</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="singlesCard" style="background:#e8eef5">
       <div style="font-size:12px;color:#666;margin:0 0 8px">Select as many matchups as you wish — Pards Golf will score all of them. Tap a matchup to add it, then set the bet amount.</div>
-      <div id="singlesGrid"></div>
       <div id="singleGamesList"></div>
+      <div id="singlesGrid"></div>
       <button onclick="this.closest('div[style*=display]').style.display='none';this.closest('div[style*=display]').previousElementSibling.querySelector('.sc').textContent='▶'" style="width:100%;margin-top:8px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
     </div>
   </div>
 
   <div id="sixPointSection">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎯 6-Point Game</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎯 6-Point Game</span><span id="badge6pt" style="font-size:10px;font-weight:800;color:#52b788;margin-left:8px;display:none">✓ Game Set</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="sixPointCard" style="background:#e8eef5">
       <div style="font-size:12px;color:#666;margin:0 0 8px">Pick any 3 players for a separate 6-Point game (lowest player dropped to 0, net, no presses — 6 points up for grabs every hole).</div>
-      <div id="sixPointGrid"></div>
       <div id="sixPointGamesList"></div>
+      <div id="sixPointGrid"></div>
       <button onclick="this.closest('div[style*=display]').style.display='none';this.closest('div[style*=display]').previousElementSibling.querySelector('.sc').textContent='▶'" style="width:100%;margin-top:8px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
     </div>
   </div>
@@ -699,7 +699,7 @@ input::placeholder{color:#bbb}
 
   <div id="stablefordSetupWrap">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🏆 Stableford</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🏆 Stableford</span><span id="badgeSF" style="font-size:10px;font-weight:800;color:#52b788;margin-left:8px;display:none">✓ Game Set</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="stablefordSetupCard" style="background:#e8eef5">
@@ -713,7 +713,7 @@ input::placeholder{color:#bbb}
 
   <div id="skinsSetupWrap">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">💰 Skins</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">💰 Skins</span><span id="badgeSkins" style="font-size:10px;font-weight:800;color:#52b788;margin-left:8px;display:none">✓ Game Set</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="skinsSetupCard" style="background:#e8eef5">
@@ -727,13 +727,13 @@ input::placeholder{color:#bbb}
 
   <div id="vegasSetupWrap">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎲 Vegas</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+    <span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎲 Vegas</span><span id="badgeVegas" style="font-size:10px;font-weight:800;color:#52b788;margin-left:8px;display:none">✓ Game Set</span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="vegasSetupCard" style="background:#e8eef5">
       <div style="font-size:12px;color:#666;margin:0 0 8px">Fixed 2-vs-2. Each team's two scores combine into a number, low score first (a 4 and 5 make 45). Teams play the difference each hole × the dollar value. If the other team makes a birdie, your number flips high-first (45 → 54). Needs exactly 4 players.</div>
-      <div id="vegasGrid"></div>
       <div id="vegasGamesList"></div>
+      <div id="vegasGrid"></div>
       <button onclick="this.closest('div[style*=display]').style.display='none';this.closest('div[style*=display]').previousElementSibling.querySelector('.sc').textContent='▶'" style="width:100%;margin-top:8px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
     </div>
   </div>
@@ -3149,6 +3149,20 @@ function startNamesPoll(){
 }
 function stopNamesPoll(){ clearInterval(_namesPoll); _namesPoll=null; }
 
+function updateAccordionBadges(){
+  function show(id, active){
+    const el=document.getElementById(id);
+    if(el) el.style.display=active?'inline':'none';
+  }
+  show('badge2v2',  G.teamGames   && G.teamGames.length>0   && G.teamGames.some(function(g){return g.bet>0;}));
+  show('badge1v1',  G.singleGames && G.singleGames.length>0 && G.singleGames.some(function(g){return g.bet>0;}));
+  show('badge6pt',  G.sixPointGames && G.sixPointGames.length>0);
+  show('badgeSF',   G.stablefordGames && G.stablefordGames.length>0 && G.stablefordGames[0].players && G.stablefordGames[0].players.length>0);
+  show('badgeSkins',G.skinsGames && G.skinsGames.length>0 && G.skinsGames[0].players && G.skinsGames[0].players.length>0);
+  show('badgeVegas',G.vegasGames && G.vegasGames.length>0);
+  show('badgeSnake',G.snake && G.snake.enabled);
+}
+
 function renderAllPairOptions(){
   renderTeamOptions();
   renderSinglesOptions();
@@ -3165,6 +3179,7 @@ function renderAllPairOptions(){
   renderMatchCardsSetupVisibility();
   renderMatchCardsConfig();
   renderGameSectionsVisibility();
+  updateAccordionBadges();
 }
 
 function renderTeamOptions(){
@@ -4932,7 +4947,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.50</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.52</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5595,7 +5610,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.50</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.52</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -5994,7 +6009,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.50</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.52</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -6567,7 +6582,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.50</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.52</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9127,7 +9142,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.50</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.52</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9566,7 +9581,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.50</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.52</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -9839,7 +9854,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.50</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.52</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -9976,7 +9991,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v11.50');
+  lines.push('— Pards Golf · v11.52');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -10672,7 +10687,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v11.50 · ${dateStr}</div>
+<div class="foot">Pards Golf · v11.52 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12834,7 +12849,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v11.50';
+const CURRENT_VERSION = 'pards-v11.52';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13263,7 +13278,7 @@ window.addEventListener('focus', syncBottomBars);
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v11.50';
+const CACHE='pards-v11.52';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pards-golf-manual-v11.html','gc_id.jpg']))
