@@ -4947,7 +4947,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.63</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.64</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5610,7 +5610,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.63</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.64</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6009,7 +6009,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.63</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.64</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -6582,7 +6582,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.63</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.64</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9144,7 +9144,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.63</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.64</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9583,7 +9583,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.63</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.64</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -9856,7 +9856,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.63</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.64</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -9996,7 +9996,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v11.63');
+  lines.push('— Pards Golf · v11.64');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -10692,7 +10692,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v11.63 · ${dateStr}</div>
+<div class="foot">Pards Golf · v11.64 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -11498,66 +11498,84 @@ function renderMMVegas(){
     el.innerHTML = '<div style="font-size:12px;color:#aaa;text-align:center;padding:8px 0">Vegas needs 4 or 5 players.</div>';
     return;
   }
-  const g = G.vegasGames[0];
   const combos = allPairCombos();
   window._mmVegasCombos = combos;
 
-  let h = '<div style="font-size:11px;color:#888;margin-bottom:6px">Teams:</div><div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">';
-  combos.forEach((c,i)=>{
-    const sel = g && JSON.stringify([...g.teamA].sort())===JSON.stringify([...c.a].sort()) && JSON.stringify([...g.teamB].sort())===JSON.stringify([...c.b].sort());
-    h += `<button onclick="mmSetVegasTeams(${i})" style="padding:8px;border-radius:8px;border:1.5px solid ${sel?'#0d5c4e':'#ccc'};background:${sel?'#0d5c4e':'#fff'};color:${sel?'#52b788':'#555'};font-size:12px;font-weight:700;cursor:pointer">${nm[c.a[0]]} & ${nm[c.a[1]]} vs ${nm[c.b[0]]} & ${nm[c.b[1]]}</button>`;
+  function comboActive(c){
+    const aKey=JSON.stringify([...c.a].sort()), bKey=JSON.stringify([...c.b].sort());
+    return G.vegasGames.some(function(g){
+      if(!g||!g.teamA||!g.teamB) return false;
+      const gA=JSON.stringify([...g.teamA].sort()), gB=JSON.stringify([...g.teamB].sort());
+      return (gA===aKey&&gB===bKey)||(gA===bKey&&gB===aKey);
+    });
+  }
+
+  let h = '<div style="font-size:11px;color:#888;margin-bottom:6px">Tap to add/remove Vegas matchups:</div><div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">';
+  combos.forEach(function(c,i){
+    const sel = comboActive(c);
+    h += '<button onclick="mmToggleVegasTeams('+i+')" style="padding:8px;border-radius:8px;border:1.5px solid '+(sel?'#0d5c4e':'#ccc')+';background:'+(sel?'#0d5c4e':'#fff')+';color:'+(sel?'#52b788':'#555')+';font-size:12px;font-weight:700;cursor:pointer">'+nm[c.a[0]]+' & '+nm[c.a[1]]+' vs '+nm[c.b[0]]+' & '+nm[c.b[1]]+'</button>';
   });
   h += '</div>';
 
-  if(g && g.teamA && g.teamB){
+  // Show settings + running score for each active game
+  const active = G.vegasGames.filter(function(g){ return g&&g.teamA&&g.teamB&&g.teamA.length===2&&g.teamB.length===2; });
+  active.forEach(function(g){
+    const gi = G.vegasGames.indexOf(g);
     const perPoint = g.perPoint||1, mode = g.mode||'gross', flipOn = g.flip!==false;
-    h += '<div style="font-size:11px;color:#888;margin-bottom:6px">Dollar per point:</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">';
-    VEGAS_POINT_OPTIONS.forEach(v=>{
-      h += `<button onclick="mmSetVegasPoint(${v})" style="padding:6px 10px;border-radius:8px;border:1.5px solid ${perPoint===v?'#0d5c4e':'#ccc'};background:${perPoint===v?'#0d5c4e':'#fff'};color:${perPoint===v?'#52b788':'#555'};font-size:12px;font-weight:700;cursor:pointer">${v<1?(v*100)+'¢':'$'+v}</button>`;
+    const teamAName = nm[g.teamA[0]]+' & '+nm[g.teamA[1]];
+    const teamBName = nm[g.teamB[0]]+' & '+nm[g.teamB[1]];
+    h += '<div style="background:#f0fff8;border:1px solid #b2dfdb;border-radius:8px;padding:10px;margin-bottom:8px">';
+    h += '<div style="font-size:12px;font-weight:700;color:#0d5c4e;margin-bottom:8px">'+teamAName+' vs '+teamBName+'</div>';
+    h += '<div style="font-size:11px;color:#888;margin-bottom:4px">Dollar per point:</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">';
+    VEGAS_POINT_OPTIONS.forEach(function(v){
+      h += '<button onclick="mmSetVegasPoint('+gi+','+v+')" style="padding:6px 10px;border-radius:8px;border:1.5px solid '+(perPoint===v?'#0d5c4e':'#ccc')+';background:'+(perPoint===v?'#0d5c4e':'#fff')+';color:'+(perPoint===v?'#52b788':'#555')+';font-size:12px;font-weight:700;cursor:pointer">'+(v<1?(v*100)+'¢':'$'+v)+'</button>';
     });
     h += '</div>';
-    h += '<div style="font-size:11px;color:#888;margin-bottom:6px">Scoring:</div><div style="display:flex;gap:6px;margin-bottom:12px">';
-    [['gross','Gross'],['net','Net (handicap)']].forEach(([m,label])=>{
-      h += `<button onclick="mmSetVegasMode('${m}')" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid ${mode===m?'#0d5c4e':'#ccc'};background:${mode===m?'#0d5c4e':'#fff'};color:${mode===m?'#52b788':'#555'};font-size:12px;font-weight:700;cursor:pointer">${label}</button>`;
+    h += '<div style="font-size:11px;color:#888;margin-bottom:4px">Scoring:</div><div style="display:flex;gap:6px;margin-bottom:10px">';
+    [['gross','Gross'],['net','Net']].forEach(function(arr){
+      h += '<button onclick="mmSetVegasMode('+gi+',\''+arr[0]+'\')" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid '+(mode===arr[0]?'#0d5c4e':'#ccc')+';background:'+(mode===arr[0]?'#0d5c4e':'#fff')+';color:'+(mode===arr[0]?'#52b788':'#555')+';font-size:12px;font-weight:700;cursor:pointer">'+arr[1]+'</button>';
     });
     h += '</div>';
-    h += '<div style="font-size:11px;color:#888;margin-bottom:6px">Flip on opponent birdie:</div><div style="display:flex;gap:6px;margin-bottom:8px">';
-    [[true,'Flip on'],[false,'No flip']].forEach(([f,label])=>{
-      h += `<button onclick="mmSetVegasFlip(${f})" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid ${flipOn===f?'#0d5c4e':'#ccc'};background:${flipOn===f?'#0d5c4e':'#fff'};color:${flipOn===f?'#52b788':'#555'};font-size:12px;font-weight:700;cursor:pointer">${label}</button>`;
+    h += '<div style="font-size:11px;color:#888;margin-bottom:4px">Flip on birdie:</div><div style="display:flex;gap:6px;margin-bottom:8px">';
+    [[true,'Flip on'],[false,'No flip']].forEach(function(arr){
+      h += '<button onclick="mmSetVegasFlip('+gi+','+arr[0]+')" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid '+(flipOn===arr[0]?'#0d5c4e':'#ccc')+';background:'+(flipOn===arr[0]?'#0d5c4e':'#fff')+';color:'+(flipOn===arr[0]?'#52b788':'#555')+';font-size:12px;font-weight:700;cursor:pointer">'+arr[1]+'</button>';
     });
     h += '</div>';
-
     const r = computeVegas(g);
     if(r.holesPlayed>0){
       const rA=r.runningA;
-      const teamAName=`${(nm[g.teamA[0]]||'').split(' ')[0]} & ${(nm[g.teamA[1]]||'').split(' ')[0]}`;
-      const teamBName=`${(nm[g.teamB[0]]||'').split(' ')[0]} & ${(nm[g.teamB[1]]||'').split(' ')[0]}`;
-      h += '<div style="background:#f0fff8;border:1px solid #b2dfdb;border-radius:8px;padding:8px 10px;font-size:12px">';
-      h += `<div style="font-weight:800;color:#0d5c4e;text-align:center">${rA>0?teamAName+' +'+rA:rA<0?teamBName+' +'+(-rA):'All square'} pts</div>`;
-      h += '</div>';
+      h += '<div style="font-weight:800;color:#0d5c4e;text-align:center;font-size:12px">'+(rA>0?teamAName+' +'+rA:rA<0?teamBName+' +'+(-rA):'All square')+' pts</div>';
     }
-  } else {
-    h += '<div style="font-size:12px;color:#aaa;text-align:center;padding:8px 0">Pick two teams to start Vegas</div>';
+    h += '</div>';
+  });
+
+  if(!active.length){
+    h += '<div style="font-size:12px;color:#aaa;text-align:center;padding:8px 0">Tap a matchup above to activate Vegas</div>';
   }
   el.innerHTML = h;
 }
 
-function mmSetVegasTeams(i){
+function mmToggleVegasTeams(i){
   const c=(window._mmVegasCombos||allPairCombos())[i];
   if(!c) return;
-  const g=G.vegasGames[0];
-  const alreadySel = g && JSON.stringify([...g.teamA].sort())===JSON.stringify([...c.a].sort()) && JSON.stringify([...g.teamB].sort())===JSON.stringify([...c.b].sort());
-  if(alreadySel){
-    G.vegasGames=[];
+  const aKey=JSON.stringify([...c.a].sort()), bKey=JSON.stringify([...c.b].sort());
+  const existing=G.vegasGames.findIndex(function(g){
+    if(!g||!g.teamA||!g.teamB) return false;
+    const gA=JSON.stringify([...g.teamA].sort()), gB=JSON.stringify([...g.teamB].sort());
+    return (gA===aKey&&gB===bKey)||(gA===bKey&&gB===aKey);
+  });
+  if(existing>=0){
+    G.vegasGames.splice(existing,1);
   } else {
-    const prev=g||{};
-    G.vegasGames[0]={ teamA:[...c.a], teamB:[...c.b], perPoint:prev.perPoint||1, mode:prev.mode||'gross', flip:prev.flip!==false };
+    const prev=G.vegasGames[0]||{};
+    G.vegasGames.push({teamA:[...c.a],teamB:[...c.b],perPoint:prev.perPoint||1,mode:prev.mode||'gross',flip:prev.flip!==false});
   }
   saveG(); renderMMVegas(); renderCard();
 }
-function mmSetVegasPoint(v){ if(!G.vegasGames[0]) return; G.vegasGames[0].perPoint=v; saveG(); renderMMVegas(); renderCard(); }
-function mmSetVegasMode(m){ if(!G.vegasGames[0]) return; G.vegasGames[0].mode=m; saveG(); renderMMVegas(); renderCard(); }
-function mmSetVegasFlip(f){ if(!G.vegasGames[0]) return; G.vegasGames[0].flip=f; saveG(); renderMMVegas(); renderCard(); }
+function mmSetVegasPoint(gi,v){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].perPoint=v; saveG(); renderMMVegas(); renderCard(); }
+function mmSetVegasMode(gi,m){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].mode=m; saveG(); renderMMVegas(); renderCard(); }
+function mmSetVegasFlip(gi,f){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].flip=f; saveG(); renderMMVegas(); renderCard(); }
+
 
 
 // ── Match Cards (mid-round) ─────────────────────────────────────────────────
@@ -12891,7 +12909,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v11.63';
+const CURRENT_VERSION = 'pards-v11.64';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13320,7 +13338,7 @@ window.addEventListener('focus', syncBottomBars);
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v11.63';
+const CACHE='pards-v11.64';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pards-golf-manual-v11.html','gc_id.jpg']))
