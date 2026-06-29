@@ -5254,7 +5254,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.82</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.83</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5918,7 +5918,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.82</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.83</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6357,7 +6357,10 @@ function renderCard(){
   });
 
   // ── Mid-round settings entry (between the score wheels and the master scorecard) ──
-  html += `<button id="manageBtn" onclick="openMatchManager()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 20px);margin:6px 10px 12px;padding:12px;background:rgba(201,168,76,.1);border:1.5px solid var(--gold);border-radius:10px;color:var(--gold);font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;letter-spacing:.2px"><span style="font-size:17px">⚙️</span> Mid-Round Match &amp; Player Settings</button>`;
+  const _anyScore = G.scores && G.scores.some(function(ps){ return ps && ps.some(function(s){ return s!==null; }); });
+  const _mbLabel = _anyScore ? '<span style="font-size:17px">⚙️</span> Mid-Round Match &amp; Player Settings' : '✏️ Edit Round Settings';
+  const _mbAction = _anyScore ? 'openMatchManager()' : 'editRoundSettings()';
+  html += `<button id="manageBtn" onclick="${_mbAction}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 20px);margin:6px 10px 12px;padding:12px;background:rgba(201,168,76,.1);border:1.5px solid var(--gold);border-radius:10px;color:var(--gold);font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;letter-spacing:.2px">${_mbLabel}</button>`;
 
   // ── Master scorecard only (match cards live under 💵 Games → Nassau) ──
   html += renderMasterScorecard();
@@ -6370,7 +6373,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.82</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.83</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -6943,7 +6946,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.82</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.83</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9505,7 +9508,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.82</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.83</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9944,7 +9947,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.82</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.83</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10217,7 +10220,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.82</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.83</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10357,7 +10360,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v11.82');
+  lines.push('— Pards Golf · v11.83');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11053,7 +11056,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v11.82 · ${dateStr}</div>
+<div class="foot">Pards Golf · v11.83 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -11527,6 +11530,10 @@ function closeGamesMenu(){
   const menu=document.getElementById('gamesMenu');
   sheet.style.transform='translateY(100%)';
   setTimeout(()=>{ menu.style.display='none'; },300);
+}
+
+function editRoundSettings(){
+  showS('setup');
 }
 
 function openMatchManager(){
@@ -13271,7 +13278,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v11.82';
+const CURRENT_VERSION = 'pards-v11.83';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13708,7 +13715,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v11.82';
+const CACHE='pards-v11.83';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pards-golf-manual-v11.html','gc_id.jpg']))
