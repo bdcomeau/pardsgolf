@@ -4301,9 +4301,12 @@ function renderVegasOptions(){
   window._vegasCombos = combos;
   // Find which combos are currently active in G.vegasGames
   function comboActive(c){
-    return G.vegasGames.some(g=>g&&g.teamA&&g.teamB&&
-      JSON.stringify([...g.teamA].sort())===JSON.stringify([...c.a].sort())&&
-      JSON.stringify([...g.teamB].sort())===JSON.stringify([...c.b].sort()));
+    const aKey=JSON.stringify([...c.a].sort()), bKey=JSON.stringify([...c.b].sort());
+    return G.vegasGames.some(g=>{
+      if(!g||!g.teamA||!g.teamB) return false;
+      const gA=JSON.stringify([...g.teamA].sort()), gB=JSON.stringify([...g.teamB].sort());
+      return (gA===aKey&&gB===bKey)||(gA===bKey&&gB===aKey);
+    });
   }
   let h = '<div style="font-size:11px;color:#888;margin-bottom:6px">Tap to add/remove matchups — select as many as you like:</div><div class="pair-grid">';
   combos.forEach((c,i)=>{
@@ -4319,8 +4322,11 @@ function toggleVegasTeams(i){
   if(!c) return;
   const aKey = JSON.stringify([...c.a].sort());
   const bKey = JSON.stringify([...c.b].sort());
-  const existing = G.vegasGames.findIndex(g=>g&&g.teamA&&g.teamB&&
-    JSON.stringify([...g.teamA].sort())===aKey&&JSON.stringify([...g.teamB].sort())===bKey);
+  const existing = G.vegasGames.findIndex(g=>{
+    if(!g||!g.teamA||!g.teamB) return false;
+    const gA=JSON.stringify([...g.teamA].sort()), gB=JSON.stringify([...g.teamB].sort());
+    return (gA===aKey&&gB===bKey)||(gA===bKey&&gB===aKey);
+  });
   if(existing >= 0){
     // Already active — remove it
     G.vegasGames.splice(existing, 1);
@@ -4941,7 +4947,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.62</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.63</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5604,7 +5610,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.62</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.63</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6003,7 +6009,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.62</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.63</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -6576,7 +6582,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.62</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.63</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9138,7 +9144,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.62</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.63</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9577,7 +9583,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.62</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.63</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -9850,7 +9856,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.62</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.63</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -9990,7 +9996,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v11.62');
+  lines.push('— Pards Golf · v11.63');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -10686,7 +10692,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v11.62 · ${dateStr}</div>
+<div class="foot">Pards Golf · v11.63 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12885,7 +12891,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v11.62';
+const CURRENT_VERSION = 'pards-v11.63';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13314,7 +13320,7 @@ window.addEventListener('focus', syncBottomBars);
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v11.62';
+const CACHE='pards-v11.63';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pards-golf-manual-v11.html','gc_id.jpg']))
