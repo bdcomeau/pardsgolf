@@ -81,9 +81,9 @@ input::placeholder{color:#bbb}
 .deck-note{font-size:10px;color:var(--gold-d,#9a7a1e);font-weight:600;line-height:1.2}
 .hdcp-stack{display:flex;flex-direction:column;align-items:center;gap:1px}
 .hdcp-wrap-adj{position:relative;top:auto;left:auto;width:100%;margin:0}
-.hdcp-tag{position:absolute;top:3px;left:5px;font-size:8px;font-weight:800;color:#888;letter-spacing:.3px;pointer-events:none;z-index:1}
-.hdcp-tag-adj{color:#1a3a2a}
-.hdcp-box{width:100%;height:34px;text-align:center;box-sizing:border-box;padding-top:8px}
+.hdcp-tag{position:absolute;top:3px;left:5px;font-size:8px;font-weight:800;color:rgba(201,168,76,.7);letter-spacing:.3px;pointer-events:none;z-index:1}
+.hdcp-tag-adj{color:rgba(168,213,181,.8)}
+.hdcp-box{width:100%;height:34px;text-align:center;box-sizing:border-box;padding-top:8px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:8px;color:#f5e6b8;font-size:14px;font-weight:700;outline:none;-webkit-appearance:none}
 .hdcp-adj{background:#f0ece2;font-weight:800;color:var(--gd);border:1px solid #cdbf9a}
 .hdcp-delta{font-size:9px;font-weight:800;line-height:1;min-height:10px}
 .hlbl-adj{color:#1a3a2a;font-weight:700;text-transform:uppercase}
@@ -114,8 +114,8 @@ input::placeholder{color:#bbb}
 .p-col1 > *{margin-top:3px}
 .p-col1 > *:first-child{margin-top:0}
 .contact-select{border:1.5px solid var(--border);border-radius:8px;padding:4px 6px;font-size:12px;width:100%;background:var(--cream);color:var(--ink);margin-top:3px;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:22px}
-.golfid-input{border:1.5px solid var(--border);border-radius:8px;padding:4px 6px;font-size:11px;width:100%;background:var(--cream);color:var(--ink);margin-top:3px;letter-spacing:.5px}
-.golfid-input::placeholder{color:#bbb;letter-spacing:normal}
+.golfid-input{border:1.5px solid rgba(255,255,255,.18);border-radius:8px;padding:9px 10px;font-size:12px;font-weight:600;width:100%;background:rgba(255,255,255,.08);color:#f5e6b8;margin-top:4px;letter-spacing:.5px;outline:none;-webkit-appearance:none}
+.golfid-input::placeholder{color:rgba(255,255,255,.3);letter-spacing:normal}
 
 .tog-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0ebe0}
 .tog-row:last-child{border-bottom:none}
@@ -2776,9 +2776,9 @@ function renderPlayers(){
       <span style="font-size:10px;color:rgba(201,168,76,.7);flex-shrink:0">TAP ▼</span>
     </button>
     <select class="contact-select" id="contact${i}" onchange="selectContact(${i})" style="display:none">${contactOpts}</select>
-    <input type="text" id="pn${i}" placeholder="Player ${i+1}" value="${nm}" oninput="renderAllPairOptions();highlightDuplicateRows();renderSnakeSetupOptions()" style="margin-top:3px">
+    <input type="text" id="pn${i}" placeholder="Player ${i+1}" value="${nm}" oninput="renderAllPairOptions();highlightDuplicateRows();renderSnakeSetupOptions()" style="margin-top:4px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:8px;padding:9px 10px;font-size:14px;font-weight:600;color:#f5e6b8;width:100%;outline:none;-webkit-appearance:none;letter-spacing:.1px" onfocus="this.style.borderColor='rgba(201,168,76,.7)'" onblur="this.style.borderColor='rgba(255,255,255,.18)'">
     <div style="position:relative;margin-top:3px">
-      <input type="text" id="gid${i}" placeholder="Golf Canada ID (10 digits)" value="${gid}" inputmode="numeric" pattern="[0-9]*" maxlength="10" class="golfid-input" oninput="highlightDuplicateRows()"${gid?' readonly style="background:#e8e4d8;color:#888;padding-right:28px"':''}>
+      <input type="text" id="gid${i}" placeholder="Golf Canada ID (10 digits)" value="${gid}" inputmode="numeric" pattern="[0-9]*" maxlength="10" class="golfid-input" oninput="highlightDuplicateRows()"${gid?' readonly style="background:rgba(0,0,0,.25);color:rgba(255,255,255,.35);padding-right:28px;border-color:rgba(255,255,255,.1)"':''}>
       ${gid?'<span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:13px;cursor:pointer;opacity:.6" onclick="unlockGid('+i+')" title="Tap to edit Golf Canada ID">' + '🔒' + '</span>':''}
     </div>
     <div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:2px;line-height:1.3;font-weight:600">${gid?'Golf Canada ID (locked — tap 🔒 to edit)':('10 Digit Golf Canada Member ID')}</div>
@@ -5329,7 +5329,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.02</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.04</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5994,7 +5994,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.02</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.04</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6449,7 +6449,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.02</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.04</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7022,7 +7022,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.02</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.04</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9584,7 +9584,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.02</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.04</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10023,7 +10023,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.02</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.04</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10296,7 +10296,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.02</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.04</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10436,7 +10436,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.02');
+  lines.push('— Pards Golf · v12.04');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11132,7 +11132,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.02 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.04 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12959,7 +12959,8 @@ function unlockGid(i){
   const gidEl=document.getElementById('gid'+i);
   if(!gidEl) return;
   gidEl.removeAttribute('readonly');
-  gidEl.style.background=''; gidEl.style.color=''; gidEl.style.paddingRight='';
+  gidEl.style.background='rgba(255,255,255,.08)'; gidEl.style.color='#f5e6b8'; gidEl.style.paddingRight='';
+  gidEl.style.borderColor='rgba(255,255,255,.18)';
   const wrap=gidEl.parentElement;
   if(wrap){ const lock=wrap.querySelector('span'); if(lock) lock.style.display='none'; }
   const hint=wrap?wrap.nextElementSibling:null;
@@ -13510,7 +13511,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.02';
+const CURRENT_VERSION = 'pards-v12.04';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13955,7 +13956,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.02';
+const CACHE='pards-v12.04';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
