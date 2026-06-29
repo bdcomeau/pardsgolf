@@ -2146,6 +2146,7 @@ function _courseRow(c, indented){
       <div style="font-size:11px;color:${active?'rgba(255,255,255,.6)':'#4a7a5a'};margin-top:1px">${c.location||''}</div>
     </div>
     ${tick}
+    <button onclick="showCoursePreview('${c.id}',event)" style="flex-shrink:0;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);border-radius:8px;color:#c9a84c;font-size:11px;font-weight:700;padding:5px 8px;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;margin-left:4px">📋 Info</button>
   </div>`;
 }
 
@@ -2266,6 +2267,126 @@ function _closeCoursePickerOutside(e){
   const btn   = document.getElementById('coursePickerBtn');
   if(panel && btn && !panel.contains(e.target) && !btn.contains(e.target)){
     panel.style.display = 'none';
+  }
+}
+
+async function showCoursePreview(courseId, event){
+  event.stopPropagation(); // don't trigger pickCourse
+
+  const course = PARDS_COURSES.find(function(c){ return c.id===courseId; });
+  if(!course) return;
+
+  // Remove any existing preview
+  const ex = document.getElementById('coursePreviewModal');
+  if(ex) ex.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'coursePreviewModal';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:flex-end;justify-content:center;padding:0';
+
+  // Build tee table
+  const par = course.par || [];
+  const si  = course.si  || [];
+  const totalPar = par.reduce(function(a,b){ return a+b; }, 0);
+  const out = par.slice(0,9).reduce(function(a,b){ return a+b; }, 0);
+  const inn = par.slice(9).reduce(function(a,b){ return a+b; }, 0);
+
+  // Header row
+  let tableHtml = '<table style="width:100%;border-collapse:collapse;font-size:10px">';
+  tableHtml += '<thead><tr style="background:rgba(0,0,0,.3)">';
+  tableHtml += '<th style="padding:4px 3px;text-align:left;color:rgba(255,255,255,.6);font-weight:600">Hole</th>';
+  for(let h=1; h<=18; h++){
+    tableHtml += '<th style="padding:4px 2px;text-align:center;color:rgba(255,255,255,.6);font-weight:600;min-width:20px">'+(h===10?'<span style="color:rgba(255,255,255,.3)">|</span>':'')+h+'</th>';
+  }
+  tableHtml += '<th style="padding:4px 3px;text-align:center;color:rgba(255,255,255,.6);font-weight:600">Out</th>';
+  tableHtml += '<th style="padding:4px 3px;text-align:center;color:rgba(255,255,255,.6);font-weight:600">In</th>';
+  tableHtml += '<th style="padding:4px 3px;text-align:center;color:rgba(255,255,255,.6);font-weight:600">Tot</th>';
+  tableHtml += '</tr></thead><tbody>';
+
+  // Par row
+  tableHtml += '<tr style="background:rgba(201,168,76,.15)">';
+  tableHtml += '<td style="padding:4px 3px;color:#c9a84c;font-weight:800">Par</td>';
+  for(let h=0; h<18; h++){
+    tableHtml += '<td style="padding:3px 2px;text-align:center;color:#f5e6b8;font-weight:700">'+(par[h]||'-')+'</td>';
+  }
+  tableHtml += '<td style="padding:3px;text-align:center;color:#c9a84c;font-weight:800">'+out+'</td>';
+  tableHtml += '<td style="padding:3px;text-align:center;color:#c9a84c;font-weight:800">'+inn+'</td>';
+  tableHtml += '<td style="padding:3px;text-align:center;color:#c9a84c;font-weight:800">'+totalPar+'</td></tr>';
+
+  // SI row
+  tableHtml += '<tr style="background:rgba(0,0,0,.2)">';
+  tableHtml += '<td style="padding:4px 3px;color:rgba(255,255,255,.5);font-weight:600">HCP</td>';
+  for(let h=0; h<18; h++){
+    tableHtml += '<td style="padding:3px 2px;text-align:center;color:rgba(255,255,255,.6)">'+(si[h]||'-')+'</td>';
+  }
+  tableHtml += '<td colspan="3"></td></tr>';
+
+  // Tee rows
+  const teeColours = {
+    'black':'#1a1a1a','blue':'#1a56a0','red':'#c0392b','white':'#f0ece2',
+    'gold':'#c9a84c','yellow':'#c9a84c','green':'#2d6a4f','silver':'#888',
+    'copper':'#b87333','bronze':'#b87333','purple':'#6c3483','royal':'#6c3483'
+  };
+  function teeColour(name){
+    const n=(name||'').toLowerCase();
+    for(const k of Object.keys(teeColours)){ if(n.includes(k)) return teeColours[k]; }
+    return '#c9a84c';
+  }
+
+  (course.tees||[]).forEach(function(tee, ti){
+    const bg = ti%2===0 ? 'rgba(255,255,255,.04)' : 'rgba(0,0,0,.1)';
+    const col = teeColour(tee.name);
+    const yards = tee.yards || [];
+    const totalYds = yards.reduce(function(a,b){ return a+b; }, 0);
+    const outYds = yards.slice(0,9).reduce(function(a,b){ return a+b; }, 0);
+    const innYds = yards.slice(9).reduce(function(a,b){ return a+b; }, 0);
+    tableHtml += '<tr style="background:'+bg+'">';
+    tableHtml += '<td style="padding:4px 3px;white-space:nowrap"><span style="display:inline-block;background:'+col+';color:'+(col==='#f0ece2'?'#1a3a2a':'#fff')+';font-size:9px;font-weight:800;padding:2px 5px;border-radius:4px">'+tee.name+'</span><span style="font-size:8px;color:rgba(255,255,255,.4);margin-left:3px">'+tee.rating+'/'+tee.slope+'</span></td>';
+    for(let h=0; h<18; h++){
+      tableHtml += '<td style="padding:3px 2px;text-align:center;color:rgba(255,255,255,.8);font-size:10px">'+(yards[h]||'-')+'</td>';
+    }
+    tableHtml += '<td style="padding:3px;text-align:center;color:rgba(255,255,255,.7);font-size:10px">'+outYds+'</td>';
+    tableHtml += '<td style="padding:3px;text-align:center;color:rgba(255,255,255,.7);font-size:10px">'+innYds+'</td>';
+    tableHtml += '<td style="padding:3px;text-align:center;color:#c9a84c;font-weight:700;font-size:10px">'+totalYds+'</td></tr>';
+  });
+  tableHtml += '</tbody></table>';
+
+  // Weather placeholder — fetch async after modal shown
+  const weatherHtml = '<div id="coursePreviewWeather" style="font-size:12px;color:rgba(255,255,255,.5);text-align:center;padding:4px 0">Fetching weather...</div>';
+
+  const logo = course.logo ? '<img src="'+course.logo+'" style="height:36px;width:auto;object-fit:contain;margin-right:10px">' : '';
+
+  overlay.innerHTML = '<div style="background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:600px;max-height:85vh;display:flex;flex-direction:column">'
+    +'<div style="padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0">'
+    +'<div style="display:flex;align-items:center">'+logo+'<div><div style="font-size:15px;font-weight:800;color:#c9a84c">'+course.name+'</div>'
+    +'<div style="font-size:11px;color:rgba(255,255,255,.5)">'+( course.location||'')+'</div></div></div>'
+    +'<button onclick="document.getElementById(\'coursePreviewModal\').remove()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:18px;cursor:pointer;flex-shrink:0">&times;</button>'
+    +'</div>'
+    +weatherHtml
+    +'<div style="overflow-x:auto;overflow-y:auto;flex:1;padding:10px 8px">'
+    +tableHtml
+    +'</div>'
+    +'<div style="padding:12px 16px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.1)">'
+    +'<button onclick="document.getElementById(\'coursePreviewModal\').remove()" style="width:100%;background:#c9a84c;color:#1a3a2a;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:800;cursor:pointer">Got It 👍</button>'
+    +'</div>'
+    +'</div>';
+
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+
+  // Fetch weather async
+  try{
+    const wx = await fetchWeather();
+    const el = document.getElementById('coursePreviewWeather');
+    if(el && wx){
+      const dir = wx.windDir !== null ? ' ' + dirToCompass(wx.windDir) : '';
+      el.innerHTML = '<span style="color:#f5e6b8;font-weight:700">🌡️ '+wx.tempC+'°C</span>'
+        + (wx.windKmh !== null ? ' &nbsp;💨 '+wx.windKmh+' km/h'+dir : '')
+        + (wx.humidity !== null ? ' &nbsp;💧 '+wx.humidity+'%' : '');
+    }
+  } catch(e){
+    const el = document.getElementById('coursePreviewWeather');
+    if(el) el.innerHTML = '<span style="color:rgba(255,255,255,.3);font-size:11px">Weather unavailable</span>';
   }
 }
 
@@ -4947,7 +5068,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.66</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v11.67</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5610,7 +5731,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.67</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6062,7 +6183,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.66</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.67</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -6635,7 +6756,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.66</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.67</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9197,7 +9318,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.67</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9636,7 +9757,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.66</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v11.67</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -9909,7 +10030,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v11.67</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10049,7 +10170,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v11.66');
+  lines.push('— Pards Golf · v11.67');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -10745,7 +10866,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v11.66 · ${dateStr}</div>
+<div class="foot">Pards Golf · v11.67 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12962,7 +13083,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v11.66';
+const CURRENT_VERSION = 'pards-v11.67';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -13399,7 +13520,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v11.66';
+const CACHE='pards-v11.67';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pards-golf-manual-v11.html','gc_id.jpg']))
