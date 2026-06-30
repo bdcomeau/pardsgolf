@@ -5360,7 +5360,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.67</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.69</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6055,7 +6055,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.67</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.69</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6382,7 +6382,7 @@ function renderCard(){
   } else if(isCurrentRoundSaved() && !(G._editingHistoryIdx >= 0)){
     const _intlActive2 = Object.keys(G.internationals||{}).length>0;
     const _intlNote = _intlActive2 ? ' 🌍 International matches settled — see Games → Nassau for results.' : '';
-    html += `<div class="save-round-done">🏁 All 18 Holes Complete — Round Saved to History<div style="font-size:11px;font-weight:600;opacity:.8;margin-top:5px;color:#f5e6b8">Tap New Round below to start another game.${_intlNote}</div></div>`;
+    html += `<div class="save-round-done">🏁 Round Complete — Saved to History<div style="font-size:11px;font-weight:600;opacity:.8;margin-top:5px;color:#f5e6b8">Tap 🔄 New Round to start another game.${_intlNote}</div></div>`;
   }
 
   // ── Manual-advance confirm button ──
@@ -6518,7 +6518,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.67</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.69</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7081,7 +7081,7 @@ function renderBets(){
   } else if(isRoundComplete() && !isCurrentRoundSaved()){
     html += `<button class="save-round-btn" onclick="manualSaveRound()">💾 Save Round</button>`;
   } else if(isCurrentRoundSaved() && !(G._editingHistoryIdx >= 0)){
-    html += `<div class="save-round-done">🏁 All 18 Holes Complete — Round Saved to History<div style="font-size:11px;font-weight:600;opacity:.8;margin-top:5px;color:#f5e6b8">Tap New Round below to start another game</div></div>`;
+    html += `<div class="save-round-done">🏁 Round Complete — Saved to History<div style="font-size:11px;font-weight:600;opacity:.8;margin-top:5px;color:#f5e6b8">Tap 🔄 New Round to start another game</div></div>`;
   }
 
   const matchups=buildMatchups();
@@ -7091,7 +7091,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.67</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.69</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -8313,6 +8313,15 @@ function newRound(){
   const saved    = isCurrentRoundSaved();
   const inProgress = !complete && G.scores && G.scores[0] && G.scores[0].some(s=>s!==null);
 
+  // Round is already finished and safely saved to History — there's nothing to
+  // lose, so skip the confirmation dialog entirely and go straight to a fresh round.
+  // First, re-save in case any score was edited after the round originally completed.
+  if(complete && saved){
+    refreshSavedRoundIfStale();
+    newRoundStep2();
+    return;
+  }
+
   // ── Block if on the last hole with missing scores ──
   // This catches the common mistake of tapping New Round when hole 18 is
   // still partially scored — the round is SO close to complete that we
@@ -8424,17 +8433,17 @@ function newRound(){
 // Second confirmation — swipe to confirm (only shown for in-progress rounds as extra protection)
 function newRoundStep2(){
   const overlay=document.getElementById('newRoundConfirm');
-  if(!overlay) return;
 
   const complete = isRoundComplete();
   const saved    = isCurrentRoundSaved();
 
   // If round is complete (saved or will be auto-saved) — no need for swipe, just proceed
   if(complete || !G.scores || !G.scores[0] || !G.scores[0].some(s=>s!==null)){
-    overlay.remove();
+    if(overlay) overlay.remove();
     confirmNewRound();
     return;
   }
+  if(!overlay) return; // safety net — swipe-confirm UI needs an existing overlay to update
 
   // Round in progress — show the swipe-to-confirm safety step
   overlay.innerHTML=`
@@ -9321,6 +9330,27 @@ function isCurrentRoundSaved(){
   return hist.some(r=>r.roundDate===G.roundDate);
 }
 
+// If the current round is already saved to History (matched by roundDate) but the
+// player went back and changed a score afterward, the saved snapshot can go stale.
+// This replaces that existing entry in place with a freshly-built snapshot from the
+// current live G state — same approach as the initial save, just targeting the
+// existing record instead of inserting a new one. No-op if nothing is saved yet.
+function refreshSavedRoundIfStale(){
+  if(!G.roundDate) return;
+  try{
+    const hist = loadHistory();
+    const idx = hist.findIndex(r => r.roundDate === G.roundDate);
+    if(idx < 0) return; // nothing saved yet — normal save path will handle it
+    const fresh = buildRoundSnapshot();
+    // Preserve fields that shouldn't be clobbered by a re-snapshot: lock state,
+    // and the original savedAt timestamp (so History doesn't reorder on a silent refresh).
+    fresh.locked = hist[idx].locked;
+    fresh.savedAt = hist[idx].savedAt;
+    hist[idx] = fresh;
+    saveHistoryList(hist);
+  }catch(e){ console.warn('refreshSavedRoundIfStale failed', e); }
+}
+
 // Build a snapshot of the current round for storage
 function buildRoundSnapshot(){
   const matchups=buildMatchups();
@@ -9707,7 +9737,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.67</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.69</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10215,7 +10245,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.67</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.69</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10488,7 +10518,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.67</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.69</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10628,7 +10658,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.67');
+  lines.push('— Pards Golf · v12.69');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11333,7 +11363,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.67 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.69 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13692,7 +13722,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v12.67. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v12.69. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14180,7 +14210,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.67';
+const CURRENT_VERSION = 'pards-v12.69';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14625,7 +14655,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.67';
+const CACHE='pards-v12.69';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
