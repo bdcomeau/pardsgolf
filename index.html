@@ -5360,7 +5360,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.51</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.53</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6055,7 +6055,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.51</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.53</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6518,7 +6518,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.51</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.53</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7091,7 +7091,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.51</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.53</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9707,7 +9707,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.51</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.53</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9721,7 +9721,14 @@ function exportData(){
   const json=JSON.stringify(payload,null,2);
   const fname=backupFileName();
 
-  // Preferred on iPhone: open the native share sheet with the backup as a file,
+  // Native iOS app (Capacitor): write the backup to the device's Documents
+  // folder via Filesystem, then hand it to the native Share sheet.
+  if(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform()){
+    exportDataNative(json, fname);
+    return;
+  }
+
+  // Preferred in mobile Safari: open the native share sheet with the backup as a file,
   // so the user can Save to Files / iCloud, Mail it, or Message it in one tap.
   try{
     if(navigator.canShare){
@@ -9736,6 +9743,32 @@ function exportData(){
   downloadBackupFile(json,fname);
 }
 
+// Native (Capacitor) export path — requires @capacitor/filesystem and @capacitor/share
+// to be installed and imported as window.CapacitorFilesystem / window.CapacitorShare,
+// or adapted to whatever import style the wrapped project uses.
+async function exportDataNative(json, fname){
+  try{
+    const { Filesystem, Directory, Encoding } = window.CapacitorFilesystemPlugins || {};
+    const { Share } = window.CapacitorSharePlugin || {};
+    if(!Filesystem || !Share){ downloadBackupFile(json, fname); return; }
+    const writeResult = await Filesystem.writeFile({
+      path: fname,
+      data: json,
+      directory: Directory.Cache,
+      encoding: Encoding.UTF8
+    });
+    await Share.share({
+      title: 'Pards Golf Backup',
+      text: 'Pards Golf data backup — keep this file safe.',
+      url: writeResult.uri,
+      dialogTitle: 'Save or Share Backup'
+    });
+  } catch(e){
+    // Fall back to the web download path if anything native fails
+    downloadBackupFile(json, fname);
+  }
+}
+
 function downloadBackupFile(json,fname){
   const blob=new Blob([json],{type:'application/json'});
   const url=URL.createObjectURL(blob);
@@ -9745,6 +9778,13 @@ function downloadBackupFile(json,fname){
 }
 
 function importData(){
+  // Native iOS app (Capacitor): the bare <input type="file"> picker is unreliable
+  // inside some WebView configurations — prefer the native file picker via Filesystem
+  // when available, falling back to the web input below if not wired up.
+  if(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform() && window.CapacitorFilePicker){
+    importDataNative();
+    return;
+  }
   const input=document.createElement('input');
   input.type='file'; input.accept='.json,application/json';
   input.onchange=e=>{
@@ -9752,21 +9792,7 @@ function importData(){
     const reader=new FileReader();
     reader.onload=ev=>{
       try{
-        const payload=JSON.parse(ev.target.result);
-        if(!payload.version) throw new Error('Not a Pards Golf backup file.');
-        let msg=[];
-        if(Array.isArray(payload.contacts)){
-          localStorage.setItem('pards_contacts', JSON.stringify(payload.contacts));
-          msg.push(payload.contacts.length+' player contacts');
-        }
-        if(Array.isArray(payload.history)){
-          localStorage.setItem('pards_history', JSON.stringify(payload.history));
-          msg.push(payload.history.length+' rounds of history');
-        }
-        if(payload.currentRound){
-          localStorage.setItem('pards_G', JSON.stringify(payload.currentRound));
-          msg.push('current round');
-        }
+        const msg=applyBackupPayload(ev.target.result);
         showImportResult('✓ Restored: '+msg.join(', ')+'. Reloading app…',false);
         renderHistory();
         // Reload the page after a short delay — cleanest way to ensure everything
@@ -9779,6 +9805,49 @@ function importData(){
     reader.readAsText(file);
   };
   input.click();
+}
+
+// Shared restore logic — used by both the web <input> picker and the native picker below.
+function applyBackupPayload(jsonText){
+  const payload=JSON.parse(jsonText);
+  if(!payload.version) throw new Error('Not a Pards Golf backup file.');
+  let msg=[];
+  if(Array.isArray(payload.contacts)){
+    localStorage.setItem('pards_contacts', JSON.stringify(payload.contacts));
+    msg.push(payload.contacts.length+' player contacts');
+  }
+  if(Array.isArray(payload.history)){
+    localStorage.setItem('pards_history', JSON.stringify(payload.history));
+    msg.push(payload.history.length+' rounds of history');
+  }
+  if(payload.currentRound){
+    localStorage.setItem('pards_G', JSON.stringify(payload.currentRound));
+    msg.push('current round');
+  }
+  return msg;
+}
+
+// Native (Capacitor) import path — requires a file-picker plugin (e.g.
+// @capawesome/capacitor-file-picker) wired up as window.CapacitorFilePicker,
+// plus @capacitor/filesystem to read the chosen file's contents.
+async function importDataNative(){
+  try{
+    const { FilePicker } = window.CapacitorFilePicker;
+    const { Filesystem } = window.CapacitorFilesystemPlugins || {};
+    const picked = await FilePicker.pickFiles({ types: ['application/json'], readData: true });
+    if(!picked || !picked.files || !picked.files.length) return;
+    const f = picked.files[0];
+    const text = f.data ? atob(f.data) : await (async()=>{
+      const r = await Filesystem.readFile({ path: f.path });
+      return atob(r.data);
+    })();
+    const msg = applyBackupPayload(text);
+    showImportResult('✓ Restored: '+msg.join(', ')+'. Reloading app…',false);
+    renderHistory();
+    setTimeout(()=>{ window.scrollTo(0,0); window.location.reload(); }, 1500);
+  } catch(err){
+    showImportResult('⚠️ Could not read backup: '+err.message,true);
+  }
 }
 
 function showImportResult(msg, isError){
@@ -10146,7 +10215,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.51</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.53</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10419,7 +10488,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.51</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.53</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10559,7 +10628,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.51');
+  lines.push('— Pards Golf · v12.53');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11257,7 +11326,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.51 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.53 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13433,15 +13502,28 @@ function deleteContact(name){
 /* ═══ PRE-SEEDED CONTACTS ═══
    Merged in on every boot — only adds players whose Golf Canada ID
    is not already in the saved list. Existing data is never touched. */
-const SEEDED_CONTACTS = [{"name":"Al Comeau","idx":0,"golfId":"6103000874","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Ben Toma","idx":0,"golfId":"6101079896","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Bill Burch","idx":0,"golfId":"6100116204","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK3","typicalScore":1},{"name":"Brent Buchanan","idx":0,"golfId":"5130031302","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Bruce Comeau","idx":0,"golfId":"5130031968","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Chris Comeau","idx":0,"golfId":"5130035961","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Conroy Ip","idx":0,"golfId":"6101783283","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Craig McElroy","idx":0,"golfId":"5130030922","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK3","typicalScore":1},{"name":"Darryl Maxwell","idx":0,"golfId":"5130030914","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Dave Reynolds","idx":0,"golfId":"5130033158","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Doug Boyer","idx":0,"golfId":"5130032834","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":2},{"name":"Doug Comeau","idx":0,"golfId":"6102500131","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2/3","typicalScore":0},{"name":"Trevor Goplin","idx":0,"golfId":"5130031813","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Gord Taylor","idx":0,"golfId":"5130037005","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK3","typicalScore":1},{"name":"Greg Hines","idx":0,"golfId":"5130031505","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"John Coulter","idx":0,"golfId":"5130031221","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Josh Comeau","idx":0,"golfId":"5130035167","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":1},{"name":"Mark Comeau","idx":0,"golfId":"5130033636","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Phil McAvoy","idx":0,"golfId":"5130036803","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Rob Daniels","idx":0,"golfId":"5130034121","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Rob Miller","idx":0,"golfId":"5130030622","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK3","typicalScore":1},{"name":"Stu Curley","idx":0,"golfId":"5130037110","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Tom Richards","idx":0,"golfId":"5130033190","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Wayne Buskas","idx":0,"golfId":"5130031838","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Ben Milligan","idx":0,"golfId":"6108087587","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Doug McMahon","idx":0,"golfId":"5200214944","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Denis Rowley","idx":0,"golfId":"5130032104","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mike Fryer","idx":0,"golfId":"","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Will Comeau","idx":0,"golfId":"","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mark Curley","idx":0,"golfId":"6102108310","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0}];
+const SEEDED_CONTACTS = [{"name":"Al Comeau","idx":0,"golfId":"6103000874","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Allen Walter","idx":0,"golfId":"6105091014","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Austin Krysa","idx":0,"golfId":"5130035953","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Ben Milligan","idx":0,"golfId":"6108087587","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Ben Toma","idx":0,"golfId":"6101079896","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Bill Burch","idx":0,"golfId":"6100116204","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK3","typicalScore":1},{"name":"Birkley Elliott","idx":0,"golfId":"6108087384","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Brandon Bruyer","idx":0,"golfId":"6103375824","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Brent Buchanan","idx":0,"golfId":"5130031302","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Bruce Comeau","idx":0,"golfId":"5130031968","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Cade Barry","idx":0,"golfId":"6106347163","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Chad Hudson","idx":0,"golfId":"5130033377","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Chris Comeau","idx":0,"golfId":"5130035961","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Chris Neitsch","idx":0,"golfId":"6106638797","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Connor Honey","idx":0,"golfId":"6104224355","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Conroy Ip","idx":0,"golfId":"6101783283","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Craig Compton","idx":0,"golfId":"6103385641","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Craig McElroy","idx":0,"golfId":"5130030922","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK3","typicalScore":1},{"name":"Curt Compton","idx":0,"golfId":"6103385033","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Darren McDonald","idx":0,"golfId":"6105373892","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Darryl Maxwell","idx":0,"golfId":"5130030914","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Dave Reynar","idx":0,"golfId":"6103989984","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Dave Reynolds","idx":0,"golfId":"5130033158","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"David Wolanski","idx":0,"golfId":"6102397141","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Denis Rowley","idx":0,"golfId":"5130032104","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Doug Boyer","idx":0,"golfId":"5130032834","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":2},{"name":"Doug Comeau","idx":0,"golfId":"6102500131","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2/3","typicalScore":0},{"name":"Doug McMahon","idx":0,"golfId":"5200214944","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Eric Tam","idx":0,"golfId":"6106066400","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Frank Krupka","idx":0,"golfId":"6102105484","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Glen Kinnee","idx":0,"golfId":"5130034187","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Glenn Fisher","idx":0,"golfId":"6103958547","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Gord Taylor","idx":0,"golfId":"5130037005","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK3","typicalScore":1},{"name":"Greg Hines","idx":0,"golfId":"5130031505","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Harman Bhatti","idx":0,"golfId":"6104988308","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Jared Milligan","idx":0,"golfId":"6102675903","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Jason Milligan","idx":0,"golfId":"6104516725","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Jeremy Deeks","idx":0,"golfId":"6109144393","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Jimmy Kasturi","idx":0,"golfId":"6106245938","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"John Coulter","idx":0,"golfId":"5130031221","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Jonathan Chia","idx":0,"golfId":"6104968122","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Josh Comeau","idx":0,"golfId":"5130035167","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":1},{"name":"Justin Petryk","idx":0,"golfId":"6105078330","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Justin Solberg","idx":0,"golfId":"6103483205","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Kelley Hilton","idx":0,"golfId":"6103377500","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mark Comeau","idx":0,"golfId":"5130033636","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mark Curley","idx":0,"golfId":"6102108310","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mark Haupt","idx":0,"golfId":"6107603935","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mark Smith","idx":0,"golfId":"6106667973","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mark Stretch","idx":0,"golfId":"6105287943","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Matt Cruikshank","idx":0,"golfId":"6104517146","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Matt Haupt","idx":0,"golfId":"6104466684","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Matt Kozicky","idx":0,"golfId":"6103400366","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Matthew Jackson","idx":0,"golfId":"5130002904","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Michael MacPhail","idx":0,"golfId":"6107123742","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mike Dejong","idx":0,"golfId":"6100429498","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mike Fryer","idx":0,"golfId":"","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Mike Melnick","idx":0,"golfId":"6105720206","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Neil Kautz","idx":0,"golfId":"5200690666","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Peter Bevilacqua","idx":0,"golfId":"6105521781","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Phil McAvoy","idx":0,"golfId":"5130036803","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Randy Singh","idx":0,"golfId":"6108087684","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Rob Daniels","idx":0,"golfId":"5130034121","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Rob Miller","idx":0,"golfId":"5130030622","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK3","typicalScore":1},{"name":"Ryan MacLean","idx":0,"golfId":"5130037013","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Scott Buchanan","idx":0,"golfId":"5200664624","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Scott Janis","idx":0,"golfId":"6108751008","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Steven McPhee","idx":0,"golfId":"6103377225","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Stu Curley","idx":0,"golfId":"5130037110","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Thomas Chibri","idx":0,"golfId":"6103358060","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Tim Kantor","idx":0,"golfId":"5130032315","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Tim Nelson","idx":0,"golfId":"6102367422","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Tom Buchanan","idx":0,"golfId":"6108331282","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Tom Richards","idx":0,"golfId":"5130033190","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Trevor Goplin","idx":0,"golfId":"5130031813","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Trevor Harrington","idx":0,"golfId":"6105803937","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Wayne Buskas","idx":0,"golfId":"5130031838","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0},{"name":"Will Comeau","idx":0,"golfId":"","hdcpBaseline":null,"hdcpFetchedAt":null,"fav":false,"me":false,"defaultDeck":"DECK2","typicalScore":0}];
 
 function seedContactsIfEmpty(){
   try{
     const existing = JSON.parse(localStorage.getItem('pards_contacts')||'[]');
+    // Match by Golf Canada ID only — blank/missing IDs never count as a match,
+    // so multiple no-ID contacts (e.g. someone without a GC ID yet) can coexist
+    // and a seeded no-ID contact is also matched by exact name as a fallback.
     const existingGids = new Set(existing.map(c=>c.golfId).filter(Boolean));
+    const existingNames = new Set(existing.map(c=>(c.name||'').trim().toLowerCase()));
     let added=0;
     SEEDED_CONTACTS.forEach(seed=>{
-      if(!existingGids.has(seed.golfId)){ existing.push(seed); existingGids.add(seed.golfId); added++; }
+      const hasGid = !!seed.golfId;
+      const matchesExisting = hasGid
+        ? existingGids.has(seed.golfId)
+        : existingNames.has((seed.name||'').trim().toLowerCase());
+      if(!matchesExisting){
+        existing.push(seed);
+        if(hasGid) existingGids.add(seed.golfId);
+        existingNames.add((seed.name||'').trim().toLowerCase());
+        added++;
+      }
     });
     if(added>0) localStorage.setItem('pards_contacts', JSON.stringify(existing));
   }catch(e){}
@@ -13912,7 +13994,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.51';
+const CURRENT_VERSION = 'pards-v12.53';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14357,7 +14439,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.51';
+const CACHE='pards-v12.53';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
