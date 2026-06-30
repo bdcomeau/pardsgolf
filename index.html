@@ -599,20 +599,16 @@ input::placeholder{color:#bbb}
 
   <div style="display:flex;gap:10px;margin-bottom:0">
     <div style="flex:1">
-      <div class="card" id="roundTypeCard" style="background:#1a3a2a;padding:12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid rgba(168,213,181,.4);box-shadow:0 3px 8px rgba(0,0,0,.35)">
-        <div style="font-size:11px;font-weight:700;color:#fff;margin-bottom:5px;letter-spacing:.2px">Scores Only or With Games?</div>
-        <div style="display:flex;background:rgba(0,0,0,.35);border-radius:8px;padding:3px;gap:3px;width:100%">
-          <button id="segScoreOnly" onclick="setScorecardMode(true)"
-            style="flex:1;padding:6px 4px;border:none;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">
-            SCORES ONLY
-          </button>
-          <button id="segWithGames" onclick="setScorecardMode(false)"
-            style="flex:1;padding:6px 4px;border:none;border-radius:6px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">
-            ✓ WITH GAMES
-          </button>
-        </div>
+      <div class="card" id="roundTypeCard" style="background:#1a3a2a;padding:12px;border:1.5px solid rgba(168,213,181,.4);box-shadow:0 3px 8px rgba(0,0,0,.35)">
         <input type="hidden" id="scorecardOnly">
         <input type="hidden" id="autoAdvanceEnabled">
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">🏌️ Just keep score today, no money matches?</div>
+          <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
+            <button id="segScoreOn" onclick="setScorecardMode(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">ON</button>
+            <button id="segScoreOff" onclick="setScorecardMode(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ OFF</button>
+          </div>
+        </div>
         <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)">
           <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">🍺 Birdie Juice Tracking</div>
           <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
@@ -3842,20 +3838,20 @@ function setBirdieJuice(enabled){
 }
 
 function setScorecardMode(scoresOnly){
-  const segScoreOnly=document.getElementById('segScoreOnly');
-  const segWithGames=document.getElementById('segWithGames');
+  const segOn=document.getElementById('segScoreOn');
+  const segOff=document.getElementById('segScoreOff');
   const hidden=document.getElementById('scorecardOnly');
-  if(!segScoreOnly||!segWithGames) return;
+  if(!segOn||!segOff) return;
   if(scoresOnly){
-    segScoreOnly.style.background='#c9a84c'; segScoreOnly.style.color='#1a3a2a'; segScoreOnly.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
-    segScoreOnly.textContent='✓ SCORES ONLY';
-    segWithGames.style.background='transparent'; segWithGames.style.color='rgba(255,255,255,.4)'; segWithGames.style.boxShadow='none';
-    segWithGames.textContent='WITH GAMES';
+    segOn.style.background='var(--gp)'; segOn.style.color='var(--gd)'; segOn.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
+    segOn.textContent='✓ ON';
+    segOff.style.background='transparent'; segOff.style.color='rgba(255,255,255,.4)'; segOff.style.boxShadow='none';
+    segOff.textContent='OFF';
   } else {
-    segWithGames.style.background='var(--gp)'; segWithGames.style.color='var(--gd)'; segWithGames.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
-    segWithGames.textContent='✓ WITH GAMES';
-    segScoreOnly.style.background='transparent'; segScoreOnly.style.color='rgba(255,255,255,.4)'; segScoreOnly.style.boxShadow='none';
-    segScoreOnly.textContent='SCORES ONLY';
+    segOff.style.background='var(--gp)'; segOff.style.color='var(--gd)'; segOff.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
+    segOff.textContent='✓ OFF';
+    segOn.style.background='transparent'; segOn.style.color='rgba(255,255,255,.4)'; segOn.style.boxShadow='none';
+    segOn.textContent='ON';
   }
   if(hidden) hidden.value=scoresOnly?'1':'0';
   toggleScorecardOnly();
@@ -5382,7 +5378,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.78</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.79</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6077,7 +6073,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.78</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.79</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6545,7 +6541,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.78</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.79</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7118,7 +7114,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.78</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.79</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9765,7 +9761,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.78</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.79</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10273,7 +10269,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.78</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.79</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10546,7 +10542,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.78</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.79</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10686,7 +10682,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.78');
+  lines.push('— Pards Golf · v12.79');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11393,7 +11389,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.78 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.79 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13752,7 +13748,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v12.78. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v12.79. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14240,7 +14236,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.78';
+const CURRENT_VERSION = 'pards-v12.79';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14685,7 +14681,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.78';
+const CACHE='pards-v12.79';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
