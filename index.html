@@ -5350,7 +5350,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.41</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.43</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -5850,6 +5850,23 @@ function checkBirdieStreak(pi, h){
   else if(streak >= 7) showLegendPopup(name, streak);
 }
 
+function showInternationalReminderOverlay(){
+  if(G._intlReminderShown) return;
+  G._intlReminderShown = true;
+  saveG();
+  _showBJOverlay('intlReminderPopup',`
+    <div style="background:linear-gradient(160deg,#0a2342,#11479c,#1d6fd6);border-radius:16px;padding:30px 24px;max-width:340px;text-align:center;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-10px;left:0;right:0;font-size:60px;opacity:.1;pointer-events:none">🌍🌍🌍</div>
+      <div style="font-size:72px;margin-bottom:4px">🌍</div>
+      <div style="font-size:12px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">Hole 18 \u2014 Last Chance</div>
+      <div style="font-size:24px;font-weight:800;color:#fff;margin-bottom:10px">Call The International!</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.9);margin-bottom:20px">The International is available on some matches. You must call it <b>before</b> entering a score on hole 18 \u2014 once a score goes in, it's too late.</div>
+      <button class="export-overlay-btn save" style="width:100%;background:rgba(255,255,255,.2);color:#fff;border:1.5px solid rgba(255,255,255,.4);margin-bottom:8px" onclick="document.getElementById('intlReminderPopup').remove();showS('bets')">🌍 Yes — Go Select It in Nassau</button>
+      <button class="export-overlay-btn close" style="width:100%;background:rgba(0,0,0,.2);color:rgba(255,255,255,.8);border:1.5px solid rgba(255,255,255,.25)" onclick="document.getElementById('intlReminderPopup').remove()">No — No International Today, Proceed</button>
+    </div>`);
+}
+
+
 function showTurkeyPopup(name){
   _showBJOverlay('streakPopup',`
     <div style="background:linear-gradient(160deg,#7d3200,#e65c00,#f9a825);border-radius:16px;padding:30px 24px;max-width:340px;text-align:center;position:relative;overflow:hidden">
@@ -6015,7 +6032,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.41</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.43</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6316,6 +6333,8 @@ function renderCard(){
     // On hole 18, scores not yet all in — prompt to go call International now
     if(internationalAvailableForAnyMatch()){
       html += `<div class="intl-available-banner" onclick="showS('bets')">🌍 The International is available on some matches — tap to go to 💵 Games → Nassau and call it before scoring hole 18</div>`;
+      // Block scoring with a full-screen overlay the first time hole 18 loads
+      setTimeout(function(){ showInternationalReminderOverlay(); }, 150);
     }
   } else if(isRoundComplete()){
     // All 18 holes scored
@@ -6470,7 +6489,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.41</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.43</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7043,7 +7062,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.41</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.43</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -8508,6 +8527,7 @@ function abandonRound(){
   G.birdieJuice={earned:[],redeemed:0};
   G.scores=[]; _billyBunkerShown=false; _stuBunkerShown=false; _gregQuietShown=false; G.hole=0; G.roundDate=null; G.roundEnd=null;
   G.weatherStart=null; G.weatherEnd=null;
+  G._intlReminderShown=false;
   G.internationals={}; G.scorecardOnly=false;
   G.startHole=1;
   G.snake={enabled:false,holder:null,history:[],bet:5,settlements:[],participants:[],h18confirmed:false};
@@ -9609,7 +9629,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.41</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.43</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10048,7 +10068,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.41</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.43</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10321,7 +10341,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.41</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.43</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10461,7 +10481,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.41');
+  lines.push('— Pards Golf · v12.43');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11157,7 +11177,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.41 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.43 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13812,7 +13832,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.41';
+const CURRENT_VERSION = 'pards-v12.43';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14257,7 +14277,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.41';
+const CACHE='pards-v12.43';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
