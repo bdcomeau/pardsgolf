@@ -52,7 +52,7 @@
 <div class="cover">
   <span class="emoji">⛳</span>
   <h1>Pards Golf</h1>
-  <div class="sub">User Manual &nbsp;·&nbsp; Version 11.92</div>
+  <div class="sub">User Manual &nbsp;·&nbsp; Version 12.36</div>
   <div class="sub">A mobile scorecard, betting tracker, and Birdie Juice ledger</div>
   <div class="games">Nassau &nbsp;·&nbsp; 6-Point &nbsp;·&nbsp; Stableford &nbsp;·&nbsp; Skins &nbsp;·&nbsp; Vegas &nbsp;·&nbsp; Snake &nbsp;·&nbsp; Match Cards &nbsp;·&nbsp; The International</div>
 </div>
@@ -111,12 +111,13 @@
 <div class="section" id="setup">
   <h1 class="sec">2. Setting Up a Round</h1>
   <h2 class="sub">Step 1 — Choose Your Course</h2>
-  <p>Tap the course picker at the top. Courses are grouped by facility — Derrick is always first. Tap 📋 Info on any course row to see live weather, your history there, and the full scorecard.</p>
+  <p>Tap the course picker at the top. Your <strong>Home Course</strong> (set in Manage My Players) always appears first in the list. If no home course is set, Derrick is first by default. Tap 📋 Info on any course row to see live weather, your history there, and the full scorecard.</p>
   <h2 class="sub">Step 2 — Set Number of Players</h2>
   <p>Use + and − to set 1 to 5 players.</p>
   <h2 class="sub">Step 3 — Load Your Favourites</h2>
   <p>Tap <strong>⭐ Load My Favourites</strong> to fill in your saved regular group automatically.</p>
-  <h2 class="sub">Step 4 — Adding a New Player</h2>
+  <h2 class="sub">Step 4 — Adding a Player</h2>
+  <p>Tap the <strong>Select Saved Player</strong> button to open a searchable list of your saved contacts — sorted with "Me" first, then ⭐ Favourites, then alphabetically. Each row shows their handicap index and lifetime money. Or type a new name directly:</p>
   <ul>
     <li>Type their name, enter their handicap index, select their tee.</li>
     <li>Optionally enter their 10-digit Golf Canada Member ID.</li>
@@ -248,6 +249,12 @@
   <p>Tee pills are colour-coded. Combo tees (Black/Gold, Blue/White, etc.) show as a split diagonal gradient.</p>
   <h2 class="sub">Round History on Course Rows</h2>
   <p>Each course row shows rounds played and last 3 gross scores — visible before you even select the course.</p>
+  <h2 class="sub">Weather Sources</h2>
+  <p>The Setup screen top-right always shows your home weather. The scorecard weather strip during a round always shows weather for the <strong>course being played</strong>, regardless of your home city.</p>
+  <ul>
+    <li><strong>Bruce Comeau</strong> — always uses the personal WeatherLink station at Derrick.</li>
+    <li><strong>Anyone else</strong> — uses live Open-Meteo weather for their Home City (or Edmonton if blank).</li>
+  </ul>
 </div>
 
 <div class="section" id="history">
@@ -278,13 +285,17 @@
 
 <div class="section" id="players">
   <h1 class="sec">16. Manage My Players</h1>
-  <p>Tap ⚙️ Manage My Players (below Load My Favourites on Setup):</p>
+  <p>Tap ⚙️ Manage My Players (below Load My Favourites on Setup). A search bar at the top filters your list live. Players are sorted with "Me" first, then ⭐ Favourites, then alphabetically.</p>
   <ul>
-    <li>Mark yourself as "Me" — auto-fills Player 1 every round.</li>
+    <li>Mark yourself as "Me" — auto-fills Player 1 every round. If "Me" is already set, you'll get a confirmation prompt before switching to a different person.</li>
     <li>Star players to mark as Favourites.</li>
-    <li>Set typical score (Par, Bogey, Double) to centre the score wheel.</li>
+    <li><strong>Tee Deck</strong> — tap the coloured tee button to pick a preferred tee for the current course from a modal list.</li>
+    <li><strong>Score Wheel Default</strong> — tap the button to set Par, Bogey, or Double as the starting point on the score entry wheel.</li>
+    <li><strong>🌤️ Home City</strong> (Me only) — sets which city's weather shows on the Setup screen. Leave blank or set to Edmonton to use your personal WeatherLink station; any other city uses live weather from Open-Meteo.</li>
+    <li><strong>⛳ Home Course</strong> (Me only) — sets your default course. It always appears first in the course picker and is selected automatically on every new round.</li>
     <li>Edit names, handicaps, Golf Canada IDs, tee preferences.</li>
   </ul>
+  <p>A gold <strong>Done ✓</strong> button floats in the top-right corner so you can close the overlay from anywhere while scrolling.</p>
 </div>
 
 <div class="section" id="courses">
