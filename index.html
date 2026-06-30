@@ -5360,7 +5360,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.56</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.58</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6055,7 +6055,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.56</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.58</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6518,7 +6518,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.56</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.58</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7091,7 +7091,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.56</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.58</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9707,7 +9707,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.56</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.58</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10215,7 +10215,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.56</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.58</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10488,7 +10488,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.56</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.58</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10628,7 +10628,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.56');
+  lines.push('— Pards Golf · v12.58');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11326,7 +11326,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.56 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.58 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12768,6 +12768,24 @@ async function refreshAllHandicaps(){
 }
 
 
+function toggleFavSearchClear(){
+  const input = document.getElementById('favSearchInput');
+  const btn = document.getElementById('favSearchClearBtn');
+  if(!input || !btn) return;
+  btn.style.display = input.value ? 'flex' : 'none';
+  btn.style.alignItems = 'center';
+  btn.style.justifyContent = 'center';
+}
+
+function clearFavSearch(){
+  const input = document.getElementById('favSearchInput');
+  if(!input) return;
+  input.value = '';
+  input.focus();
+  toggleFavSearchClear();
+  renderFavoritesList();
+}
+
 function openFavorites(){
   const ex=document.getElementById('favOverlay'); if(ex) ex.remove();
   const overlay=document.createElement('div');
@@ -12775,7 +12793,7 @@ function openFavorites(){
   overlay.style.alignItems='flex-start';
   overlay.style.paddingTop='env(safe-area-inset-top,0px)';
   overlay.innerHTML=`
-    <div class="mm-sheet" style="border-radius:0 0 16px 16px;max-height:calc(100vh - env(safe-area-inset-top,0px));padding-bottom:70px">
+    <div class="mm-sheet" style="border-radius:0 0 16px 16px;height:calc(100vh - env(safe-area-inset-top,0px));max-height:calc(100vh - env(safe-area-inset-top,0px));padding-bottom:70px;display:flex;flex-direction:column">
       <div class="mm-hdr">
         <div class="mm-title">⭐ Manage Favorites &amp; Players</div>
         <button class="mm-close" onclick="document.getElementById('favOverlay').remove()">Done</button>
@@ -12785,12 +12803,15 @@ function openFavorites(){
       <button id="favRefreshAllBtn" onclick="refreshAllHandicaps()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">
         <img src="${GC_LOGO}" alt="Golf Canada" style="height:14px;width:auto"> <span id="favRefreshAllLbl">Refresh All Handicaps</span>
       </button>
-      <div class="card" id="favList"></div>
+      <div class="card" id="favList" style="flex:1;overflow-y:auto;min-height:0"></div>
     </div>
     <div style="position:fixed;left:0;right:0;bottom:0;z-index:10002;background:linear-gradient(160deg,#1a3a2a,#0d1f15);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(201,168,76,.3);box-shadow:0 -4px 16px rgba(0,0,0,.3)">
-      <input id="favSearchInput" type="text" placeholder="🔍 Search players…" autocomplete="off"
-        oninput="renderFavoritesList()"
-        style="width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:10px;padding:11px 14px;font-size:14px;color:#f5e6b8;outline:none;box-sizing:border-box;-webkit-appearance:none">
+      <div style="position:relative">
+        <input id="favSearchInput" type="text" placeholder="🔍 Search players…" autocomplete="off"
+          oninput="renderFavoritesList();toggleFavSearchClear()"
+          style="width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:10px;padding:11px 38px 11px 14px;font-size:14px;color:#f5e6b8;outline:none;box-sizing:border-box;-webkit-appearance:none">
+        <button id="favSearchClearBtn" onclick="clearFavSearch()" style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;border-radius:50%;width:24px;height:24px;color:#f5e6b8;font-size:14px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;line-height:1">✕</button>
+      </div>
     </div>`;
   document.body.appendChild(overlay);
   overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
@@ -12836,8 +12857,16 @@ function renderFavoritesList(){
   const stats = computePlayerStats();
   if(!contacts.length){
     box.innerHTML=favQ
-      ? `<div style="font-size:13px;color:#888;text-align:center;padding:14px">No players match "${favQ}"</div>`
-      : `<div style="font-size:13px;color:#888;text-align:center;padding:14px">No saved players yet. Save a player on the setup screen (💾) first, then come back to star your regulars.</div>`;
+      ? `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:50px 20px;text-align:center;min-height:200px">
+          <div style="font-size:40px">🔍</div>
+          <div style="font-size:16px;font-weight:800;color:#1a3a2a">No players found</div>
+          <div style="font-size:13px;color:#888">Nobody matches “${favQ}”. Try a different spelling.</div>
+        </div>`
+      : `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:50px 20px;text-align:center;min-height:200px">
+          <div style="font-size:40px">👥</div>
+          <div style="font-size:16px;font-weight:800;color:#1a3a2a">No saved players yet</div>
+          <div style="font-size:13px;color:#888">Save a player on the setup screen (💾) first, then come back to star your regulars.</div>
+        </div>`;
     return;
   }
   const favCount = contacts.filter(c=>c.fav).length;
@@ -14073,7 +14102,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.56';
+const CURRENT_VERSION = 'pards-v12.58';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14518,7 +14547,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.56';
+const CACHE='pards-v12.58';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
