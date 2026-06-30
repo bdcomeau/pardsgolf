@@ -81,8 +81,8 @@ input::placeholder{color:#bbb}
 .deck-note{font-size:10px;color:var(--gold-d,#9a7a1e);font-weight:600;line-height:1.2}
 .hdcp-stack{display:flex;flex-direction:column;align-items:center;gap:1px}
 .hdcp-wrap-adj{position:relative;top:auto;left:auto;width:100%;margin:0}
-.hdcp-tag{position:absolute;top:3px;left:5px;font-size:8px;font-weight:800;color:rgba(201,168,76,.7);letter-spacing:.3px;pointer-events:none;z-index:1}
-.hdcp-tag-adj{color:rgba(168,213,181,.8)}
+.hdcp-tag{position:absolute;top:3px;left:5px;font-size:7px;font-weight:800;color:#a8221c;letter-spacing:.2px;pointer-events:none;z-index:1}
+.hdcp-tag-adj{color:#0d3d1f}
 .hdcp-box{width:100%;height:34px;text-align:center;box-sizing:border-box;padding-top:8px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);border-radius:8px;color:#f5e6b8;font-size:14px;font-weight:700;outline:none;-webkit-appearance:none}
 .hdcp-adj{background:#f0ece2;font-weight:800;color:var(--gd);border:1px solid #cdbf9a}
 .hdcp-delta{font-size:9px;font-weight:800;line-height:1;min-height:10px}
@@ -618,6 +618,13 @@ input::placeholder{color:#bbb}
           <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
             <button id="segBJOn" onclick="setBirdieJuice(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ ON</button>
             <button id="segBJOff" onclick="setBirdieJuice(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">OFF</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)">
+          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">✅ Confirm Scores Every Hole</div>
+          <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
+            <button id="segConfirmOn" onclick="setAdvanceMode(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ ON</button>
+            <button id="segConfirmOff" onclick="setAdvanceMode(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">OFF</button>
           </div>
         </div>
       </div>
@@ -2812,17 +2819,17 @@ function renderPlayers(){
       <input type="text" id="gid${i}" placeholder="Golf Canada ID (10 digits)" value="${gid}" inputmode="numeric" pattern="[0-9]*" maxlength="10" class="golfid-input" oninput="highlightDuplicateRows()"${gid?' readonly style="background:rgba(0,0,0,.25);color:rgba(255,255,255,.35);padding-right:28px;border-color:rgba(255,255,255,.1)"':''}>
       ${gid?'<span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:13px;cursor:pointer;opacity:.6" onclick="unlockGid('+i+')" title="Tap to edit Golf Canada ID">' + '🔒' + '</span>':''}
     </div>
-    <div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:2px;line-height:1.3;font-weight:600">${gid?'Golf Canada ID (locked — tap 🔒 to edit)':('10 Digit Golf Canada Member ID')}</div>
+    <div style="font-size:10px;color:#a8221c;margin-top:2px;line-height:1.3;font-weight:700">${gid?'Golf Canada ID (locked — tap 🔒 to edit)':('10 Digit Golf Canada Member ID')}</div>
     <div id="hdcpStamp${i}" class="hdcp-stamp">${G.players[i]&&G.players[i].hdcpFetchedAt?('🟢 Handicap current as of '+fmtFetchTime(G.players[i].hdcpFetchedAt)):''}</div>
   </div>
   <div class="p-col2">
     <div class="hdcp-wrap">
-      <span class="hdcp-tag">IDX</span>
+      <span class="hdcp-tag">INDEX</span>
       <input type="number" id="ph${i}" placeholder="0.0" step=".1" min="0" max="54" value="${idxShown}" class="hdcp-box" oninput="onHdcpTyped(${i})">
     </div>
     <span class="hdcp-delta" id="idxlbl${i}"></span>
     <div class="hdcp-wrap" style="margin-top:4px">
-      <span class="hdcp-tag hdcp-tag-adj">ADJ</span>
+      <span class="hdcp-tag hdcp-tag-adj">TEE INDEX</span>
       <input type="text" id="phAdj${i}" value="${adjShown}" class="hdcp-box hdcp-adj" readonly tabindex="-1">
     </div>
   </div>
@@ -3764,20 +3771,19 @@ function confirmResetSetup(){
 
 // Show/hide the betting setup sections based on the Scorecard-only checkbox.
 function setAdvanceMode(autoAdv){
-  const segAuto=document.getElementById('segAuto');
-  const segConfirm=document.getElementById('segConfirm');
+  // autoAdv=true means Auto-Advance is ON, which means "Confirm Scores Every Hole" is OFF.
+  const confirmOn = !autoAdv;
+  const onBtn=document.getElementById('segConfirmOn');
+  const offBtn=document.getElementById('segConfirmOff');
   const hidden=document.getElementById('autoAdvanceEnabled');
-  if(!segAuto||!segConfirm) return;
-  if(autoAdv){
-    segAuto.style.background='var(--gp)'; segAuto.style.color='var(--gd)'; segAuto.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
-    segAuto.textContent='✓ AUTO-ADVANCE';
-    segConfirm.style.background='transparent'; segConfirm.style.color='rgba(255,255,255,.4)'; segConfirm.style.boxShadow='none';
-    segConfirm.textContent='CONFIRM SCORES';
-  } else {
-    segConfirm.style.background='#c9a84c'; segConfirm.style.color='#1a3a2a'; segConfirm.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
-    segConfirm.textContent='✓ CONFIRM SCORES';
-    segAuto.style.background='transparent'; segAuto.style.color='rgba(255,255,255,.4)'; segAuto.style.boxShadow='none';
-    segAuto.textContent='AUTO-ADVANCE';
+  if(onBtn && offBtn){
+    if(confirmOn){
+      onBtn.style.background='var(--gp)'; onBtn.style.color='var(--gd)'; onBtn.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
+      offBtn.style.background='transparent'; offBtn.style.color='rgba(255,255,255,.4)'; offBtn.style.boxShadow='none';
+    } else {
+      offBtn.style.background='#c9a84c'; offBtn.style.color='#1a3a2a'; offBtn.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
+      onBtn.style.background='transparent'; onBtn.style.color='rgba(255,255,255,.4)'; onBtn.style.boxShadow='none';
+    }
   }
   if(hidden) hidden.value=autoAdv?'1':'0';
   try{ localStorage.setItem('pards_pref_autoAdvance', autoAdv?'1':'0'); }catch(_){}
@@ -3786,7 +3792,7 @@ function setAdvanceMode(autoAdv){
 function initAdvanceMode(){
   try{
     const pref=localStorage.getItem('pards_pref_autoAdvance');
-    // Default to false (confirm) for first-timers
+    // Default to false (Auto-Advance off / Confirm Scores on) for first-timers
     setAdvanceMode(pref==='1');
   }catch(_){ setAdvanceMode(false); }
 }
@@ -5376,7 +5382,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.74</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.78</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6071,7 +6077,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.74</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.78</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6539,7 +6545,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.74</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.78</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7112,7 +7118,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.74</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.78</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9759,7 +9765,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.74</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.78</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10267,7 +10273,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.74</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.78</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10540,7 +10546,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.74</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.78</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10680,7 +10686,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.74');
+  lines.push('— Pards Golf · v12.78');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11387,7 +11393,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.74 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.78 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13746,7 +13752,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v12.74. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v12.78. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14234,7 +14240,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.74';
+const CURRENT_VERSION = 'pards-v12.78';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14679,7 +14685,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.74';
+const CACHE='pards-v12.78';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
