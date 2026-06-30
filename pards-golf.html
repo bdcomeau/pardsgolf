@@ -5360,7 +5360,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.58</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.62</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6055,7 +6055,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.62</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6518,7 +6518,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.58</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.62</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7091,7 +7091,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.58</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.62</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9707,7 +9707,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.62</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10215,7 +10215,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.58</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.62</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10488,7 +10488,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.62</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10628,7 +10628,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.58');
+  lines.push('— Pards Golf · v12.62');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11326,7 +11326,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.58 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.62 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12667,17 +12667,19 @@ function contactDeckForCourse(contact, courseId){
   if(contact.defaultDeck && course.tees.find(function(t){ return t.name===contact.defaultDeck; })){
     return contact.defaultDeck;
   }
-  // Find reference slope from the contact's Derrick deck (or defaultDeck at any
-  // course it actually matches), defaulting to Deck 2's slope of 119.
-  let refSlope = 119;
+  // Find which Derrick deck this contact plays (or defaultDeck at any course
+  // it actually matches), defaulting to Deck 2, then look up that deck's
+  // explicit target {slope, yards} combo and find the closest-fit tee here.
+  let derrickDeck = 'Deck 2';
   const derrick = PARDS_COURSES.find(function(c){ return c.id==='derrick-gwc'; });
   if(derrick){
-    const derrickDeck = (contact.deckByCourse && contact.deckByCourse['derrick-gwc']) || contact.defaultDeck || 'Deck 2';
-    const dt = derrick.tees.find(function(t){ return t.name===derrickDeck; });
-    if(dt) refSlope = dt.slope;
+    derrickDeck = (contact.deckByCourse && contact.deckByCourse['derrick-gwc']) || contact.defaultDeck || 'Deck 2';
   }
+  const target = (typeof DERRICK_DECK_TARGETS!=='undefined' && DERRICK_DECK_TARGETS[derrickDeck])
+    || { slope: 119, yards: 6200 };
+  if(typeof bestFitTeeForCourse==='function') return bestFitTeeForCourse(course, target.slope, target.yards).name;
   const best = course.tees.reduce(function(a,b){
-    return Math.abs(b.slope-refSlope) < Math.abs(a.slope-refSlope) ? b : a;
+    return Math.abs(b.slope-target.slope) < Math.abs(a.slope-target.slope) ? b : a;
   });
   return best.name;
 }
@@ -12799,11 +12801,12 @@ function openFavorites(){
         <button class="mm-close" onclick="document.getElementById('favOverlay').remove()">Done</button>
       <button onclick="document.getElementById('favOverlay').remove()" style="position:fixed;top:env(safe-area-inset-top,12px);right:12px;z-index:10001;background:#c9a84c;color:#1a3a2a;border:none;border-radius:20px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);-webkit-tap-highlight-color:transparent">Done ✓</button>
       </div>
-      <div style="font-size:12px;color:#666;margin:0 0 8px">Star up to ${MAX_FAVORITES} players as favorites — they’ll auto-fill each new round. Mark one as <b>“Me”</b> (scorekeeper). Tap ✕ to remove a player entirely.</div>
+      <div style="font-size:12px;color:#666;margin:0 0 4px">Star up to ${MAX_FAVORITES} players as favorites — they’ll auto-fill each new round. Mark one as <b>“Me”</b> (scorekeeper). Tap ✕ to remove a player entirely.</div>
+      <div id="favSearchCount" style="font-size:12px;font-weight:800;color:#1a3a2a;margin:0 0 8px;display:none"></div>
       <button id="favRefreshAllBtn" onclick="refreshAllHandicaps()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">
         <img src="${GC_LOGO}" alt="Golf Canada" style="height:14px;width:auto"> <span id="favRefreshAllLbl">Refresh All Handicaps</span>
       </button>
-      <div class="card" id="favList" style="flex:1;overflow-y:auto;min-height:0"></div>
+      <div class="card" id="favList" style="flex:1;overflow-y:auto;min-height:0;display:flex;flex-direction:column"></div>
     </div>
     <div style="position:fixed;left:0;right:0;bottom:0;z-index:10002;background:linear-gradient(160deg,#1a3a2a,#0d1f15);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(201,168,76,.3);box-shadow:0 -4px 16px rgba(0,0,0,.3)">
       <div style="position:relative">
@@ -12854,6 +12857,16 @@ function renderFavoritesList(){
       if(!a.fav && b.fav) return 1;
       return a.name.localeCompare(b.name);
     });
+  // Live result count, only shown while actively searching
+  const countEl = document.getElementById('favSearchCount');
+  if(countEl){
+    if(favQ){
+      countEl.style.display = 'block';
+      countEl.textContent = contacts.length + ' player' + (contacts.length===1?'':'s') + ' found';
+    } else {
+      countEl.style.display = 'none';
+    }
+  }
   const stats = computePlayerStats();
   if(!contacts.length){
     box.innerHTML=favQ
@@ -13641,6 +13654,64 @@ function seedContactsIfEmpty(){
 // Runs once per version. Reads each contact's Derrick deck slope and finds
 // the closest-slope tee on every other course, writing it to deckByCourse
 // only if no preference already exists for that course.
+// Maps each Derrick deck name to an explicit target {slope, yards} combo used
+// to find the closest-fit tee at every other course — set deliberately per deck
+// rather than scaled, since Derrick plays shorter than most modern tracks.
+const DERRICK_DECK_TARGETS = {
+  'Deck 1':   { slope: 121, yards: 6600 },
+  'Deck 1/2': { slope: 120, yards: 6400 },
+  'Deck 2':   { slope: 119, yards: 6200 },
+  'Deck 2/3': { slope: 118, yards: 6000 },
+  'Deck 3':   { slope: 117, yards: 5800 },
+  'Deck 3/4': { slope: 113, yards: 5600 },
+  'Deck 4':   { slope: 111, yards: 5400 },
+};
+const DECK2_TARGET = DERRICK_DECK_TARGETS['Deck 2']; // kept for any old references
+
+function bestFitTeeForCourse(course, refSlope, refYards){
+  // Score every tee by normalized distance on both slope and total yardage,
+  // weighted evenly so neither dimension dominates regardless of scale.
+  let best = course.tees[0], bestScore = Infinity;
+  course.tees.forEach(function(t){
+    const tYards = (t.yards||[]).reduce(function(a,b){ return a+b; }, 0);
+    const slopeDist = (t.slope - refSlope) / 10;      // ~10 slope points ≈ 1 unit
+    const yardsDist = (tYards - refYards) / 300;       // ~300 yards ≈ 1 unit
+    const score = slopeDist*slopeDist + yardsDist*yardsDist;
+    if(score < bestScore){ bestScore = score; best = t; }
+  });
+  return best;
+}
+
+// ONE-TIME forced recalculation — v12.62. Overwrites every contact's non-Derrick
+// deckByCourse entries using the new explicit slope/yardage targets, even if a
+// value was already set from the old (less accurate) matching logic. Runs only
+// once per browser via its own localStorage flag, then never again — after this,
+// migrateDecksFromDerrick() below resumes its normal never-overwrite behavior so
+// manually chosen tee preferences are preserved going forward.
+function forceRecalcDeckTargetsOnce(){
+  const FLAG = 'pards_deck_target_recalc_v1261';
+  try{ if(localStorage.getItem(FLAG)) return; }catch(e){ return; }
+  try{
+    const contacts = JSON.parse(localStorage.getItem('pards_contacts')||'[]');
+    if(!contacts.length){ localStorage.setItem(FLAG,'1'); return; }
+    const derrick = PARDS_COURSES.find(c=>c.id==='derrick-gwc');
+    if(!derrick){ localStorage.setItem(FLAG,'1'); return; }
+    contacts.forEach(contact=>{
+      if(!contact.deckByCourse) contact.deckByCourse = {};
+      const derrickDeck = contact.deckByCourse['derrick-gwc'] || contact.defaultDeck || 'Deck 2';
+      const target = DERRICK_DECK_TARGETS[derrickDeck] || DERRICK_DECK_TARGETS['Deck 2'];
+      PARDS_COURSES.forEach(course=>{
+        if(course.id==='derrick-gwc') return; // never touch Derrick itself
+        const best = bestFitTeeForCourse(course, target.slope, target.yards);
+        contact.deckByCourse[course.id] = best.name; // overwrite, this run only
+      });
+    });
+    localStorage.setItem('pards_contacts', JSON.stringify(contacts));
+    localStorage.setItem(FLAG,'1');
+    console.log('Pards: one-time deck target recalc complete — will not run again');
+  }catch(e){ console.warn('One-time deck recalc failed',e); }
+}
+
 function migrateDecksFromDerrick(){
   // Runs on every load — safe to re-run because the per-course check below
   // ("if(contact.deckByCourse[course.id]) return") never overwrites an existing
@@ -13656,15 +13727,12 @@ function migrateDecksFromDerrick(){
       if(!contact.deckByCourse) contact.deckByCourse = {};
       // Determine Derrick deck: deckByCourse['derrick-gwc'] → defaultDeck → 'Deck 2'
       const derrickDeck = contact.deckByCourse['derrick-gwc'] || contact.defaultDeck || 'Deck 2';
-      const dt = derrick.tees.find(t=>t.name===derrickDeck);
-      const refSlope = dt ? dt.slope : 119; // Deck 2 = 119
+      const target = DERRICK_DECK_TARGETS[derrickDeck] || DERRICK_DECK_TARGETS['Deck 2'];
       // Backfill every other course
       PARDS_COURSES.forEach(course=>{
         if(course.id==='derrick-gwc') return; // skip Derrick itself
         if(contact.deckByCourse[course.id]) return; // already set — don't overwrite
-        const best = course.tees.reduce((a,b)=>
-          Math.abs(b.slope-refSlope)<Math.abs(a.slope-refSlope)?b:a
-        );
+        const best = bestFitTeeForCourse(course, target.slope, target.yards);
         contact.deckByCourse[course.id] = best.name;
         changed = true;
       });
@@ -14096,13 +14164,13 @@ function renderSnakeTab(){
   document.body.appendChild(overlay);
 })();
 
-seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup();startNamesPoll();
+seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();renderAllPairOptions();initSetup();startNamesPoll();
 
 // ── Restore saved round on launch ──
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.58';
+const CURRENT_VERSION = 'pards-v12.62';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14547,7 +14615,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.58';
+const CACHE='pards-v12.62';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
