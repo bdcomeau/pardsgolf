@@ -3245,7 +3245,7 @@ function applyDeckToRow(i){
 
 // User changed the tee deck for a player.
 // Tee colour map
-function deckColour(name){
+function deckColour(name, slope){
   function _c(n){
     if(/black|bk/.test(n))          return '#1a1a1a';
     if(/blue|\bbl\b|indigo/.test(n)) return '#1a56a0';
@@ -3280,6 +3280,19 @@ function deckColour(name){
   if(/green/.test(n))            return {bg:'#2d6a4f',text:'#fff'};
   if(/white/.test(n))            return {bg:'#f0ece2',text:'#1a3a2a'};
   if(/tan/.test(n))              return {bg:'#c4a35a',text:'#1a3a2a'};
+  // No colour word recognized in the name (e.g. Derrick's "Deck 1"–"Deck 4").
+  // Fall back to a slope-based shade: harder tees (higher slope) get a darker,
+  // richer green; easier tees get a lighter sage. Gives a visual "ladder" of
+  // difficulty even when tee names carry no colour information at all.
+  if(slope!=null && !isNaN(slope)){
+    const clamped = Math.max(95, Math.min(145, slope)); // typical slope range
+    const t = (clamped-95)/(145-95); // 0 = easiest, 1 = hardest
+    // Interpolate from light sage (#cfe3d6) to dark forest (#163c28)
+    const lerp=(a,b,t)=>Math.round(a+(b-a)*t);
+    const r=lerp(0xcf,0x16,t), g=lerp(0xe3,0x3c,t), b=lerp(0xd6,0x28,t);
+    const hex='#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    return {bg:hex, text: t>0.55 ? '#f5e6b8' : '#1a3a2a'};
+  }
   return {bg:'#1a3a2a',text:'#c9a84c'};
 }
 
@@ -5363,7 +5376,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.70</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.73</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6058,7 +6071,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.70</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.73</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6521,7 +6534,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.70</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.73</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7094,7 +7107,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.70</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.73</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -7211,10 +7224,11 @@ function renderMasterScorecard(){
     </colgroup><thead><tr>
     <th class="d-hdr d-holehdr" style="vertical-align:middle;text-align:center;width:${holeW}px">${_holeLogo}<div class="d-holetxt" style="font-size:9px">HOLE</div></th>
     ${playingTees.map(t=>{
-      const ci = courseTees.indexOf(t);
-      const bg = deckColors[ci] || deckColors[deckColors.length-1];
+      const dc = deckColour(t.name, t.slope);
+      const txtColor = dc.text || '#1a2a3a';
+      const txtShadow = dc.textShadow ? `text-shadow:${dc.textShadow};` : '';
       const ratingSlope = (t.rating && t.slope) ? `<div style="font-size:8px;font-weight:800;line-height:1.3">${t.rating}/${t.slope}</div>` : '';
-      return `<th class="d-deckhdr d-vert" style="background:${bg};color:#1a2a3a;font-weight:800;font-size:8px;width:${teeW}px">${t.name}${ratingSlope}</th>`;
+      return `<th class="d-deckhdr d-vert" style="background:${dc.bg};color:${txtColor};${txtShadow}font-weight:800;font-size:8px;width:${teeW}px">${t.name}${ratingSlope}</th>`;
     }).join('')}
     <th class="d-hdr d-vert" style="font-size:8px;width:${hcpW}px">HCP</th>
     <th class="d-hdr" style="font-size:8px;width:${parW}px">PAR</th>`;
@@ -9740,7 +9754,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.70</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.73</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10248,7 +10262,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.70</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.73</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10521,7 +10535,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.70</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.73</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10661,7 +10675,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.70');
+  lines.push('— Pards Golf · v12.73');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11125,9 +11139,11 @@ function buildPrintHTML(snap){
     </colgroup><thead><tr>`;
   sc+=`<th style="background:#2d3a2e;color:#c9a84c;font-weight:800;padding:4px 2px;border:1px solid #444;font-size:9px;text-align:center;vertical-align:bottom"><div style="font-size:9px;font-weight:800;color:#c9a84c">HOLE</div></th>`;
   _pPlayingTees.forEach(t=>{
-    const bg = _pDeckColors[_pTees.indexOf(t)] || _pDeckColors[_pDeckColors.length-1];
+    const dc = deckColour(t.name, t.slope);
+    const txtColor = dc.text || '#1a2a3a';
+    const txtShadow = dc.textShadow ? `text-shadow:${dc.textShadow};` : '';
     const rs = (t.rating && t.slope) ? `<div style="font-size:8px;font-weight:800;line-height:1.3">${t.rating}/${t.slope}</div>` : '';
-    sc+=`<th style="background:${bg};color:#1a2a3a;font-weight:800;font-size:8px;padding:3px 1px;border:1px solid #90a4ae;text-align:center;vertical-align:bottom;writing-mode:vertical-lr;transform:rotate(180deg);white-space:nowrap">${t.name}${rs}</th>`;
+    sc+=`<th style="background:${dc.bg};color:${txtColor};${txtShadow}font-weight:800;font-size:8px;padding:3px 1px;border:1px solid #90a4ae;text-align:center;vertical-align:bottom;writing-mode:vertical-lr;transform:rotate(180deg);white-space:nowrap">${t.name}${rs}</th>`;
   });
   sc+=`<th style="background:#e6e2e2;color:#1a1a1a;font-weight:800;font-size:8px;padding:3px 1px;border:1px solid #90a4ae;text-align:center;vertical-align:bottom;writing-mode:vertical-lr;transform:rotate(180deg)">HCP</th>`;
   sc+=`<th style="background:#c3cc5a;color:#1a1a1a;font-weight:800;font-size:8px;padding:3px 1px;border:1px solid #90a4ae;text-align:center;vertical-align:bottom">PAR</th>`;
@@ -11366,7 +11382,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.70 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.73 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13725,7 +13741,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v12.70. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v12.73. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14213,7 +14229,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.70';
+const CURRENT_VERSION = 'pards-v12.73';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14658,7 +14674,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.70';
+const CACHE='pards-v12.73';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
