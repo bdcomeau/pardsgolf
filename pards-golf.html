@@ -885,16 +885,17 @@ input::placeholder{color:#bbb}
 <div class="setup-bar" id="setupBar">
   <a href="pardsgolf-help.html" target="_blank" rel="noopener" style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:rgba(168,213,181,.12);border:1.5px solid rgba(168,213,181,.32);color:#a8d5b5;border-radius:10px;padding:6px 3px;font-size:10px;font-weight:700;text-decoration:none;-webkit-tap-highlight-color:transparent;line-height:1.1;text-align:center"><span class="sb-top">User</span><span class="sb-ico">❓</span><span class="sb-sub">Manual</span></a>
   <button onclick="manualCheckForUpdate(this)" id="updateAppBtn"><span class="sb-top">Update App</span><span class="sb-ico">⬆️</span><span class="sb-sub" id="versionLabel">v1.2</span></button>
-  <button class="sb-reset" onclick="showResetConfirm()"><span class="sb-top">Reset</span><span class="sb-ico">♻️</span><span class="sb-sub">Setup</span></button>
+  <button class="sb-reset" onclick="showResetConfirm()"><span class="sb-top">Reset</span><span class="sb-ico">🧹</span><span class="sb-sub">Start Over</span></button>
   <button onclick="showS('history')"><span class="sb-top">Round</span><span class="sb-ico">📜</span><span class="sb-sub">History</span></button>
   <button onclick="showS('backup')"><span class="sb-top">Backup</span><span class="sb-ico">💾</span><span class="sb-sub">Data</span></button>
 </div>
 
 <!-- Reset confirm — pops up just above the setup action bar, near the Reset button -->
-<div id="resetConfirmPop" style="display:none;position:fixed;left:10px;right:10px;z-index:203;background:#2a1414;border:1.5px solid #c0392b;border-radius:12px;padding:14px 16px;box-shadow:0 4px 16px rgba(0,0,0,.4);transform:translate3d(0,0,0)">
-  <div style="font-size:14px;font-weight:700;color:#f0d0d0;text-align:center;margin-bottom:12px;line-height:1.4">⚠️ Clear all names, handicaps, and selected games?</div>
+<div id="resetConfirmPop" style="display:none;position:fixed;left:10px;right:10px;z-index:203;background:#1a3a2a;border:1.5px solid #c9a84c;border-radius:12px;padding:14px 16px;box-shadow:0 4px 16px rgba(0,0,0,.4);transform:translate3d(0,0,0)">
+  <div style="font-size:14px;font-weight:700;color:#f5e6b8;text-align:center;margin-bottom:4px;line-height:1.4">🧹 Clear THIS round's setup screen?</div>
+  <div style="font-size:12px;color:rgba(255,255,255,.6);text-align:center;margin-bottom:12px;line-height:1.4">Only clears the player names, handicaps, and game selections you see right now — like erasing a whiteboard before filling it in again.<br><br><b style="color:#f5e6b8">Your saved players, round history, and backups are never touched.</b></div>
   <div style="display:flex;gap:8px">
-    <button onclick="confirmResetSetup()" style="flex:1;background:#c0392b;color:#fff;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">Reset</button>
+    <button onclick="confirmResetSetup()" style="flex:1;background:#c9a84c;color:#1a3a2a;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">Clear It</button>
     <button onclick="hideResetConfirm()" style="flex:1;background:rgba(255,255,255,.12);color:#e8e8e8;border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">Cancel</button>
   </div>
 </div>
@@ -5347,7 +5348,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.36</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.39</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6012,7 +6013,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.36</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.39</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6467,7 +6468,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.36</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.39</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7040,7 +7041,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.36</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.39</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9606,7 +9607,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.36</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.39</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10045,7 +10046,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.36</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.39</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10318,7 +10319,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.36</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.39</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10458,7 +10459,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.36');
+  lines.push('— Pards Golf · v12.39');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11154,7 +11155,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.36 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.39 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13809,7 +13810,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.36';
+const CURRENT_VERSION = 'pards-v12.39';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14254,7 +14255,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.36';
+const CACHE='pards-v12.39';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
