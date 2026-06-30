@@ -5353,7 +5353,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.47</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.48</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6048,7 +6048,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.47</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.48</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6363,13 +6363,6 @@ function renderCard(){
       // Block scoring with a full-screen overlay the first time hole 18 loads
       setTimeout(function(){ showInternationalReminderOverlay(); }, 150);
     }
-  } else if(isRoundComplete()){
-    // All 18 holes scored
-    const intlActive = Object.keys(G.internationals||{}).length>0;
-    if(intlActive){
-      html += `<div class="intl-available-banner" onclick="showS('bets')">🌍 International matches have been settled — check 💵 Games → Nassau for results</div>`;
-    }
-    // No internationals called — show nothing
   }
 
   if(G._editingHistoryIdx !== undefined && G._editingHistoryIdx >= 0){
@@ -6380,7 +6373,9 @@ function renderCard(){
   } else if(isRoundComplete() && !isCurrentRoundSaved()){
     html += `<button class="save-round-btn" onclick="manualSaveRound()">💾 Save Round</button>`;
   } else if(isCurrentRoundSaved() && !(G._editingHistoryIdx >= 0)){
-    html += `<div class="save-round-done">🏁 All 18 Holes Complete — Round Saved to History<div style="font-size:11px;font-weight:600;opacity:.8;margin-top:5px;color:#f5e6b8">Tap New Round below to start another game</div></div>`;
+    const _intlActive2 = Object.keys(G.internationals||{}).length>0;
+    const _intlNote = _intlActive2 ? ' 🌍 International matches settled — see Games → Nassau for results.' : '';
+    html += `<div class="save-round-done">🏁 All 18 Holes Complete — Round Saved to History<div style="font-size:11px;font-weight:600;opacity:.8;margin-top:5px;color:#f5e6b8">Tap New Round below to start another game.${_intlNote}</div></div>`;
   }
 
   // ── Manual-advance confirm button ──
@@ -6516,7 +6511,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.47</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.48</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7089,7 +7084,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.47</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.48</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9659,7 +9654,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.47</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.48</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10098,7 +10093,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.47</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.48</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10371,7 +10366,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.47</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.48</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10511,7 +10506,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.47');
+  lines.push('— Pards Golf · v12.48');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11207,7 +11202,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.47 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.48 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13862,7 +13857,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.47';
+const CURRENT_VERSION = 'pards-v12.48';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14307,7 +14302,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.47';
+const CACHE='pards-v12.48';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
