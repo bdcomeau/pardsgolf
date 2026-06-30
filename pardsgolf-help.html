@@ -27,6 +27,8 @@
   li { margin-bottom:6px; }
   .tip { background:rgba(26,58,42,.07); border-left:4px solid var(--green); border-radius:0 8px 8px 0; padding:12px 16px; margin:16px 0; font-size:15px; color:#1a3a2a; }
   .tip::before { content:'💡 Tip: '; font-weight:700; }
+  .dyk { background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.04)); border-left:4px solid var(--gold); border-radius:0 8px 8px 0; padding:12px 16px; margin:16px 0; font-size:15px; color:#5a4a1a; }
+  .dyk::before { content:'✨ Did you know? '; font-weight:700; color:#8a6d1f; }
   .warn { background:rgba(192,57,43,.07); border-left:4px solid #c0392b; border-radius:0 8px 8px 0; padding:12px 16px; margin:16px 0; font-size:15px; color:#c0392b; }
   .warn::before { content:'⚠️ '; font-weight:700; }
   .note { background:rgba(0,0,0,.04); border-left:4px solid #aaa; border-radius:0 8px 8px 0; padding:12px 16px; margin:16px 0; font-size:15px; color:#555; font-style:italic; }
@@ -170,6 +172,8 @@
   <h2 class="sub">Mid-Round Settings</h2>
   <p>Change handicaps, switch tee boxes (tap their coloured tee pill), add/remove players, add/adjust any betting game, change starting hole, or toggle Auto-Advance.</p>
   <div class="tip">Any game can be added mid-round and will back-calculate results for holes already played.</div>
+  <div class="dyk">Change the starting hole mid-round (handy for a shotgun start correction) and the app doesn't just reset — it actually shifts every score you've already entered to its correct new position, shows you exactly which holes are moving where before you confirm, and even shifts Snake 3-putt history along with it.</div>
+  <div class="dyk">Switch a player's tee box mid-round and everything recalculates instantly: their handicap strokes for every remaining hole, and every Nassau match they're part of re-zeroes its relative handicaps in case the tee change shifted who the lowest-handicap player in the match is.</div>
 </div>
 
 <div class="section" id="nassau">
@@ -258,6 +262,8 @@
     </tbody>
   </table>
   <p>Tap 🐦🥃 to open the tracker. Tap 🍻 Redeem each time a round is poured.</p>
+  <div class="dyk">Birdie streaks keep counting even if you turn Birdie Juice Tracking off entirely — so you'll never lose track of a Turkey or a Legend run just because the group decided not to track drinks that day.</div>
+  <div class="dyk">The credit system is fully self-correcting: if you accidentally score a hole wrong and fix it afterward, the app automatically removes the old credit before adding any new one — no manual cleanup, no double-counted drinks.</div>
 </div>
 
 <div class="section" id="coursepicker">
@@ -319,6 +325,7 @@
     <li>Edit names, handicaps, Golf Canada IDs, tee preferences.</li>
   </ul>
   <p>A gold <strong>Done ✓</strong> button floats in the top-right corner so you can close the overlay from anywhere while scrolling.</p>
+  <div class="dyk">The tee you set in "Tee Deck" is remembered <em>per course, per player</em> — not just one global preference. Switch to a different course in the picker, open Manage My Players, and set that player's tee there; the app remembers that exact tee for that exact course forever, while your tee at every other course stays untouched. Play 20 different courses with 20 different favourite tees, all remembered independently.</div>
 </div>
 
 <div class="section" id="courses">
