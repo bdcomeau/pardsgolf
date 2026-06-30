@@ -840,6 +840,9 @@ input::placeholder{color:#bbb}
 <!-- Floating return button for Games/Nassau screen during an active round -->
 <button id="betsFloatBack" onclick="showS('score');renderCard()" style="display:none;position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:16px;z-index:500;background:linear-gradient(135deg,var(--gd),var(--gm));color:#c9a84c;border:1.5px solid #c9a84c;border-radius:24px;padding:10px 18px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);-webkit-tap-highlight-color:transparent;letter-spacing:.3px">⛳ Return to Scorecard</button>
 
+<!-- Floating return button for Backup/Restore screen -->
+<button id="backupFloatBack" onclick="showS('setup')" style="display:none;position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:16px;z-index:500;background:linear-gradient(135deg,var(--gd),var(--gm));color:#c9a84c;border:1.5px solid #c9a84c;border-radius:24px;padding:10px 18px;font-size:14px;font-weight:800;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);-webkit-tap-highlight-color:transparent;letter-spacing:.3px">&#8249; Return</button>
+
 <!-- ══════════ BACKUP & RESTORE ══════════ -->
 <div class="screen" id="screen-backup">
   <div class="shdr" style="display:flex;align-items:center;gap:10px;padding:10px 14px">
@@ -906,6 +909,10 @@ input::placeholder{color:#bbb}
 </div>
 
 <script>
+// Always start at the top on load/reload — prevents iOS Safari from restoring a mid-page
+// scroll position after window.location.reload() (e.g. after a backup import).
+if('scrollRestoration' in history){ history.scrollRestoration = 'manual'; }
+window.scrollTo(0,0);
 /* ═══════════════════════════════════════════════
    PARDS GOLF — COURSE DATABASE
    All courses baked in; no network dependency.
@@ -5353,7 +5360,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.50</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.51</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6048,7 +6055,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.50</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.51</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6511,7 +6518,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.50</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.51</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7084,7 +7091,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.50</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.51</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -8272,6 +8279,9 @@ function showS(name){
   // Floating Return to Scorecard on the Games/Nassau screen, only while a round is in progress
   const _bfb=document.getElementById('betsFloatBack');
   if(_bfb) _bfb.style.display=(name==='bets' && !!G.roundDate)?'block':'none';
+  // Floating Return on the Backup/Restore screen
+  const _bkfb=document.getElementById('backupFloatBack');
+  if(_bkfb) _bkfb.style.display=(name==='backup')?'block':'none';
   if(name==='score'){
     renderCard();
     // Force the scorecard to the top every time it's selected (after content is rendered).
@@ -9697,7 +9707,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.50</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.51</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -9761,7 +9771,7 @@ function importData(){
         renderHistory();
         // Reload the page after a short delay — cleanest way to ensure everything
         // re-initialises from the freshly restored localStorage data
-        setTimeout(()=>{ window.location.reload(); }, 1500);
+        setTimeout(()=>{ window.scrollTo(0,0); window.location.reload(); }, 1500);
       } catch(err){
         showImportResult('⚠️ Could not read backup: '+err.message,true);
       }
@@ -10136,7 +10146,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.50</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.51</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10409,7 +10419,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.50</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.51</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10549,7 +10559,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.50');
+  lines.push('— Pards Golf · v12.51');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11247,7 +11257,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.50 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.51 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13902,7 +13912,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.50';
+const CURRENT_VERSION = 'pards-v12.51';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14347,7 +14357,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.50';
+const CACHE='pards-v12.51';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
