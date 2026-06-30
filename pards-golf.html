@@ -5353,7 +5353,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.49</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.50</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6048,7 +6048,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.49</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.50</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6511,7 +6511,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.49</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.50</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7084,7 +7084,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.49</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.50</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -8775,6 +8775,47 @@ function printSixPointCard(gi){
   if(!win){ alert('Please allow pop-ups for this site to use Print.'); URL.revokeObjectURL(url); }
 }
 
+// Returns a Set of player indices whose score "counted" (won the ball) for this matchup on this hole.
+// Same logic as the live renderOneMatchCard winner highlight.
+function matchHoleWinners(m, h){
+  const winnerPis = new Set();
+  const allIdxs = [...m.sideA, ...m.sideB];
+  if(m.type === '2v2-combined'){
+    const allScored = allIdxs.every(pi => G.scores[pi][h] !== null);
+    if(!allScored) return winnerPis;
+    const allPh = matchPlayHdcps(allIdxs);
+    const phA = allPh.slice(0, m.sideA.length);
+    const phB = allPh.slice(m.sideA.length);
+    const netA = m.sideA.map((pi,ii) => matchNetS(pi, h, phA[ii]));
+    const netB = m.sideB.map((pi,ii) => matchNetS(pi, h, phB[ii]));
+    const aLow=Math.min(...netA), bLow=Math.min(...netB), aHigh=Math.max(...netA), bHigh=Math.max(...netB);
+    function markBall(side, nets, targetNet, usedSet){
+      const idx = side.findIndex((pi,ii) => nets[ii]===targetNet && !usedSet.has(pi));
+      if(idx !== -1){ winnerPis.add(side[idx]); usedSet.add(side[idx]); }
+    }
+    const aWinsLow=aLow<bLow, bWinsLow=bLow<aLow, aWinsHigh=aHigh<bHigh, bWinsHigh=bHigh<aHigh;
+    const aPoints=(aWinsLow?1:0)+(aWinsHigh?1:0), bPoints=(bWinsLow?1:0)+(bWinsHigh?1:0);
+    if(aPoints > 0 && bPoints === 0){
+      const u = new Set();
+      if(aWinsLow) markBall(m.sideA, netA, aLow, u);
+      if(aWinsHigh) markBall(m.sideA, netA, aHigh, u);
+    } else if(bPoints > 0 && aPoints === 0){
+      const u = new Set();
+      if(bWinsLow) markBall(m.sideB, netB, bLow, u);
+      if(bWinsHigh) markBall(m.sideB, netB, bHigh, u);
+    }
+  } else if(m.type === '1v1'){
+    const allScored = allIdxs.every(pi => G.scores[pi][h] !== null);
+    if(!allScored) return winnerPis;
+    const ph1v1 = matchPlayHdcps([...m.sideA, ...m.sideB]);
+    const aNet = matchNetS(m.sideA[0], h, ph1v1[0]);
+    const bNet = matchNetS(m.sideB[0], h, ph1v1[1]);
+    if(aNet < bNet) winnerPis.add(m.sideA[0]);
+    else if(bNet < aNet) winnerPis.add(m.sideB[0]);
+  }
+  return winnerPis;
+}
+
 function printMatchCard(mi){
   const matchups=buildMatchups();
   const m=matchups[mi];
@@ -8791,11 +8832,12 @@ function printMatchCard(mi){
   const th=(txt,bg,col,fw,xtra)=>`<th style="background:${bg||GD};color:${col||GOLD};font-weight:${fw||700};padding:5px 4px;border:1px solid #90a4ae;font-size:10px;white-space:nowrap;text-align:center${xtra?';'+xtra:''}">${txt}</th>`;
   const td=(txt,bg,col,fw,xtra)=>`<td style="background:${bg||'#fff'};color:${col||'#1a1a1a'};font-weight:${fw||400};padding:4px 3px;border:1px solid #ddd;font-size:10px;text-align:center${xtra?';'+xtra:''}">${txt}</td>`;
   const tdl=(txt,bg,col,fw)=>`<td style="background:${bg||'#eceff1'};color:${col||'#37474f'};font-weight:${fw||700};padding:4px 6px;border:1px solid #b0bec5;font-size:10px;text-align:left;white-space:nowrap">${txt}</td>`;
-  function scoreCell(g,stk){
+  function scoreCell(g,stk,won){
     const disp=g!==null?g:'·';
-    if(stk===2) return `<span style="display:inline-block;border:1px solid ${RED};border-radius:50%;padding:1px"><span style="display:inline-block;min-width:14px;height:14px;line-height:14px;border:1px solid ${RED};border-radius:50%;font-size:9px;font-weight:700;text-align:center">${disp}</span></span>`;
-    if(stk===1) return `<span style="display:inline-block;min-width:16px;height:16px;line-height:16px;border:1px solid ${RED};border-radius:50%;font-size:9px;font-weight:700;text-align:center">${disp}</span>`;
-    return g!==null?`<b>${g}</b>`:'·';
+    const tick = won ? `<span style="color:${GOLD};font-size:8px;font-weight:900;line-height:1;vertical-align:top;margin-left:1px">✓</span>` : '';
+    if(stk===2) return `<span style="display:inline-block;border:1px solid ${RED};border-radius:50%;padding:1px"><span style="display:inline-block;min-width:14px;height:14px;line-height:14px;border:1px solid ${RED};border-radius:50%;font-size:9px;font-weight:700;text-align:center">${disp}</span></span>${tick}`;
+    if(stk===1) return `<span style="display:inline-block;min-width:16px;height:16px;line-height:16px;border:1px solid ${RED};border-radius:50%;font-size:9px;font-weight:700;text-align:center">${disp}</span>${tick}`;
+    return g!==null?`<b>${g}</b>${tick}`:'·';
   }
 
   const allIdxs=[...m.sideA,...m.sideB];
@@ -8821,8 +8863,9 @@ function printMatchCard(mi){
   mt+=`</tr></thead><tbody>`;
   function mRow(playIdx){
     const h=actualHoleIdx(playIdx);
+    const _winners = matchHoleWinners(m, h);
     let r=`<tr>${td(h+1,'#3a3a3a','#fff',700)}${td(G.si[h],'#e6e2e2','#1a1a1a',700)}${td(G.par[h],'#c3cc5a','#1a1a1a',700)}`;
-    allIdxs.forEach((pi,ii)=>r+=td(scoreCell(G.scores[pi][h],smM[ii][h]),'#fff','#1a1a1a',700));
+    allIdxs.forEach((pi,ii)=>r+=td(scoreCell(G.scores[pi][h],smM[ii][h],_winners.has(pi)),'#fff','#1a1a1a',700));
     cols.forEach(col=>{const v=col.cells[playIdx],isN=!col.game.isPress;r+=td(v||'',v==='P'?'#fff3cd':isN?'#eef5ef':'#fff',v&&v[0]==='+'?'#1b5e20':v&&v[0]==='-'?RED:'#333',700);});
     return r+'</tr>';
   }
@@ -9654,7 +9697,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.49</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.50</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10093,7 +10136,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.49</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.50</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10366,7 +10409,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.49</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.50</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10506,7 +10549,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.49');
+  lines.push('— Pards Golf · v12.50');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -10903,7 +10946,7 @@ function buildPrintHTML(snap){
   const td=(txt,bg,col,fw,xtra)=>`<td style="background:${bg||'#fff'};color:${col||'#1a1a1a'};font-weight:${fw||400};padding:4px 3px;border:1px solid #ddd;font-size:10px;text-align:center${xtra?';'+xtra:''}">${txt}</td>`;
   const tdl=(txt,bg,col,fw)=>`<td style="background:${bg||'#eceff1'};color:${col||'#37474f'};font-weight:${fw||700};padding:4px 6px;border:1px solid #b0bec5;font-size:10px;text-align:left;white-space:nowrap">${txt}</td>`;
   const strokeMaps=players.map(p=>matchStrokes(Math.round(p.idx)));
-  function scoreCell(g, stk, par){
+  function scoreCell(g, stk, par, won){
     // Traditional markings when par is supplied (master scorecard only)
     if(par!==undefined){
       if(g===null) return '·';
@@ -10917,9 +10960,10 @@ function buildPrintHTML(snap){
     }
     // Stroke circles (Nassau/6-Point cards) — show circle even if no score yet
     const disp = g!==null ? g : '·';
-    if(stk===2) return `<span style="display:inline-block;border:1px solid ${RED};border-radius:50%;padding:1px"><span style="display:inline-block;min-width:14px;height:14px;line-height:14px;border:1px solid ${RED};border-radius:50%;font-size:9px;font-weight:700;text-align:center">${disp}</span></span>`;
-    if(stk===1) return `<span style="display:inline-block;min-width:16px;height:16px;line-height:16px;border:1px solid ${RED};border-radius:50%;font-size:9px;font-weight:700;text-align:center">${disp}</span>`;
-    return g!==null ? `<b>${g}</b>` : '·';
+    const _tick = won ? `<span style="color:${GOLD};font-size:8px;font-weight:900;line-height:1;vertical-align:top;margin-left:1px">✓</span>` : '';
+    if(stk===2) return `<span style="display:inline-block;border:1px solid ${RED};border-radius:50%;padding:1px"><span style="display:inline-block;min-width:14px;height:14px;line-height:14px;border:1px solid ${RED};border-radius:50%;font-size:9px;font-weight:700;text-align:center">${disp}</span></span>${_tick}`;
+    if(stk===1) return `<span style="display:inline-block;min-width:16px;height:16px;line-height:16px;border:1px solid ${RED};border-radius:50%;font-size:9px;font-weight:700;text-align:center">${disp}</span>${_tick}`;
+    return g!==null ? `<b>${g}</b>${_tick}` : '·';
   }
   const _pCourse = activeCourse();
   const _pTees = _pCourse.tees;
@@ -11055,8 +11099,9 @@ function buildPrintHTML(snap){
       mt+=`</tr></thead><tbody>`;
       function mRow(playIdx){
         const h=actualHoleIdx(playIdx);
+        const _winners=matchHoleWinners(m,h);
         let r=`<tr>${td(h+1,'#3a3a3a','#fff',700)}${td(G.si[h],'#e6e2e2','#1a1a1a',700)}${td(G.par[h],'#c3cc5a','#1a1a1a',700)}`;
-        allIdxs.forEach((pi,ii)=>r+=td(scoreCell(G.scores[pi][h],smM[ii][h]),'#fff','#1a1a1a',700));
+        allIdxs.forEach((pi,ii)=>r+=td(scoreCell(G.scores[pi][h],smM[ii][h],undefined,_winners.has(pi)),'#fff','#1a1a1a',700));
         cols.forEach(c=>{const v=c.cells[playIdx],isN=!c.game.isPress;r+=td(v||'',v==='P'?'#fff3cd':isN?'#eef5ef':'#fff',v&&v[0]==='+'?'#1b5e20':v&&v[0]==='-'?RED:'#333',700);});
         return r+'</tr>';
       }
@@ -11202,7 +11247,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.49 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.50 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13857,7 +13902,7 @@ seedContactsIfEmpty();migrateDecksFromDerrick();renderAllPairOptions();initSetup
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.49';
+const CURRENT_VERSION = 'pards-v12.50';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14302,7 +14347,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.49';
+const CACHE='pards-v12.50';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
