@@ -602,11 +602,27 @@ input::placeholder{color:#bbb}
       <div class="card" id="roundTypeCard" style="background:#1a3a2a;padding:12px;border:1.5px solid rgba(168,213,181,.4);box-shadow:0 3px 8px rgba(0,0,0,.35)">
         <input type="hidden" id="scorecardOnly">
         <input type="hidden" id="autoAdvanceEnabled">
-        <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">📋 Scorekeeping Mode Only</div>
-          <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
-            <button id="segScoreOn" onclick="setScorecardMode(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">ON</button>
-            <button id="segScoreOff" onclick="setScorecardMode(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ OFF</button>
+        <div style="position:relative">
+          <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
+            <div style="display:flex;align-items:center;gap:5px">
+              <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">📋 Scorekeeping Mode Only</div>
+              <button onclick="toggleScoreInfo(event)" style="width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(168,213,181,.6);background:transparent;color:rgba(168,213,181,.8);font-size:9px;font-weight:800;cursor:pointer;padding:0;line-height:1;flex:none;-webkit-tap-highlight-color:transparent">i</button>
+            </div>
+            <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
+              <button id="segScoreOn" onclick="setScorecardMode(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">ON</button>
+              <button id="segScoreOff" onclick="setScorecardMode(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ OFF</button>
+            </div>
+          </div>
+          <div id="scoreInfoPopup" style="display:none;position:absolute;top:24px;left:0;z-index:200;background:#0f2a1a;border:1.5px solid rgba(201,168,76,.5);border-radius:10px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.6);width:260px">
+            <div style="font-size:11px;font-weight:800;color:var(--gp);margin-bottom:8px;letter-spacing:.3px">Scorekeeping Mode</div>
+            <div style="display:flex;gap:8px;margin-bottom:7px">
+              <div style="color:var(--gp);font-size:11px;flex:none">•</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5"><span style="font-weight:800;color:#a8d5b5">OFF — DEFAULT</span> — Scores and tracks as many money games as you can select in Games Setup.</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <div style="color:var(--gp);font-size:11px;flex:none">•</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5"><span style="font-weight:800;color:#a8d5b5">Scorekeeping Mode Only (ON)</span> — No betting games, just a scorecard and that's it.</div>
+            </div>
           </div>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)">
@@ -3837,6 +3853,18 @@ function setBirdieJuice(enabled){
   saveG();
 }
 
+function toggleScoreInfo(e){
+  e.stopPropagation();
+  const pop=document.getElementById('scoreInfoPopup');
+  if(!pop) return;
+  const visible=pop.style.display!=='none';
+  pop.style.display=visible?'none':'block';
+  if(!visible){
+    const hide=function(){ pop.style.display='none'; document.removeEventListener('click',hide); };
+    setTimeout(()=>document.addEventListener('click',hide),0);
+  }
+}
+
 function setScorecardMode(scoresOnly){
   const segOn=document.getElementById('segScoreOn');
   const segOff=document.getElementById('segScoreOff');
@@ -5379,7 +5407,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.83</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v12.85</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6074,7 +6102,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.83</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.85</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6542,7 +6570,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.83</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.85</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7115,7 +7143,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.83</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.85</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9762,7 +9790,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.83</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.85</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10270,7 +10298,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.83</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v12.85</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10543,7 +10571,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.83</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v12.85</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10683,7 +10711,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v12.83');
+  lines.push('— Pards Golf · v12.85');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11390,7 +11418,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v12.83 · ${dateStr}</div>
+<div class="foot">Pards Golf · v12.85 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13749,7 +13777,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v12.83. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v12.85. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14237,7 +14265,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v12.83';
+const CURRENT_VERSION = 'pards-v12.85';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14682,7 +14710,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v12.83';
+const CACHE='pards-v12.85';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
