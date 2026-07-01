@@ -5554,7 +5554,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.20</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.22</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6261,7 +6261,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.20</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.22</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6548,56 +6548,70 @@ function renderWhoStrokes(){
   if(!el || !G.players || !G.players.length) return;
   var h   = G.hole || 0;
   var si  = G.si && G.si[h] != null ? G.si[h] : null;
-  var par = G.par && G.par[h] != null ? G.par[h] : '—';
   var gld = 'color:var(--gold)';
   var dim = 'color:rgba(255,255,255,.4)';
   var hdr = 'font-size:10px;font-weight:800;color:rgba(201,168,76,.75);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px';
+  var pn  = function(i){ return G.players[i] ? G.players[i].name.split(' ')[0] : '?'; };
 
   var out = '<div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:8px;letter-spacing:.3px">WHO STROKES? · HOLE '+(h+1)+' · HCP '+(si!==null?si:'—')+'</div>';
 
-  var matchups = buildMatchups();
-  if(!matchups.length){
-    out += '<div style="'+dim+'">No matches set up.</div>';
-    el.innerHTML = out; return;
+  function strokesOnHole(ph){
+    if(si === null) return 0;
+    if(ph >= si + 18) return 2;
+    if(ph >= si)      return 1;
+    return 0;
   }
 
-  var anyStrokesInAnyMatch = false;
+  function buildSection(gameType, playerIdxs, label){
+    var playHdcp = matchPlayHdcps(playerIdxs);
+    var parts = [];
+    playerIdxs.forEach(function(pi, ii){
+      var strokes = strokesOnHole(playHdcp[ii]);
+      if(strokes > 0){
+        parts.push('<span style="'+gld+';font-weight:700">'+pn(pi)+'</span> gets '+(strokes===1?'1 shot':'2 shots'));
+      }
+    });
+    out += '<div style="margin-bottom:8px">';
+    out += '<div style="'+hdr+'">'+label+' · <span style="color:rgba(201,168,76,.5)">'+gameType+'</span></div>';
+    if(parts.length === 0){
+      out += '<div style="'+dim+'">No strokes this hole</div>';
+    } else {
+      out += '<div style="font-size:12px;color:rgba(255,255,255,.85)">'+parts.join(' · ')+'</div>';
+    }
+    out += '</div>';
+  }
 
+  var hasAny = false;
+
+  // ── Nassau matches ───────────────────────────────────────────────────────
+  var matchups = buildMatchups();
   matchups.forEach(function(m){
-    var allIdxs  = m.sideA.concat(m.sideB);
-    var playHdcp = matchPlayHdcps(allIdxs);
-    var pn = function(i){ return G.players[i] ? G.players[i].name.split(' ')[0] : '?'; };
+    hasAny = true;
+    var allIdxs = m.sideA.concat(m.sideB);
     var label = m.type === '2v2-combined'
       ? m.sideA.map(pn).join('/') + ' vs ' + m.sideB.map(pn).join('/')
       : pn(m.sideA[0]) + ' vs ' + pn(m.sideB[0]);
-
-    var strokeParts = [];
-    allIdxs.forEach(function(pi, ii){
-      var ph = playHdcp[ii];
-      var strokes = 0;
-      if(si !== null){
-        if(ph >= si + 18) strokes = 2;
-        else if(ph >= si)  strokes = 1;
-      }
-      if(strokes > 0){
-        var shot = strokes === 1 ? '1 shot' : '2 shots';
-        strokeParts.push('<span style="'+gld+';font-weight:700">'+pn(pi)+'</span> gets '+shot);
-      }
-    });
-
-    out += '<div style="margin-bottom:8px">';
-    out += '<div style="'+hdr+'">🏌️ '+label+'</div>';
-    if(strokeParts.length === 0){
-      out += '<div style="'+dim+'">No strokes this hole</div>';
-    } else {
-      anyStrokesInAnyMatch = true;
-      out += '<div style="font-size:12px;color:rgba(255,255,255,.85)">'+strokeParts.join(' · ')+'</div>';
-    }
-    out += '</div>';
+    var gameType = m.type === '2v2-combined' ? '2v2 Nassau' : '1v1 Nassau';
+    buildSection(gameType, allIdxs, label);
   });
+
+  // ── 6-Point games ────────────────────────────────────────────────────────
+  if(G.sixPointGames && G.sixPointGames.length){
+    G.sixPointGames.forEach(function(game){
+      if(!game.players || game.players.length < 2) return;
+      hasAny = true;
+      var label = game.players.map(pn).join(' vs ');
+      buildSection('6-Point', game.players, label);
+    });
+  }
+
+  if(!hasAny){
+    out += '<div style="'+dim+'">No matches set up.</div>';
+  }
 
   el.innerHTML = out;
 }
+
 
 
 function toggleLiveStandings(){
@@ -6615,6 +6629,35 @@ function toggleLiveStandings(){
   if(panel) panel.style.display = _liveStandOpen ? 'block' : 'none';
   if(chev)  chev.textContent    = _liveStandOpen ? '▲' : '▼';
   if(_liveStandOpen) renderLiveStandings();
+}
+
+// Per-player settled dollars for a single matchup (mirrors computeMoney logic)
+function matchSettledDollars(m){
+  const money = G.players.map(()=>0);
+  const intlActive = (G.internationals||{})[m.matchId];
+  let intl = null, bucketed = null;
+  if(intlActive){ intl = computeInternational(m); if(intl) bucketed = intl.bucketedLabels; }
+  computeMatchGames(m).forEach(g=>{
+    if(!g.settled||g.winner==='tie') return;
+    if(bucketed){
+      if(g.isFrontPress){
+        if(!bucketed.has(g.label+'#leg9') && g.leg9.settled && g.leg9.score!==0){
+          const a=base_(m), wi=g.leg9.score>0?m.sideA:m.sideB, li=g.leg9.score>0?m.sideB:m.sideA;
+          wi.forEach(i=>money[i]+=a); li.forEach(i=>money[i]-=a);
+        }
+        if(!bucketed.has(g.label+'#leg18') && g.leg18.settled && g.leg18.score!==0){
+          const a=base_(m), wi=g.leg18.score>0?m.sideA:m.sideB, li=g.leg18.score>0?m.sideB:m.sideA;
+          wi.forEach(i=>money[i]+=a); li.forEach(i=>money[i]-=a);
+        }
+        return;
+      } else if(bucketed.has(g.label)) return;
+    }
+    const amt = g.isFrontPress ? Math.abs(g.combinedPay||0) : g.value;
+    const wi=g.winner==='A'?m.sideA:m.sideB, li=g.winner==='A'?m.sideB:m.sideA;
+    wi.forEach(i=>money[i]+=amt); li.forEach(i=>money[i]-=amt);
+  });
+  if(intl){ const n=intlNetToA(m,intl); m.sideA.forEach(i=>money[i]+=n); m.sideB.forEach(i=>money[i]-=n); }
+  return money;
 }
 
 function renderLiveStandings(){
@@ -6661,6 +6704,21 @@ function renderLiveStandings(){
       else if(g.isPress)  lbl = 'Press H'+(g.startH+1)+'+';
       h += row(lbl, gameLine(g.score, g.holesPlayed, g.settled, g.winner, sA, sB));
     });
+    // Per-player settled $ for this matchup
+    if(!G.scoreOnly){
+      var mdollars = matchSettledDollars(m);
+      var allIdxs  = m.sideA.concat(m.sideB);
+      var anyMoney = allIdxs.some(function(i){ return mdollars[i] !== 0; });
+      if(anyMoney){
+        var mparts = allIdxs.map(function(i){
+          var v = mdollars[i];
+          var col = v>0?gld:v<0?red:dim;
+          var fv = (v>0?'+$':v<0?'-$':'$')+Math.abs(v).toFixed(2).replace(/\.00$/,'');
+          return '<span style="'+col+'">'+pn(i)+' '+fv+'</span>';
+        });
+        h += '<div style="font-size:10px;margin-top:3px;padding-top:3px;border-top:1px solid rgba(255,255,255,.08)">'+mparts.join('  ')+'</div>';
+      }
+    }
     h += '</div>';
   });
 
@@ -6968,7 +7026,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.20</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.22</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7541,7 +7599,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.20</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.22</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10190,7 +10248,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.20</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.22</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10698,7 +10756,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.20</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.22</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10971,7 +11029,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.20</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.22</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11111,7 +11169,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.20');
+  lines.push('— Pards Golf · v13.22');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11818,7 +11876,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.20 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.22 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -14177,7 +14235,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.20. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.22. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14665,7 +14723,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.20';
+const CURRENT_VERSION = 'pards-v13.22';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -15110,7 +15168,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.20';
+const CACHE='pards-v13.22';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
