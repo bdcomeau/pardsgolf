@@ -5561,7 +5561,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.29</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.30</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6268,7 +6268,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.29</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.30</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6724,6 +6724,9 @@ function renderLiveStandings(){
   m2.concat(m1).forEach(function(m){
     var games    = computeMatchGames(m);
     var dollars  = !G.scoreOnly ? matchSettledDollars(m) : null;
+    var allIdxs  = m.sideA.concat(m.sideB);
+    var anyStarted = games.some(function(g){ return g.holesPlayed > 0; });
+    var allSquare  = dollars && anyStarted && allIdxs.every(function(i){ return dollars[i] === 0; });
     function nameDollar(i){
       var name = pn(i);
       if(!dollars || dollars[i]===0) return name;
@@ -6734,10 +6737,9 @@ function renderLiveStandings(){
     }
     var sA = m.type==='1v1' ? nameDollar(m.sideA[0]) : m.sideA.map(nameDollar).join('/');
     var sB = m.type==='1v1' ? nameDollar(m.sideB[0]) : m.sideB.map(nameDollar).join('/');
-    var sAplain = m.type==='1v1' ? pn(m.sideA[0]) : m.sideA.map(pn).join('/');
-    var sBplain = m.type==='1v1' ? pn(m.sideB[0]) : m.sideB.map(pn).join('/');
     var type = m.type==='2v2-combined' ? '2v2 Nassau' : '1v1 Nassau';
-    h += '<div style="'+wrp+'"><div style="'+hdr+'">\uD83C\uDFCC\uFE0F '+type+' \u00B7 '+sA+' vs '+sB+'</div></div>';
+    var asSuffix = allSquare ? ' <span style="color:#a8d5b5;font-size:10px;font-weight:700">· ALL SQUARE</span>' : '';
+    h += '<div style="'+wrp+'"><div style="'+hdr+'">\uD83C\uDFCC\uFE0F '+type+' \u00B7 '+sA+' vs '+sB+asSuffix+'</div></div>';
   });
 
   // 6-Point
@@ -7046,7 +7048,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.29</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.30</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7619,7 +7621,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.29</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.30</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10268,7 +10270,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.29</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.30</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10776,7 +10778,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.29</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.30</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11049,7 +11051,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.29</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.30</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11189,7 +11191,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.29');
+  lines.push('— Pards Golf · v13.30');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11896,7 +11898,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.29 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.30 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -14255,7 +14257,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.29. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.30. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14743,7 +14745,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.29';
+const CURRENT_VERSION = 'pards-v13.30';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -15188,7 +15190,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.29';
+const CACHE='pards-v13.30';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
