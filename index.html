@@ -543,20 +543,9 @@ input::placeholder{color:#bbb}
     <div id="coursePickerPanel" style="display:none;background:#fff;border-radius:12px;margin-top:6px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.35)"></div>
     <!-- Map icon (shown when course has coords) -->
     <div id="courseMapIcon" style="display:none;margin-top:6px">
-      <button onclick="showCourseMapModal()" style="background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);border-radius:8px;padding:5px 12px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px">
-        <span style="font-size:15px">🗺️</span> Satellite Map
+      <button onclick="openCourseInMaps()" style="background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);border-radius:8px;padding:5px 12px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px">
+        <span style="font-size:15px">🗺️</span> Open in Maps
       </button>
-    </div>
-
-    <!-- Map modal overlay -->
-    <div id="courseMapModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.82);align-items:center;justify-content:center" onclick="hideCourseMapModal()">
-      <div style="width:92%;max-width:500px;border-radius:14px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.7)" onclick="event.stopPropagation()">
-        <img id="courseMapImg" src="" alt="" style="width:100%;display:block">
-        <div style="background:#1a1a1a;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
-          <button onclick="openCourseInMaps()" style="background:rgba(201,168,76,.2);border:1px solid rgba(201,168,76,.5);border-radius:8px;padding:6px 14px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer">📍 Open in Maps</button>
-          <button onclick="hideCourseMapModal()" style="background:rgba(255,255,255,.1);border:none;border-radius:8px;padding:6px 14px;color:rgba(255,255,255,.7);font-size:12px;cursor:pointer">✕ Close</button>
-        </div>
-      </div>
     </div>
     <div id="courseDetail" style="margin-top:8px;font-size:11px;color:rgba(201,168,76,.7);min-height:14px"></div>
   </div>
@@ -2250,28 +2239,11 @@ function _updateCoursePickerBtn(){
 }
 
 function updateCourseMap(courseId){
-  const icon  = document.getElementById('courseMapIcon');
-  const img   = document.getElementById('courseMapImg');
-  if(!icon || !img) return;
-  const ll = COURSE_COORDS[courseId];
-  if(!ll){
-    icon.style.display = 'none';
-    return;
-  }
-  const [lat, lng] = ll;
-  img.src = `${WL_WORKER}/maps-static?lat=${lat}&lng=${lng}&zoom=16`;
-  icon.style.display = 'block';
+  const icon = document.getElementById('courseMapIcon');
+  if(!icon) return;
+  icon.style.display = COURSE_COORDS[courseId] ? 'block' : 'none';
 }
 
-function showCourseMapModal(){
-  const modal = document.getElementById('courseMapModal');
-  if(modal){ modal.style.display = 'flex'; }
-}
-
-function hideCourseMapModal(){
-  const modal = document.getElementById('courseMapModal');
-  if(modal){ modal.style.display = 'none'; }
-}
 
 function openCourseInMaps(){
   const ll = COURSE_COORDS[G.courseId];
@@ -5571,7 +5543,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.09</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.10</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6278,7 +6250,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.09</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.10</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6746,7 +6718,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.09</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.10</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7319,7 +7291,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.09</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.10</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9968,7 +9940,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.09</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.10</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10476,7 +10448,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.09</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.10</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10749,7 +10721,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.09</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.10</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10889,7 +10861,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.09');
+  lines.push('— Pards Golf · v13.10');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11596,7 +11568,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.09 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.10 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13955,7 +13927,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.09. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.10. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14443,7 +14415,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.09';
+const CURRENT_VERSION = 'pards-v13.10';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14888,7 +14860,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.09';
+const CACHE='pards-v13.10';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
