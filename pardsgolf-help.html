@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pards Golf User Manual v11.92</title>
+<title>Pards Golf User Manual v13.32</title>
 <style>
   :root { --green:#1a3a2a; --gold:#c9a84c; --lgold:#f5e6b8; }
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -54,7 +54,7 @@
 <div class="cover">
   <span class="emoji">⛳</span>
   <h1>Pards Golf</h1>
-  <div class="sub">User Manual &nbsp;·&nbsp; Version 12.66</div>
+  <div class="sub">User Manual &nbsp;·&nbsp; Version 13.32</div>
   <div class="sub">A mobile scorecard, betting tracker, and Birdie Juice ledger</div>
   <div class="games">Nassau &nbsp;·&nbsp; 6-Point &nbsp;·&nbsp; Stableford &nbsp;·&nbsp; Skins &nbsp;·&nbsp; Vegas &nbsp;·&nbsp; Snake &nbsp;·&nbsp; Match Cards &nbsp;·&nbsp; The International</div>
 </div>
@@ -82,6 +82,9 @@
     <li><a href="#players">Manage My Players</a></li>
     <li><a href="#courses">Courses</a></li>
     <li><a href="#trouble">Troubleshooting</a></li>
+    <li><a href="#whatsnew">What's New in v13</a></li>
+    <li><a href="#livestandings">Live Standings</a></li>
+    <li><a href="#whostrokes">Who Strokes?</a></li>
   </ol>
 </div>
 
@@ -163,7 +166,8 @@
 <div class="section" id="scoring">
   <h1 class="sec">3. Scoring — The Scorecard Screen</h1>
   <h2 class="sub">Entering Scores</h2>
-  <p>Scroll each player's wheel to their score, then tap the centre to confirm. A birdie or better triggers a Birdie Juice popup (if enabled). Correct any score by scrolling again — everything recalculates instantly.</p>
+  <p>Each player has a score wheel. The <strong>◀</strong> arrow on the far left scrolls to a better score; the <strong>▶</strong> arrow on the far right scrolls to a worse score. The selected score is always centred — scan straight down the middle of all player cards to review every score at once. Tap side scores to jump directly. Tap the centre to confirm. A birdie or better triggers a Birdie Juice popup (if enabled). Correct any score by scrolling again — everything recalculates instantly.</p>
+  <div class="tip">The ◀ arrow is greyed out and disabled when the score reaches 1 — you can't go lower than a hole-in-one.</div>
   <h2 class="sub">The Settings Button</h2>
   <ul>
     <li><strong>✏️ Edit Round Settings</strong> — before any score is entered. Returns to Setup.</li>
@@ -325,16 +329,25 @@
     <li>Edit names, handicaps, Golf Canada IDs, tee preferences.</li>
   </ul>
   <p>A gold <strong>Done ✓</strong> button floats in the top-right corner so you can close the overlay from anywhere while scrolling.</p>
+  <h2 class="sub">Handicap Trend Arrows</h2>
+  <p>Beside each player's index you'll see a trend arrow whenever their handicap has changed since the last Golf Canada fetch:</p>
+  <ul>
+    <li><strong>▼ green</strong> — index went down (improving)</li>
+    <li><strong>▲ red</strong> — index went up (getting worse)</li>
+  </ul>
+  <p>The delta is shown to one decimal (e.g. ▼ 1.0). The trend is captured automatically at every fetch and persists across sessions.</p>
   <div class="dyk">The tee you set in "Tee Deck" is remembered <em>per course, per player</em> — not just one global preference. Switch to a different course in the picker, open Manage My Players, and set that player's tee there; the app remembers that exact tee for that exact course forever, while your tee at every other course stays untouched. Play 20 different courses with 20 different favourite tees, all remembered independently.</div>
 </div>
 
 <div class="section" id="courses">
   <h1 class="sec">17. Courses</h1>
-  <p>63 courses built in — all tees, par, stroke index, slope, and rating pre-loaded. No internet required.</p>
+  <p>65 courses built in — all tees, par, stroke index, slope, and rating pre-loaded. No internet required.</p>
   <h2 class="sub">Edmonton &amp; Area, AB</h2>
   <p>Derrick Golf &amp; Winter Club, Windermere G&amp;CC, Edmonton Country Club, Glendale G&amp;CC, Royal Mayfair, Edmonton Petroleum G&amp;CC, Mill Woods Golf Club, Blackhawk Golf Club, Highlands Golf Club, RedTail Landing Golf Club, Jagare Ridge Golf Club.</p>
   <h2 class="sub">Alberta</h2>
   <p>Jasper Park Lodge, Banff Springs, Stewart Creek, Kananaskis (Mt Kidd &amp; Mt Lorette), Silvertip, Willow Park, Eagle Ranch, Greywolf, Copper Point (The Point &amp; The Ridge), Glencoe Golf &amp; Country Club (4 nine combinations).</p>
+  <h2 class="sub">British Columbia</h2>
+  <p>Royal Colwood Golf Club (Victoria, BC) — 7 tees: Gold, Macan, Blue, White, Combo, Green, Royal. Par 70.</p>
   <h2 class="sub">Scottsdale / Phoenix, AZ</h2>
   <p>Troon North (Monument &amp; Pinnacle), Kierland Golf Club (6 nine combinations), Pinnacle Peak CC, Mesa CC, Las Sendas, Boulders (North &amp; South), Eagle Mountain, The Phoenician, Longbow, Lookout Mountain.</p>
   <h2 class="sub">Palm Springs / La Quinta, CA</h2>
@@ -369,9 +382,96 @@
   <p>Hold for the full 2 seconds without moving your finger — the icon fades as you hold.</p>
 </div>
 
+
+
+<div class="section" id="livestandings">
+  <h1 class="sec">19. Live Standings</h1>
+  <p>The <strong>📊 LIVE STANDINGS</strong> button in the score screen header gives you a real-time snapshot of every active game without leaving the scorecard.</p>
+  <h2 class="sub">Total Summary</h2>
+  <p>At the top of the panel, a gold-bordered card shows every player's net position across all games combined — green for up, red for down. This updates with every score you enter.</p>
+  <h2 class="sub">Nassau</h2>
+  <p>Each match shows as a single header line: <em>Bruce +$4 / Al +$4 vs Chris −$4 / Doug −$4 · 2v2 Nassau</em>. Dollar amounts are live projections — they reflect the current leader of each bet even before it's fully settled. If the match is completely even, it shows <strong>ALL SQUARE</strong> in green.</p>
+  <h2 class="sub">Other Games</h2>
+  <p>Below Nassau, each active game appears in this order: 6-Point running totals, Snake holder, Stableford points (sorted by leader), Skins counts with carry pot, Vegas running differential, Birdie Juice credits.</p>
+  <div class="tip">Live Standings is hidden in Scorekeeping Mode Only since there are no betting games to track in that mode.</div>
+  <div class="dyk">The Nassau dollar amounts in Live Standings are identical to what the Games tab would show — they come from the same engine, so they're always consistent.</div>
+</div>
+
+<div class="section" id="whostrokes">
+  <h1 class="sec">20. Who Strokes?</h1>
+  <p>The <strong>🏌️ WHO STROKES?</strong> button answers the most common mid-round question instantly.</p>
+  <p>Tap it to see, for the current hole, which players in each active match receive a handicap stroke — and how many. Only players who ARE getting a stroke are shown. If nobody strokes in a particular match, it says "No strokes this hole."</p>
+  <h2 class="sub">Example</h2>
+  <p><em>WHO STROKES? · HOLE 7 · HCP 3</em></p>
+  <p><strong>BRUCE/AL VS CHRIS/DOUG · 2v2 Nassau</strong><br>Bill gets 2 shots · Bruce gets 1 shot</p>
+  <p><strong>BRUCE VS MARK · 1v1 Nassau</strong><br>No strokes this hole</p>
+  <h2 class="sub">How Strokes Are Calculated</h2>
+  <p>Each match zeros the lowest-handicap player to zero and adjusts everyone else relative to them — identical to how the Nassau scoring engine calculates match handicaps. What you see is always exactly what the game is using.</p>
+  <div class="tip">Who Strokes also covers 6-Point games — every active game with handicap strokes is listed.</div>
+</div>
+
+<div class="section" id="whatsnew">
+  <h1 class="sec">✨ What's New in v13</h1>
+
+  <h2 class="sub">📊 Live Standings Panel</h2>
+  <p>A new <strong>📊 LIVE STANDINGS</strong> button now appears in the score screen header bar. Tap it to expand a real-time summary of every active game:</p>
+  <ul>
+    <li><strong>Total across all games</strong> — gold summary card at the top showing each player up or down across every bet combined</li>
+    <li><strong>Nassau (2v2 then 1v1)</strong> — match header shows each player's name with their current live dollar amount (green = up, red = down). Shows <em>ALL SQUARE</em> when the match is even</li>
+    <li><strong>6-Point</strong> — running totals per player, sorted by leader</li>
+    <li><strong>Snake</strong> — current holder shown in red</li>
+    <li><strong>Stableford</strong> — cumulative points per player, sorted</li>
+    <li><strong>Skins</strong> — skins won per player with the pending carry pot</li>
+    <li><strong>Vegas</strong> — running point differential between teams</li>
+    <li><strong>Birdie Juice</strong> — credits earned per player</li>
+  </ul>
+  <p>The panel updates automatically on every score entry. It is hidden in Scorekeeping Mode Only (no game money there).</p>
+  <div class="tip">The dollar amounts shown are live projections — they reflect the current leader of every unsettled bet, not just fully closed games. You always see an accurate picture of where the money stands right now.</div>
+
+  <h2 class="sub">🏌️ Who Strokes? Panel</h2>
+  <p>A second button — <strong>🏌️ WHO STROKES?</strong> — appears beside Live Standings. Tap it to see at a glance who receives a handicap stroke on the <em>current hole</em> in every active match.</p>
+  <ul>
+    <li>Only lists players who <em>are</em> getting a stroke — no clutter from players who aren't</li>
+    <li>Format: <em>Bill gets 2 shots · Bruce gets 1 shot</em></li>
+    <li>Labels each match type: <strong>1v1 Nassau</strong>, <strong>2v2 Nassau</strong>, <strong>6-Point</strong></li>
+    <li>Updates hole-by-hole as you navigate</li>
+  </ul>
+  <div class="tip">The two panels are mutually exclusive — opening one closes the other automatically.</div>
+  <div class="dyk">Strokes are calculated using the same match-play handicap zeroing the game engine uses — the lowest-handicap player in each match goes to zero, and everyone else adjusts relative to them. What you see in WHO STROKES is always exactly what the Nassau calculation is using.</div>
+
+  <h2 class="sub">🎯 Redesigned Score Wheel</h2>
+  <p>The score entry wheel has been completely redesigned based on player feedback:</p>
+  <ul>
+    <li><strong>◀ arrow moved to the far left, ▶ arrow moved to the far right</strong> — eliminates confusion about which button does what</li>
+    <li><strong>Selected score always centred</strong> — the scorekeeper can scan straight down the middle of all four player cards to confirm every score at a glance</li>
+    <li><strong>Always 5 visible scores</strong>: two better scores on the left, the current selection in the centre, two worse scores on the right</li>
+    <li><strong>◀ is greyed out and disabled at score 1</strong> — can't go lower than a hole-in-one, so the button makes it obvious</li>
+  </ul>
+
+  <h2 class="sub">📈 Handicap Trend Arrows</h2>
+  <p>In <strong>Manage My Players</strong>, each player's handicap index now shows a trend indicator beside their index number — automatically updated every time a handicap is fetched from Golf Canada:</p>
+  <ul>
+    <li><strong>▼ green</strong> — index went down (playing better)</li>
+    <li><strong>▲ red</strong> — index went up (playing worse)</li>
+    <li>The delta is shown to one decimal (e.g. ▼ 1.0)</li>
+  </ul>
+  <p>The trend persists across sessions in your saved contacts and updates every time a new Golf Canada fetch is done.</p>
+
+  <h2 class="sub">🔑 Golf Canada — Wrong Password Recovery</h2>
+  <p>Previously, entering the wrong Golf Canada password left the app stuck — no way to re-enter credentials. Now:</p>
+  <ul>
+    <li>The app detects the auth failure specifically</li>
+    <li>A dialog appears: <em>"Update your credentials now?"</em></li>
+    <li>Tap OK → re-enter username and password → the fetch retries automatically</li>
+  </ul>
+
+  <h2 class="sub">🗺️ GPS Coordinates — All 65 Courses Verified</h2>
+  <p>All 65 courses now have verified GPS coordinates sourced directly from Google Maps. These power the live weather display for each course during a round.</p>
+</div>
+
 <div class="footer">
   <span class="emoji">⛳</span>
-  <strong>Pards Golf &nbsp;·&nbsp; Version 11.92 &nbsp;·&nbsp; Edmonton, AB</strong>
+  <strong>Pards Golf &nbsp;·&nbsp; Version 13.32 &nbsp;·&nbsp; Edmonton, AB</strong>
   <div class="tagline">
     Thanks for playing.<br>
     May your drives be long, your putts be true,<br>
