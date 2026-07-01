@@ -5561,7 +5561,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.28</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.29</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6268,7 +6268,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.28</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.29</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6638,32 +6638,35 @@ function toggleLiveStandings(){
   if(_liveStandOpen) renderLiveStandings();
 }
 
-// Per-player settled dollars for a single matchup (mirrors computeMoney logic)
+// Per-player LIVE dollars for a single matchup — mirrors computeLiveMoney logic
+// Shows both settled and current-leader-projected values so mid-round is always visible
 function matchSettledDollars(m){
   const money = G.players.map(()=>0);
   const intlActive = (G.internationals||{})[m.matchId];
-  let intl = null, bucketed = null;
-  if(intlActive){ intl = computeInternational(m); if(intl) bucketed = intl.bucketedLabels; }
+  const intl = intlActive ? computeInternational(m) : null;
+  const bucketed = intl ? intl.bucketedLabels : new Set();
   computeMatchGames(m).forEach(g=>{
-    if(!g.settled||g.winner==='tie') return;
-    if(bucketed){
-      if(g.isFrontPress){
-        if(!bucketed.has(g.label+'#leg9') && g.leg9.settled && g.leg9.score!==0){
-          const a=base_(m), wi=g.leg9.score>0?m.sideA:m.sideB, li=g.leg9.score>0?m.sideB:m.sideA;
-          wi.forEach(i=>money[i]+=a); li.forEach(i=>money[i]-=a);
+    const key = g.isFrontPress ? g.label+'#leg18' : g.label;
+    if(bucketed.has(key)) return;
+    if(g.isFrontPress){
+      [{leg:g.leg9,key:g.label+'#leg9'},{leg:g.leg18,key:g.label+'#leg18'}].forEach(({leg,key})=>{
+        if(bucketed.has(key)||!leg||leg.holesPlayed===0) return;
+        const amt=base_(m);
+        if((leg.settled&&leg.winner&&leg.winner!=='tie')||(!leg.settled&&leg.score!==0)){
+          const wi=leg.score>0?m.sideA:m.sideB, li=leg.score>0?m.sideB:m.sideA;
+          wi.forEach(i=>money[i]+=amt); li.forEach(i=>money[i]-=amt);
         }
-        if(!bucketed.has(g.label+'#leg18') && g.leg18.settled && g.leg18.score!==0){
-          const a=base_(m), wi=g.leg18.score>0?m.sideA:m.sideB, li=g.leg18.score>0?m.sideB:m.sideA;
-          wi.forEach(i=>money[i]+=a); li.forEach(i=>money[i]-=a);
-        }
-        return;
-      } else if(bucketed.has(g.label)) return;
+      });
+      return;
     }
-    const amt = g.isFrontPress ? Math.abs(g.combinedPay||0) : g.value;
-    const wi=g.winner==='A'?m.sideA:m.sideB, li=g.winner==='A'?m.sideB:m.sideA;
-    wi.forEach(i=>money[i]+=amt); li.forEach(i=>money[i]-=amt);
+    if(g.holesPlayed===0) return;
+    const amt = g.value;
+    if((g.settled&&g.winner&&g.winner!=='tie')||(!g.settled&&g.score!==0)){
+      const wi=g.score>0?m.sideA:m.sideB, li=g.score>0?m.sideB:m.sideA;
+      wi.forEach(i=>money[i]+=amt); li.forEach(i=>money[i]-=amt);
+    }
+    if(intl){ const n=intlNetToA(m,intl); m.sideA.forEach(i=>money[i]+=n); m.sideB.forEach(i=>money[i]-=n); }
   });
-  if(intl){ const n=intlNetToA(m,intl); m.sideA.forEach(i=>money[i]+=n); m.sideB.forEach(i=>money[i]-=n); }
   return money;
 }
 
@@ -7043,7 +7046,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.28</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.29</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7616,7 +7619,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.28</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.29</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10265,7 +10268,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.28</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.29</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10773,7 +10776,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.28</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.29</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11046,7 +11049,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.28</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.29</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11186,7 +11189,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.28');
+  lines.push('— Pards Golf · v13.29');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11893,7 +11896,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.28 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.29 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -14252,7 +14255,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.28. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.29. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14740,7 +14743,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.28';
+const CURRENT_VERSION = 'pards-v13.29';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -15185,7 +15188,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.28';
+const CACHE='pards-v13.29';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
