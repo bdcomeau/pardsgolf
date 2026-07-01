@@ -862,6 +862,16 @@ input::placeholder{color:#bbb}
       </div>
       <button class="hnav-btn" id="btnNext" onclick="goH(1)">▶</button>
     </div>
+    <div id="liveStandBar" style="display:none;border-top:1px solid rgba(201,168,76,.15);padding:4px 12px">
+      <button onclick="toggleLiveStandings()" style="width:100%;background:none;border:none;padding:3px 0;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+        <span style="font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.3px">📊 LIVE STANDINGS</span>
+        <span id="liveStandChev" style="font-size:9px;color:rgba(201,168,76,.6)">▼</span>
+      </button>
+    </div>
+  </div>
+  <!-- Standings panel — collapsible, sits above sbody -->
+  <div id="liveStandPanel" style="display:none;background:rgba(0,20,10,.95);border-bottom:1px solid rgba(201,168,76,.25);padding:8px 12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch">
+    <div id="liveStandContent" style="font-size:11px;color:rgba(255,255,255,.9);line-height:1.7"></div>
   </div>
   <div id="holeErr" onclick="openMatchManager()" style="display:none;background:#e74c3c;color:#fff;text-align:center;font-size:13px;font-weight:700;padding:8px 12px;margin:0 10px 6px;border-radius:8px;cursor:pointer"></div>
   <div class="sbody" id="sbody"></div>
@@ -5533,7 +5543,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.16</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.17</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6240,7 +6250,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.16</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.17</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6502,11 +6512,149 @@ function scoreCardBorder(box){
   }
 }
 
+let _liveStandOpen = false;
+
+function toggleLiveStandings(){
+  _liveStandOpen = !_liveStandOpen;
+  const panel = document.getElementById('liveStandPanel');
+  const chev  = document.getElementById('liveStandChev');
+  if(panel) panel.style.display = _liveStandOpen ? 'block' : 'none';
+  if(chev)  chev.textContent    = _liveStandOpen ? '▲' : '▼';
+  if(_liveStandOpen) renderLiveStandings();
+}
+
+function renderLiveStandings(){
+  const el = document.getElementById('liveStandContent');
+  if(!el || !G.players || !G.players.length) return;
+  let h = '';
+  const pn = i => G.players[i] ? G.players[i].name.split(' ')[0] : '?';
+  const scoreLabel = (score, holesPlayed, settled, winner, labelA, labelB) => {
+    if(holesPlayed === 0) return `<span style="color:rgba(255,255,255,.4)">Not started</span>`;
+    if(settled){
+      if(winner==='tie') return `<span style="color:#a8d5b5">All Square ✓</span>`;
+      const name = winner==='A' ? labelA : labelB;
+      return `<span style="color:var(--gold)">${name} wins ✓</span>`;
+    }
+    const thru = `<span style="color:rgba(255,255,255,.45)"> thru ${holesPlayed}</span>`;
+    if(score===0) return `<span style="color:#a8d5b5">All Square</span>${thru}`;
+    const up = score > 0 ? labelA : labelB;
+    return `<span style="color:var(--gold)">${up} ${Math.abs(score)}UP</span>${thru}`;
+  };
+
+  // ── Nassau ──────────────────────────────────────────────────────────────
+  const matchups = buildMatchups();
+  if(matchups.length){
+    matchups.forEach(m => {
+      const games = computeMatchGames(m);
+      const core  = ['Front 9','Back 9','Full 18'];
+      const coreG = core.map(lbl => games.find(g => g.label===lbl && !g.isPress));
+      const shortA = m.type==='1v1' ? pn(m.sideA[0]) : m.sideA.map(pn).join('/');
+      const shortB = m.type==='1v1' ? pn(m.sideB[0]) : m.sideB.map(pn).join('/');
+      h += `<div style="margin-bottom:7px">`;
+      h += `<div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.8);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">🏌️ ${shortA} vs ${shortB}</div>`;
+      h += `<table style="width:100%;border-collapse:collapse">`;
+      coreG.forEach((g,i) => {
+        if(!g) return;
+        h += `<tr><td style="padding:1px 0;color:rgba(255,255,255,.5);font-size:10px;width:52px">${core[i]}</td>`;
+        h += `<td style="padding:1px 0">${scoreLabel(g.score, g.holesPlayed, g.settled, g.winner, shortA, shortB)}</td></tr>`;
+      });
+      h += `</table></div>`;
+    });
+  }
+
+  // ── Birdie Juice ────────────────────────────────────────────────────────
+  const bjActive = G.birdieJuice && G.birdieJuice.enabled!==false && G.birdieJuice.earned && G.birdieJuice.earned.length>0;
+  if(bjActive){
+    const counts = G.players.map((_,pi) => G.birdieJuice.earned.filter(e=>e.pi===pi).length);
+    h += `<div style="margin-bottom:7px">`;
+    h += `<div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.8);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">🍺 Birdie Juice</div>`;
+    h += `<div>${G.players.map((p,pi)=>`<span style="color:${counts[pi]>0?'var(--gold)':'rgba(255,255,255,.45)'}">${pn(pi)} ${counts[pi]}🍺</span>`).join('  ')}</div>`;
+    h += `</div>`;
+  }
+
+  // ── Snake ────────────────────────────────────────────────────────────────
+  if(G.snake && G.snake.enabled){
+    const holder = G.snake.holder;
+    h += `<div style="margin-bottom:7px">`;
+    h += `<div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.8);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">🐍 Snake</div>`;
+    h += `<div>${holder ? `<span style="color:#e74c3c;font-weight:700">${holder.split(' ')[0]} holds it</span>` : `<span style="color:rgba(255,255,255,.45)">No one holds it</span>`}</div>`;
+    h += `</div>`;
+  }
+
+  // ── Skins ────────────────────────────────────────────────────────────────
+  if(G.skinsGames && G.skinsGames.length){
+    G.skinsGames.forEach(game => {
+      if(!game.players || !game.players.length) return;
+      const res = computeSkins(game);
+      if(!res) return;
+      const skinsWon = res.skinsWon || [];
+      h += `<div style="margin-bottom:7px">`;
+      h += `<div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.8);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">🏆 Skins ($${res.perSkin}/skin)</div>`;
+      h += `<div>${game.players.map(pi=>`<span style="color:${(skinsWon[pi]||0)>0?'var(--gold)':'rgba(255,255,255,.45)'}">${pn(pi)} ${skinsWon[pi]||0}</span>`).join('  ')}`;
+      if(res.pendingPot>0) h += `  <span style="color:rgba(255,255,255,.4)">pot: ${res.pendingPot} skin${res.pendingPot!==1?'s':''}</span>`;
+      h += `</div></div>`;
+    });
+  }
+
+  // ── Vegas ────────────────────────────────────────────────────────────────
+  if(G.vegasGames && G.vegasGames.length){
+    G.vegasGames.forEach(game => {
+      if(!game.teamA || !game.teamB) return;
+      const res = computeVegas(game);
+      if(!res) return;
+      const teamA = game.teamA.map(pn).join('/');
+      const teamB = game.teamB.map(pn).join('/');
+      const pts   = res.runningA ? res.runningA[Math.max(0, res.holesPlayed-1)] || 0 : 0;
+      h += `<div style="margin-bottom:7px">`;
+      h += `<div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.8);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">🎰 Vegas</div>`;
+      if(res.holesPlayed===0){ h += `<div style="color:rgba(255,255,255,.4)">Not started</div>`; }
+      else if(pts===0){ h += `<div style="color:#a8d5b5">Tied thru ${res.holesPlayed}</div>`; }
+      else { const leader=pts>0?teamA:teamB; h += `<div style="color:var(--gold)">${leader} +${Math.abs(pts)} pts thru ${res.holesPlayed}</div>`; }
+      h += `</div>`;
+    });
+  }
+
+  // ── Stableford ──────────────────────────────────────────────────────────
+  if(G.stablefordGames && G.stablefordGames.length){
+    G.stablefordGames.forEach(game => {
+      if(!game.players || !game.players.length) return;
+      const res = computeStableford(game);
+      if(!res || !res.totals) return;
+      h += `<div style="margin-bottom:7px">`;
+      h += `<div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.8);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">⭐ Stableford</div>`;
+      const sorted = [...game.players].sort((a,b)=>(res.totals[b]||0)-(res.totals[a]||0));
+      h += `<div>${sorted.map(pi=>`<span style="color:${(res.totals[pi]||0)>0?'var(--gold)':'rgba(255,255,255,.45)'}">${pn(pi)} ${res.totals[pi]||0}pts</span>`).join('  ')}</div>`;
+      h += `</div>`;
+    });
+  }
+
+  // ── 6-Point ──────────────────────────────────────────────────────────────
+  if(G.sixPointGames && G.sixPointGames.length){
+    G.sixPointGames.forEach(game => {
+      if(!game.players || game.players.length<2) return;
+      const res = computeSixPoint(game);
+      if(!res || !res.totals) return;
+      h += `<div style="margin-bottom:7px">`;
+      h += `<div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.8);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">6️⃣ 6-Point</div>`;
+      h += `<div>${game.players.map(pi=>{const v=res.totals[pi]||0; return `<span style="color:${v>0?'var(--gold)':v<0?'#e74c3c':'rgba(255,255,255,.45)'}">${pn(pi)} ${v>0?'+':''}${v}</span>`;}).join('  ')}</div>`;
+      h += `</div>`;
+    });
+  }
+
+  if(!h) h = `<div style="color:rgba(255,255,255,.35);font-size:11px">No games in progress yet.</div>`;
+  el.innerHTML = h;
+}
+
 function renderCard(){
   maybeBillyBunker();
   maybeStuBunker();
   maybeGregQuiet();
   if(!G.players||!G.players.length) return;
+  // Show/hide the live standings bar (hide in scoreOnly mode)
+  const _lsBar = document.getElementById('liveStandBar');
+  if(_lsBar) _lsBar.style.display = (G.scoreOnly) ? 'none' : 'block';
+  // Keep standings content fresh if panel is open
+  if(_liveStandOpen) renderLiveStandings();
   const h=G.hole||0; // actual hole array index (0-17)
   const playIdx=playOrderIdx(h); // 0-17: which hole-played-number this is (0 = 1st hole played)
   // Clear any stale missing-score warning whenever the hole view (re)renders.
@@ -6708,7 +6856,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.16</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.17</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7281,7 +7429,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.16</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.17</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9930,7 +10078,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.16</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.17</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10438,7 +10586,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.16</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.17</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10711,7 +10859,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.16</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.17</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10851,7 +10999,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.16');
+  lines.push('— Pards Golf · v13.17');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11558,7 +11706,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.16 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.17 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13917,7 +14065,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.16. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.17. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14405,7 +14553,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.16';
+const CURRENT_VERSION = 'pards-v13.17';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14850,7 +14998,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.16';
+const CACHE='pards-v13.17';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
