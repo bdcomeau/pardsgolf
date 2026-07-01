@@ -541,6 +541,14 @@ input::placeholder{color:#bbb}
     </div>
     <!-- Dropdown panel -->
     <div id="coursePickerPanel" style="display:none;background:#fff;border-radius:12px;margin-top:6px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.35)"></div>
+    <!-- Satellite map inlay -->
+    <div id="courseMapInlay" style="display:none;margin-top:8px;border-radius:10px;overflow:hidden;border:1.5px solid rgba(201,168,76,.4);position:relative;cursor:pointer" onclick="openCourseInMaps()">
+      <img id="courseMapImg" src="" alt="" style="width:100%;height:160px;object-fit:cover;display:block">
+      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.55));padding:6px 10px;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.3px">📍 Tap to open in Maps</div>
+        <div style="font-size:9px;color:rgba(255,255,255,.5)">Satellite · Google Maps</div>
+      </div>
+    </div>
     <div id="courseDetail" style="margin-top:8px;font-size:11px;color:rgba(201,168,76,.7);min-height:14px"></div>
   </div>
 
@@ -2229,6 +2237,38 @@ function _updateCoursePickerBtn(){
   if(logoEl) logoEl.innerHTML   = c.logo
     ? `<img src="${logoSrc(c,true)}" style="height:32px;width:auto;object-fit:contain;${logoFilter(c,true)}" alt="">`
     : '⛳';
+  updateCourseMap(c.id);
+}
+
+function updateCourseMap(courseId){
+  const inlay = document.getElementById('courseMapInlay');
+  const img   = document.getElementById('courseMapImg');
+  if(!inlay || !img) return;
+  const ll = COURSE_COORDS[courseId];
+  if(!ll || !GOOGLE_MAPS_KEY){
+    inlay.style.display = 'none';
+    return;
+  }
+  const [lat, lng] = ll;
+  const w = Math.min(window.innerWidth - 48, 600);
+  const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=16&size=${w}x200&scale=2&maptype=satellite&markers=color:red%7Clabel:⛳%7C${lat},${lng}&key=${GOOGLE_MAPS_KEY}`;
+  img.src = mapUrl;
+  inlay.style.display = 'block';
+}
+
+function openCourseInMaps(){
+  const ll = COURSE_COORDS[G.courseId];
+  if(!ll) return;
+  const [lat, lng] = ll;
+  const c = activeCourse();
+  const name = encodeURIComponent(c.name);
+  // Try Apple Maps first (iOS), fall back to Google Maps
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+  if(isIOS){
+    window.open(`https://maps.apple.com/?ll=${lat},${lng}&q=${name}&t=h`, '_blank');
+  } else {
+    window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=`, '_blank');
+  }
 }
 
 // ── Course picker grouping ─────────────────────────────────────────────────
@@ -2992,6 +3032,10 @@ function promptWlSetup(){ return true; }
 //   2. Add its id to EDMONTON_COURSE_IDS (if it's an Edmonton course → uses WeatherLink).
 //   Without this, the course will get no weather data during a round.
 //   Coords can be found via Google Maps (right-click the course → copy coordinates).
+// ── Google Maps API key — get yours free at https://console.cloud.google.com ──
+// Enable "Maps Static API", then paste your key below.
+const GOOGLE_MAPS_KEY = 'AIzaSyDGg810fkanw6eoSOCUCapwX_K31ps_810';
+
 const COURSE_COORDS = {
   'jasper-park-lodge':          [52.8734, -118.0865],
   'banff-springs':              [51.1614, -115.5596],
@@ -5505,7 +5549,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.01</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.03</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6212,7 +6256,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.01</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.03</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6680,7 +6724,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.01</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.03</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7253,7 +7297,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.01</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.03</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9902,7 +9946,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.01</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.03</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10410,7 +10454,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.01</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.03</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10683,7 +10727,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.01</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.03</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10823,7 +10867,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.01');
+  lines.push('— Pards Golf · v13.03');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11530,7 +11574,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.01 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.03 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13889,7 +13933,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.01. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.03. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14377,7 +14421,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.01';
+const CURRENT_VERSION = 'pards-v13.03';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14822,7 +14866,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.01';
+const CACHE='pards-v13.03';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
