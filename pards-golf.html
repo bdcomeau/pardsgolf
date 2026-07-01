@@ -541,12 +541,21 @@ input::placeholder{color:#bbb}
     </div>
     <!-- Dropdown panel -->
     <div id="coursePickerPanel" style="display:none;background:#fff;border-radius:12px;margin-top:6px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.35)"></div>
-    <!-- Satellite map inlay -->
-    <div id="courseMapInlay" style="display:none;margin-top:8px;border-radius:10px;overflow:hidden;border:1.5px solid rgba(201,168,76,.4);position:relative;cursor:pointer" onclick="openCourseInMaps()">
-      <img id="courseMapImg" src="" alt="" style="width:100%;height:160px;object-fit:cover;display:block">
-      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.55));padding:6px 10px;display:flex;align-items:center;justify-content:space-between">
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.3px">📍 Tap to open in Maps</div>
-        <div style="font-size:9px;color:rgba(255,255,255,.5)">Satellite · Google Maps</div>
+    <!-- Map icon (shown when course has coords) -->
+    <div id="courseMapIcon" style="display:none;margin-top:6px">
+      <button onclick="showCourseMapModal()" style="background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);border-radius:8px;padding:5px 12px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px">
+        <span style="font-size:15px">🗺️</span> Satellite Map
+      </button>
+    </div>
+
+    <!-- Map modal overlay -->
+    <div id="courseMapModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.82);align-items:center;justify-content:center" onclick="hideCourseMapModal()">
+      <div style="width:92%;max-width:500px;border-radius:14px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.7)" onclick="event.stopPropagation()">
+        <img id="courseMapImg" src="" alt="" style="width:100%;display:block">
+        <div style="background:#1a1a1a;padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+          <button onclick="openCourseInMaps()" style="background:rgba(201,168,76,.2);border:1px solid rgba(201,168,76,.5);border-radius:8px;padding:6px 14px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer">📍 Open in Maps</button>
+          <button onclick="hideCourseMapModal()" style="background:rgba(255,255,255,.1);border:none;border-radius:8px;padding:6px 14px;color:rgba(255,255,255,.7);font-size:12px;cursor:pointer">✕ Close</button>
+        </div>
       </div>
     </div>
     <div id="courseDetail" style="margin-top:8px;font-size:11px;color:rgba(201,168,76,.7);min-height:14px"></div>
@@ -2241,18 +2250,27 @@ function _updateCoursePickerBtn(){
 }
 
 function updateCourseMap(courseId){
-  const inlay = document.getElementById('courseMapInlay');
+  const icon  = document.getElementById('courseMapIcon');
   const img   = document.getElementById('courseMapImg');
-  if(!inlay || !img) return;
+  if(!icon || !img) return;
   const ll = COURSE_COORDS[courseId];
   if(!ll){
-    inlay.style.display = 'none';
+    icon.style.display = 'none';
     return;
   }
   const [lat, lng] = ll;
-  const mapUrl = `${WL_WORKER}/maps-static?lat=${lat}&lng=${lng}&zoom=16`;
-  img.src = mapUrl;
-  inlay.style.display = 'block';
+  img.src = `${WL_WORKER}/maps-static?lat=${lat}&lng=${lng}&zoom=16`;
+  icon.style.display = 'block';
+}
+
+function showCourseMapModal(){
+  const modal = document.getElementById('courseMapModal');
+  if(modal){ modal.style.display = 'flex'; }
+}
+
+function hideCourseMapModal(){
+  const modal = document.getElementById('courseMapModal');
+  if(modal){ modal.style.display = 'none'; }
 }
 
 function openCourseInMaps(){
@@ -3036,75 +3054,76 @@ function promptWlSetup(){ return true; }
 // Google Maps key stored securely in Cloudflare Worker — not in client code
 
 const COURSE_COORDS = {
+  // ── Verified GPS from scorecards spreadsheet (Google Maps precise) ────────
   // ── Alberta ──────────────────────────────────────────────────────────────
-  'jasper-park-lodge':          [52.8850, -118.0542],  // 1 Old Lodge Rd, Jasper AB
-  'banff-springs':              [51.1743, -115.5380],  // 405 Spray Ave, Banff AB
-  'blackhawk-gc':               [53.3851, -113.6620],  // 51111 Range Rd 255, Spruce Grove AB
-  'willow-park-gcc':            [50.9582, -114.0490],  // 639 Willow Park Dr SE, Calgary AB
-  'glencoe-forest':             [50.9333, -114.2500],  // 31002 Elbow River Dr SW, Calgary AB
-  'glencoe-slopes-bridges':     [50.9333, -114.2500],
-  'glencoe-bridges-lakes':      [50.9333, -114.2500],
-  'glencoe-lakes-slopes':       [50.9333, -114.2500],
-  'stewart-creek':              [51.0553, -115.3082],  // 4100 Stewart Creek Dr, Canmore AB
-  'silvertip':                  [51.1014, -115.3385],  // Canmore AB
-  'kananaskis-kidd':            [50.9774, -115.1572],  // Kananaskis AB
-  'kananaskis-lorette':         [50.9774, -115.1572],
+  'jasper-park-lodge':          [52.885493232705514,  -118.0530008486626],
+  'banff-springs':              [51.17392394815175,   -115.53771268839488],
+  'blackhawk-gc':               [53.385575323101264,  -113.66123796657735],
+  'willow-park-gcc':            [50.958361645617146,  -114.04848249962093],
+  'glencoe-forest':             [51.025112950937945,  -114.29414886274189],
+  'glencoe-slopes-bridges':     [51.025112950937945,  -114.29414886274189],
+  'glencoe-bridges-lakes':      [51.025112950937945,  -114.29414886274189],
+  'glencoe-lakes-slopes':       [51.025112950937945,  -114.29414886274189],
+  'stewart-creek':              [51.04610027140541,   -115.31377058358594],
+  'silvertip':                  [51.105931223588435,  -115.34205136070304],
+  'kananaskis-kidd':            [50.90311732268653,   -115.14367951291216],
+  'kananaskis-lorette':         [50.90311732268653,   -115.14367951291216],
   // ── BC ───────────────────────────────────────────────────────────────────
-  'copper-point-the-point':     [50.5120, -115.9934],  // 651 Hwy 93/95, Windermere BC
-  'copper-point-the-ridge':     [50.5120, -115.9934],
-  'eagle-ranch-gc':             [50.5086, -116.0306],  // Invermere BC
-  'greywolf-gc':                [50.4647, -116.0603],  // Panorama Mountain Resort BC
-  'royal-colwood-gc':           [48.4634, -123.4350],  // Victoria BC
+  'copper-point-the-point':     [50.50586039343338,   -115.99681748059147],
+  'copper-point-the-ridge':     [50.50586039343338,   -115.99681748059147],
+  'eagle-ranch-gc':             [50.529564747777336,  -116.0273832330876],
+  'greywolf-gc':                [50.44748726826781,   -116.24843097088834],
+  'royal-colwood-gc':           [48.443541548591995,  -123.4874711136266],
   // ── Arizona ──────────────────────────────────────────────────────────────
-  'troon-north-monument':       [33.7472, -111.8587],  // 10320 E Dynamite Blvd, Scottsdale AZ
-  'troon-north-pinnacle':       [33.7472, -111.8587],
-  'kierland-ironwood-acacia':   [33.6306, -111.9351],  // 15636 N Clubgate Dr, Scottsdale AZ
-  'kierland-acacia-ironwood':   [33.6306, -111.9351],
-  'kierland-ironwood-mesquite': [33.6306, -111.9351],
-  'kierland-mesquite-ironwood': [33.6306, -111.9351],
-  'kierland-acacia-mesquite':   [33.6306, -111.9351],
-  'kierland-mesquite-acacia':   [33.6306, -111.9351],
-  'pinnacle-peak-cc':           [33.7300, -111.8600],  // Scottsdale AZ
-  'mesa-cc':                    [33.4152, -111.8316],  // Mesa AZ
-  'las-sendas-gc':              [33.4889, -111.6706],  // 7555 E Eagle Crest Dr, Mesa AZ
-  'boulders-north':             [33.8055, -111.9141],  // 34631 N Tom Darlington Dr, Carefree AZ
-  'boulders-south':             [33.8055, -111.9141],
-  'eagle-mountain-gc':          [33.5767, -111.7590],  // 14915 E Eagle Mountain, Fountain Hills AZ
-  'phoenician-gc':              [33.5049, -111.9501],  // 6000 E Camelback Rd, Scottsdale AZ
-  'longbow-gc':                 [33.4701, -111.7093],  // 5601 E Longbow Pkwy, Mesa AZ
-  'lookout-mountain-gc':        [33.6012, -112.0626],  // 11111 N 7th St, Phoenix AZ
+  'troon-north-monument':       [33.74646708636651,   -111.8613668614706],
+  'troon-north-pinnacle':       [33.74692919525346,   -111.85908163547643],
+  'kierland-ironwood-acacia':   [33.627541263237646,  -111.93470569225543],
+  'kierland-acacia-ironwood':   [33.627541263237646,  -111.93470569225543],
+  'kierland-ironwood-mesquite': [33.627541263237646,  -111.93470569225543],
+  'kierland-mesquite-ironwood': [33.627541263237646,  -111.93470569225543],
+  'kierland-acacia-mesquite':   [33.627541263237646,  -111.93470569225543],
+  'kierland-mesquite-acacia':   [33.627541263237646,  -111.93470569225543],
+  'pinnacle-peak-cc':           [33.695872389734376,  -111.89510759335279],
+  'mesa-cc':                    [33.43887004727629,   -111.8454587374348],
+  'las-sendas-gc':              [33.489163997767825,  -111.6703498257231],
+  'boulders-north':             [33.80229315488439,   -111.9176753409379],
+  'boulders-south':             [33.80229315488439,   -111.9176753409379],
+  'eagle-mountain-gc':          [33.57672961480157,   -111.75892708245557],
+  'phoenician-gc':              [33.50637902957491,   -111.94929824059777],
+  'longbow-gc':                 [33.472356602579744,  -111.71008773612051],
+  'lookout-mountain-gc':        [33.60411463524035,   -112.04723363987935],
   // ── California (Palm Springs/Desert) ─────────────────────────────────────
-  'palm-valley-challenge':      [33.7344, -116.3694],  // Palm Desert CA area
-  'palm-valley-championship':   [33.7344, -116.3694],
-  'indian-ridge-arroyo':        [33.7400, -116.3800],  // 76375 Country Club Dr, Palm Desert CA
-  'indian-ridge-grove':         [33.7400, -116.3800],
-  'desert-willow-firecliff':    [33.7584, -116.3609],  // 38-995 Desert Willow Dr, Palm Desert CA
-  'desert-willow-mountain-view':[33.7584, -116.3609],
-  'shadow-ridge-gc':            [33.7789, -116.3852],  // 9002 Shadow Ridge Rd, Palm Desert CA
-  'pgawest-stadium':            [33.6414, -116.2586],  // 56-150 PGA Blvd, La Quinta CA
-  'pgawest-mountain':           [33.6414, -116.2586],
-  'pgawest-dunes':              [33.6414, -116.2586],
-  'pgawest-nicklaus-tournament':[33.6414, -116.2586],
-  'pgawest-greg-norman':        [33.6414, -116.2586],
-  'pgawest-nicklaus-private':   [33.6414, -116.2586],
-  'pgawest-arnold-palmer':      [33.6414, -116.2586],
-  'pgawest-weiskopf':           [33.6414, -116.2586],
-  'lakes-palm-mountain':        [33.7220, -116.3686],  // Palm Desert CA
-  'lakes-mountain-lake':        [33.7220, -116.3686],
-  'lakes-lake-palm':            [33.7220, -116.3686],
-  'desert-springs-palm':        [33.7315, -116.4043],  // 74-855 Country Club Dr, Palm Desert CA
-  'desert-springs-valley':      [33.7315, -116.4043],
+  'palm-valley-challenge':      [33.76458744238946,   -116.33194921848741],
+  'palm-valley-championship':   [33.76458744238946,   -116.33194921848741],
+  'indian-ridge-arroyo':        [33.75178312186651,   -116.33266054650498],
+  'indian-ridge-grove':         [33.75178312186651,   -116.33266054650498],
+  'desert-willow-firecliff':    [33.765706556614546,  -116.36668908439256],
+  'desert-willow-mountain-view':[33.765706556614546,  -116.36668908439256],
+  'shadow-ridge-gc':            [33.782796185749056,  -116.38460911570756],
+  'pgawest-stadium':            [33.641852124328196,  -116.25806826778546],
+  'pgawest-mountain':           [33.68306412090913,   -116.31304324658943],
+  'pgawest-dunes':              [33.6831792155738,    -116.31304032387764],
+  'pgawest-nicklaus-tournament':[33.64531365441358,   -116.25761889674968],
+  'pgawest-greg-norman':        [33.646464050460544,  -116.24382397664287],
+  'pgawest-nicklaus-private':   [33.6430171991442,    -116.26867995489125],
+  'pgawest-arnold-palmer':      [33.64335753486309,   -116.2671325145854],
+  'pgawest-weiskopf':           [33.64284242709997,   -116.26723773834563],
+  'lakes-palm-mountain':        [33.753622016294855,  -116.3465447454147],
+  'lakes-mountain-lake':        [33.753622016294855,  -116.3465447454147],
+  'lakes-lake-palm':            [33.753622016294855,  -116.3465447454147],
+  'desert-springs-palm':        [33.752456523432635,  -116.36461332909992],
+  'desert-springs-valley':      [33.752456523432635,  -116.36461332909992],
   // ── Edmonton & Area ───────────────────────────────────────────────────────
-  'derrick-gwc':                [53.4683, -113.5403],  // exact — 53.4683499, -113.5402524
-  'windermere-gcc':             [53.4280, -113.6510],  // 19110 Ellerslie Rd SW, Edmonton AB
-  'edmonton-cc':                [53.4920, -113.5650],  // Edmonton AB
-  'glendale-gcc':               [53.5830, -113.6650],  // Edmonton AB
-  'royal-mayfair':              [53.5330, -113.5420],  // 9450 Groat Rd NW, Edmonton AB
-  'edmonton-petroleum':         [53.5594, -113.5071],  // Edmonton AB
-  'mill-woods-gc':              [53.4816, -113.4185],  // 4540 50 St NW, Edmonton AB
-  'highlands-gc':               [53.5612, -113.4376],  // Edmonton AB
-  'redtail-landing':            [53.3220, -113.5570],  // Edmonton International Airport area
-  'jagare-ridge-gc':            [53.4320, -113.6260],  // 14931 9th Ave SW, Edmonton AB
+  'derrick-gwc':                [53.468425571228316,  -113.54114922623062],
+  'windermere-gcc':             [53.42762325867436,   -113.65142253649653],
+  'edmonton-cc':                [53.490389374872066,  -113.59886351526706],
+  'glendale-gcc':               [53.582824510695524,  -113.66510021068558],
+  'royal-mayfair':              [53.533143137287446,  -113.54160396076978],
+  'edmonton-petroleum':         [53.41750543126563,   -113.69155546444568],
+  'mill-woods-gc':              [53.48195957288466,   -113.42926401299303],
+  'highlands-gc':               [53.561325129931795,  -113.43773556898256],
+  'redtail-landing':            [53.32249868934502,   -113.55721721038967],
+  'jagare-ridge-gc':            [53.42231096943338,   -113.58142942808863],
 };
 
 // Edmonton courses — always use WeatherLink personal station
@@ -5552,7 +5571,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.07</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.09</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6259,7 +6278,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.07</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.09</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6727,7 +6746,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.07</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.09</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7300,7 +7319,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.07</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.09</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9949,7 +9968,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.07</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.09</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10457,7 +10476,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.07</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.09</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10730,7 +10749,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.07</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.09</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10870,7 +10889,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.07');
+  lines.push('— Pards Golf · v13.09');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11577,7 +11596,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.07 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.09 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13936,7 +13955,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.07. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.09. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14424,7 +14443,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.07';
+const CURRENT_VERSION = 'pards-v13.09';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14869,7 +14888,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.07';
+const CACHE='pards-v13.09';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
