@@ -633,7 +633,18 @@ input::placeholder{color:#bbb}
           </div>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)">
-          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">✅ Confirm Scores Every Hole</div>
+          <div style="display:flex;align-items:center;gap:5px;position:relative">
+            <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">✅ Confirm Scores Every Hole</div>
+            <button onclick="toggleConfirmInfo(event)" style="width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(168,213,181,.6);background:transparent;color:rgba(168,213,181,.8);font-size:9px;font-weight:800;cursor:pointer;padding:0;line-height:1;flex:none;-webkit-tap-highlight-color:transparent">i</button>
+            <div id="confirmInfoPopup" style="display:none;position:absolute;top:24px;left:0;z-index:200;background:#0f2a1a;border:1.5px solid rgba(201,168,76,.5);border-radius:10px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.6);width:260px">
+              <div style="font-size:11px;font-weight:800;color:var(--gold);margin-bottom:6px">✅ Confirm Scores Every Hole</div>
+              <div style="font-size:10.5px;color:rgba(255,255,255,.85);line-height:1.5">When <b>ON</b>, after entering all scores for a hole you'll see a review screen — giving everyone a chance to check, fix any mistakes, and confirm before moving on.</div>
+              <div style="margin-top:8px;padding:7px 10px;background:rgba(201,168,76,.12);border-radius:7px;border-left:3px solid var(--gold)">
+                <div style="font-size:10px;font-weight:800;color:var(--gold);margin-bottom:3px">⚠️ We strongly recommend keeping this ON</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.75);line-height:1.5">When <b>OFF</b>, the app jumps immediately to the next hole after the last score is entered. Any errors missed in the moment will need to be corrected later from the scorecard.</div>
+              </div>
+            </div>
+          </div>
           <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
             <button id="segConfirmOn" onclick="setAdvanceMode(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ ON</button>
             <button id="segConfirmOff" onclick="setAdvanceMode(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">OFF</button>
@@ -3940,6 +3951,14 @@ function syncScoreOnlyBar(){
   bar.textContent=G.scorecardOnly ? 'Round in Progress — Scorekeeping LIVE' : '⛳ Round in Progress — Games LIVE';
 }
 
+function toggleConfirmInfo(e){
+  e.stopPropagation();
+  const pop=document.getElementById('confirmInfoPopup');
+  if(!pop) return;
+  const visible=pop.style.display!=='none';
+  pop.style.display=visible?'none':'block';
+  if(!visible){ const hide=function(){ pop.style.display='none'; document.removeEventListener('click',hide); }; setTimeout(()=>document.addEventListener('click',hide),0); }
+}
 function toggleFavInfo(e){
   e.stopPropagation();
   const pop=document.getElementById('favInfoPopup');
@@ -5514,7 +5533,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.15</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.16</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6221,7 +6240,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.15</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.16</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -6689,7 +6708,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.15</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.16</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7262,7 +7281,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.15</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.16</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -9911,7 +9930,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.15</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.16</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10419,7 +10438,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.15</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.16</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10692,7 +10711,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.15</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.16</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -10832,7 +10851,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.15');
+  lines.push('— Pards Golf · v13.16');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11539,7 +11558,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.15 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.16 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13898,7 +13917,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.15. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.16. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14386,7 +14405,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.15';
+const CURRENT_VERSION = 'pards-v13.16';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -14831,7 +14850,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.15';
+const CACHE='pards-v13.16';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
