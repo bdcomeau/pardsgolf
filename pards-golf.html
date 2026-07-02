@@ -5592,7 +5592,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.38</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.42</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6299,7 +6299,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.38</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.42</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7079,7 +7079,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.38</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.42</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7652,7 +7652,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.38</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.42</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10301,7 +10301,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.38</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.42</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10774,6 +10774,9 @@ function renderHistory(){
       // and lands on the hole left off). A normal paused round uses the generic resume.
       const resumeBtn = (r.paused && !r.isMatchCards) ? `<button onclick="event.stopPropagation();resumeRound(${i})" style="width:100%;margin-top:6px;padding:9px;background:#1a3a2a;color:#c9a84c;border:1.5px solid #c9a84c;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">▶ Resume Round</button>` : '';
 
+      // Rematch pill — available on any completed non-paused round
+      const rematchBtn = (!r.paused && !r.isMatchCards) ? `<button onclick="event.stopPropagation();startRematch(${i})" style="margin-top:6px;padding:7px 14px;background:rgba(201,168,76,.15);color:#c9a84c;border:1.5px solid rgba(201,168,76,.45);border-radius:20px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;letter-spacing:.3px">🔄 Rematch</button>` : '';
+
       const mcBorder = r.isMatchCards ? '#6a4c93' : borderCol;
 
       // Match Cards: needs scoring if any opponent (player idx>=1) has no scores entered yet,
@@ -10803,13 +10806,14 @@ function renderHistory(){
           ${mcNamesLine}
           ${gameSum}
           ${resumeBtn}
+          ${rematchBtn}
           ${scoreRoundBtn}
           <div style="display:flex;justify-content:flex-end;margin-top:4px">${lockBtn}</div>
         </div>
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.38</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.42</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11082,7 +11086,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.38</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.42</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11222,7 +11226,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.38');
+  lines.push('— Pards Golf · v13.42');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11379,7 +11383,112 @@ function editHistoryRound(){
   renderCard();
 }
 
+function startRematch(i){
+  const hist = loadHistory();
+  const r = hist[i];
+  if(!r || !r.players || !r.players.length){ alert('Could not load round data.'); return; }
+
+  // Warn if a round is already in progress
+  if(G.roundDate && G.scores && G.scores.some(function(s){ return s && s.some(function(v){ return v!==null; }); })){
+    if(!confirm('A round is currently in progress.\n\nStarting a rematch will take you to the setup screen with this group pre-loaded. Your current round is already saved. Continue?')) return;
+  }
+
+  // Reset G to clean state
+  const n = r.players.length;
+  const emptyScores = r.players.map(function(){ return Array(18).fill(null); });
+
+  // Copy players — preserve name, idx, deck, golfId, hdcpBaseline
+  const players = r.players.map(function(p){
+    return {
+      name:         p.name || '',
+      idx:          p.idx  != null ? p.idx : 0,
+      hdcpBaseline: p.hdcpBaseline != null ? p.hdcpBaseline : (p.idx != null ? p.idx : 0),
+      deck:         p.deck || defaultTeeName(),
+      golfId:       p.golfId || '',
+      typicalScore: p.typicalScore || 0,
+      me:           p.me || false,
+      deckByCourse: p.deckByCourse || {}
+    };
+  });
+
+  // Copy game configs — preserve structure but strip runtime state
+  function copyTeamGame(g){ return { sideA:[...g.sideA], sideB:[...g.sideB], bet:g.bet||5, presses:[], matchId:g.matchId||('tg'+Date.now()) }; }
+  function copySingleGame(g){ return { sideA:[...g.sideA], sideB:[...g.sideB], bet:g.bet||5, presses:[], matchId:g.matchId||('sg'+Date.now()) }; }
+
+  const teamGames      = (r.teamGames||[]).map(copyTeamGame);
+  const singleGames    = (r.singleGames||[]).map(copySingleGame);
+  const sixPointGames  = (r.sixPointGames||[]).map(function(g){ return { players:[...g.players], perPoint:g.perPoint||1, mode:g.mode||'net' }; });
+  const skinsGames     = (r.skinsGames||[]).map(function(g){ return { players:[...g.players], perSkin:g.perSkin||5, mode:g.mode||'gross', carry:!!g.carry, endgame:!!g.endgame }; });
+  const vegasGames     = (r.vegasGames||[]).map(function(g){ return { teamA:[...g.teamA], teamB:[...g.teamB], perPoint:g.perPoint||1, mode:g.mode||'gross', flip:!!g.flip }; });
+  const stablefordGames= (r.stablefordGames||[]).map(function(g){ return { players:[...g.players], betPerPoint:g.betPerPoint||1, points:g.points ? {...g.points} : {...STABLEFORD_DEFAULTS} }; });
+
+  // Snake — carry settings but not runtime state
+  const snake = (r.snake && r.snake.enabled) ? {
+    enabled: true, perHole: r.snake.perHole||5, bet: r.snake.bet||5,
+    holder: null, history: [], settlements: [], participants: r.snake.participants ? [...r.snake.participants] : [],
+    h18confirmed: false
+  } : { enabled:false, holder:null, history:[], bet:5, settlements:[], participants:[], h18confirmed:false };
+
+  // Birdie Juice — carry settings but not runtime state
+  const birdieJuice = {
+    enabled:   r.birdieJuice ? (r.birdieJuice.enabled !== false) : true,
+    perCredit: r.birdieJuice ? (r.birdieJuice.perCredit || 1) : 1,
+    earned:    [],
+    redeemed:  0
+  };
+
+  // Apply to G — fresh round, no date set yet (setup screen will set it on Start)
+  Object.assign(G, {
+    n, players, scores: emptyScores,
+    par:   r.par  ? [...r.par]  : [...activeCourse().par],
+    si:    r.si   ? [...r.si]   : [...activeCourse().si],
+    courseId:     r.courseId || 'derrick-gwc',
+    startHole:    1,
+    hole:         0,
+    bet:          r.bet || 5,
+    teamGames, singleGames, sixPointGames, skinsGames, vegasGames, stablefordGames,
+    snake, birdieJuice,
+    matchCards:   { enabled:false, opponents:[] },
+    internationals: {},
+    autoAdvance:  G.autoAdvance !== false,
+    scorecardOnly: false,
+    roundDate:    null,
+    roundEnd:     null,
+    firstScoreAt: null,
+    weatherStart: null,
+    weatherEnd:   null
+  });
+
+  saveG();
+  showS('setup');
+  renderSetup();
+  // Brief toast confirmation
+  setTimeout(function(){
+    var bar = document.getElementById('scoreOnlyBar');
+    if(bar){ bar.style.display='flex'; bar.textContent='\uD83D\uDD04 Rematch loaded \u2014 review and tap Start Round'; bar.style.background='#1a3a2a';
+      setTimeout(function(){ syncScoreOnlyBar(); }, 3500); }
+  }, 200);
+}
+
 function resumeRound(i){
+  const hist = loadHistory();
+  const r = hist[i];
+  if(!r || !r.paused) return;
+  // Block if an active scored round is already in progress
+  const hasActiveRound = G.scores && G.scores.length && G.scores[0] && G.scores[0].some(function(s){ return s!==null; });
+  if(hasActiveRound){
+    if(!confirm('A round is currently in progress.\n\nResuming this round will replace it. Your current round is saved. Continue?')) return;
+  }
+  // Restore paused round into G
+  Object.assign(G, JSON.parse(JSON.stringify(r)));
+  G._editingHistoryIdx = -1;
+  G._frozenFields = null;
+  saveG();
+  showS('score');
+  renderCard();
+}
+
+
   const hist = loadHistory();
   const r = hist[i];
   if(!r) return;
@@ -11929,7 +12038,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.38 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.42 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12029,7 +12138,23 @@ function mmUpdatePlayerDeck(i, deck){
 }
 
 
-function mmAdjustStartHole(){
+function mmUpdateHandicap(i){
+  const input = document.getElementById('mmHcpInput'+i);
+  if(!input) return;
+  const val = parseFloat(input.value);
+  if(isNaN(val) || val < 0 || val > 54){ alert('Please enter a valid handicap index (0–54).'); return; }
+  if(!G.players[i]) return;
+  G.players[i].idx = Math.round(val * 10) / 10;
+  G.players[i].hdcpBaseline = G.players[i].idx;
+  applyDeckToRow(i);
+  saveG();
+  renderCard();
+  // Visual confirmation
+  const btn = input.nextElementSibling;
+  if(btn){ const orig = btn.textContent; btn.textContent = '✓ Done'; setTimeout(()=>{ btn.textContent = orig; }, 1500); }
+}
+
+
   const sel=document.getElementById("mmStartHoleSel");
   if(!sel) return;
   const newStart=parseInt(sel.value);
@@ -12448,6 +12573,8 @@ function openMatchManager(){
     ? `Scorecard-only round — add or remove players here. Existing scores are kept.`
     : `Adding a match starts it from the current hole. Removing a match keeps scores but drops it from Nassau/Totals.`;
 
+
+
   overlay.innerHTML=`
     <div class="mm-sheet">
       <div class="mm-hdr">
@@ -12592,6 +12719,7 @@ function openMatchManager(){
       <div style="font-size:11px;color:var(--inkl);margin-top:10px;text-align:center">${footNote}</div>
     </div>`;
     document.body.appendChild(overlay);
+  mmBuildHandicapSection();
   overlay.addEventListener('click',e=>{ if(e.target===overlay) closeMatchManager(); });
 
   renderMMPlayers();
@@ -12992,6 +13120,115 @@ async function mmFetchMCHandicap(k){
   }catch(e){
     if(btn){ btn.innerHTML='GC'; btn.disabled=false; }
     alert('Could not fetch handicap: '+e.message);
+  }
+}
+
+function mmBuildHandicapSection(){
+  const sheet = document.querySelector('#mmOverlay .mm-sheet');
+  if(!sheet || !G.players || !G.players.length) return;
+
+  // Build rows for each player
+  var rows = '';
+  G.players.forEach(function(p, i){
+    var hasGC = p.golfId && /^\d{10}$/.test(p.golfId.trim());
+    var first = p.name ? p.name.split(' ')[0] : 'Player '+(i+1);
+    var curIdx = p.idx != null ? p.idx : '';
+    rows += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">';
+    rows += '<div style="flex:1;font-size:13px;font-weight:700;color:#fff">'+first+'</div>';
+    if(hasGC){
+      // GC player — show current index + Fetch button
+      rows += '<div style="font-size:11px;color:#a8d5b5" id="mmHcpVal'+i+'">Index '+curIdx+'</div>';
+      rows += '<button onclick="mmFetchHandicapMidRound('+i+')" id="mmHcpFetchBtn'+i+'" '
+        + 'style="background:linear-gradient(135deg,#1a4a2a,#2d6a4f);color:#c9a84c;border:1.5px solid #c9a84c;'
+        + 'border-radius:8px;padding:7px 12px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap">'
+        + '⛳ Fetch Latest</button>';
+    } else {
+      // Manual player — editable index
+      rows += '<div style="font-size:11px;color:#888">Index</div>';
+      rows += '<input id="mmHcpInput'+i+'" type="number" min="0" max="54" step="0.1" value="'+curIdx+'" '
+        + 'style="width:62px;padding:6px 8px;border-radius:8px;border:1.5px solid rgba(168,213,181,.4);'
+        + 'background:#1a2a1a;color:#fff;font-size:15px;font-weight:700;text-align:center">';
+      rows += '<button onclick="mmUpdateHandicap('+i+')" id="mmHcpApplyBtn'+i+'" '
+        + 'style="background:#a8d5b5;color:#1a3a2a;border:none;border-radius:8px;padding:7px 14px;'
+        + 'font-size:12px;font-weight:800;cursor:pointer">Apply</button>';
+    }
+    rows += '</div>';
+  });
+
+  // Build collapsible section HTML
+  var section = document.createElement('div');
+  section.id = 'mmHandicapSection';
+  section.style.cssText = 'margin-bottom:4px';
+  section.innerHTML =
+    '<div onclick="var s=this.nextElementSibling;s.style.display=s.style.display===\'none\'?\'block\':\'none\';this.querySelector(\'.mmc\').textContent=s.style.display===\'none\'?\'\\u25b6\':\'\\u25bc\'" '
+    + 'style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;'
+    + 'border:1.5px solid rgba(168,213,181,.3);border-radius:8px;padding:10px 14px;cursor:pointer">'
+    + '<span style="font-size:13px;font-weight:700;color:#a8d5b5">✏️ Player Handicaps</span>'
+    + '<span class="mmc" style="color:#a8d5b5;font-size:12px">▶</span></div>'
+    + '<div style="display:none;background:#1a2a3a;border:1.5px solid rgba(168,213,181,.3);'
+    + 'border-radius:0 0 10px 10px;padding:12px 14px;margin-bottom:8px">'
+    + '<div style="font-size:11px;color:#a8d5b5;line-height:1.5;margin-bottom:12px">'
+    + 'Adjust handicap mid-round. Changes take effect immediately on all games.</div>'
+    + rows
+    + '<button onclick="this.parentElement.style.display=\'none\';this.parentElement.previousElementSibling.querySelector(\'.mmc\').textContent=\'▶\'" '
+    + 'style="width:100%;margin-top:4px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>'
+    + '</div>';
+
+  // Insert after the BJ section (before the Starting Hole section)
+  var startingHoleEl = sheet.querySelector('[style*="1a1a2e"]');
+  if(startingHoleEl) {
+    sheet.insertBefore(section, startingHoleEl);
+  } else {
+    // Fallback — insert near top of sheet content
+    var hdr = sheet.querySelector('.mm-hdr');
+    if(hdr && hdr.nextSibling) sheet.insertBefore(section, hdr.nextSibling);
+  }
+}
+
+function mmUpdateHandicap(i){
+  var input = document.getElementById('mmHcpInput'+i);
+  var btn   = document.getElementById('mmHcpApplyBtn'+i);
+  if(!input) return;
+  var val = parseFloat(input.value);
+  if(isNaN(val) || val < 0 || val > 54){ alert('Please enter a valid handicap index (0–54).'); return; }
+  if(!G.players[i]) return;
+  G.players[i].idx = Math.round(val * 10) / 10;
+  G.players[i].hdcpBaseline = G.players[i].idx;
+  applyDeckToRow(i);
+  saveG();
+  renderCard();
+  if(btn){ var orig=btn.textContent; btn.textContent='✓ Applied'; btn.style.background='#27ae60'; btn.style.color='#fff';
+    setTimeout(function(){ btn.textContent=orig; btn.style.background='#a8d5b5'; btn.style.color='#1a3a2a'; }, 1800); }
+}
+
+async function mmFetchHandicapMidRound(i){
+  var btn = document.getElementById('mmHcpFetchBtn'+i);
+  var valEl = document.getElementById('mmHcpVal'+i);
+  if(!G.players[i] || !G.players[i].golfId) return;
+  var gid = G.players[i].golfId.trim();
+  if(!/^\d{10}$/.test(gid)) return;
+  if(btn){ btn.textContent='Fetching…'; btn.disabled=true; }
+  try{
+    var tok = await gcGetToken(gcConfig());
+    var res  = await fetch(WL_WORKER+'/handicap?cardId='+encodeURIComponent(gid),
+      { headers:{ 'Authorization':'Bearer '+tok, 'Accept':'application/json' } });
+    var data = await res.json();
+    var rec  = Array.isArray(data.data) ? data.data[0] : data;
+    if(!rec || rec.handicapValue===undefined) throw new Error('No handicap returned');
+    // Save previous for trend arrow
+    var cx=loadContacts(), ci=cx.findIndex(function(c){return (c.golfId||'').trim()===gid;});
+    if(ci>=0 && cx[ci].idx!=null && cx[ci].idx!==rec.handicapValue){ cx[ci].hdcpPrevious=cx[ci].idx; saveContacts(cx); }
+    G.players[i].hdcpBaseline = rec.handicapValue;
+    applyDeckToRow(i);
+    autoSaveContact(i);
+    saveG();
+    renderCard();
+    if(valEl) valEl.textContent = 'Index '+G.players[i].idx;
+    if(btn){ btn.textContent='✓ Updated'; btn.disabled=false; btn.style.color='#a8d5b5';
+      setTimeout(function(){ btn.textContent='⛳ Fetch Latest'; btn.style.color='#c9a84c'; }, 2500); }
+  }catch(e){
+    if(btn){ btn.textContent='⛳ Fetch Latest'; btn.disabled=false; }
+    alert('Could not fetch: '+(e.message||e));
   }
 }
 
@@ -14289,7 +14526,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.38. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.42. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14777,7 +15014,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.38';
+const CURRENT_VERSION = 'pards-v13.42';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -15222,7 +15459,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.38';
+const CACHE='pards-v13.42';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
