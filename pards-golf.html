@@ -5750,7 +5750,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.18</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.21</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6459,7 +6459,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.18</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.21</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7239,7 +7239,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.18</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.21</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7812,7 +7812,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.18</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.21</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10501,7 +10501,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.18</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.21</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10963,13 +10963,21 @@ function renderHistory(){
         var _sbShareStr = _sbShare>=0?'+$'+_sbShare:'-$'+Math.abs(_sbShare);
         var _sbD = new Date(r.savedAt||r.roundDate);
         var _sbDate = _sbD.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-        html+=`<div class="hist-row" style="border-left-color:#c9a84c;cursor:pointer" class="hist-row${(r.bets||[]).some(b=>!b.result)?' update-available':''}" onclick="event.stopPropagation();openSideBetsFromHistory(${i})">
-          <div style="flex:1">
+        const _sbLocked = !!r.locked;
+      const _sbLockIcon = _sbLocked ? '🔒' : '🔓';
+      const _sbLockOpacity = _sbLocked ? '1' : '0.45';
+      const _sbUnsettledBets = (r.bets||[]).some(b=>!b.result);
+      html+=`<div class="hist-row${_sbUnsettledBets?' update-available':''}" style="border-left-color:#c9a84c" onclick="event.stopPropagation();openSideBetsFromHistory(${i})">
+          <div style="flex:1;min-width:0;cursor:pointer">
             <div style="font-size:11px;font-weight:800;color:#c9a84c;letter-spacing:.5px;margin-bottom:2px">💰 SIDE BETS</div>
             <div style="font-size:15px;font-weight:700;color:#1a3a2a">${r.eventName||'Side Bets'}</div>
             <div style="font-size:11px;color:#888;margin-top:2px">${_sbDate} &nbsp;·&nbsp; ${(r.bets||[]).length} bets</div>
           </div>
-          <div style="text-align:right">
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+            <div style="display:flex;align-items:center;gap:4px">
+              <button onclick="event.stopPropagation();toggleLockHistory(${i})" style="background:rgba(26,58,42,.15);border:1px solid rgba(26,58,42,.2);border-radius:8px;font-size:18px;cursor:pointer;padding:4px 8px;-webkit-tap-highlight-color:transparent;opacity:${_sbLockOpacity};line-height:1">${_sbLockIcon}</button>
+              ${_sbLocked ? '' : `<button onclick="event.stopPropagation();confirmDeleteHistory(${i})" style="background:none;border:none;color:#e74c3c;font-size:13px;font-weight:700;cursor:pointer;padding:2px 4px;-webkit-tap-highlight-color:transparent">✕</button>`}
+            </div>
             <div style="font-size:18px;font-weight:800;color:${_sbCol}">${_sbNetStr}</div>
             <div style="font-size:11px;color:#888">Your share: ${_sbShareStr}</div>
           </div>
@@ -11165,7 +11173,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.18</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.21</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11438,7 +11446,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.18</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.21</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11578,7 +11586,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v14.18');
+  lines.push('— Pards Golf · v14.21');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12303,7 +12311,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v14.18 · ${dateStr}</div>
+<div class="foot">Pards Golf · v14.21 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13418,8 +13426,7 @@ function syncSideBetsButtons(){
     var msg = '\uD83C\uDFF5 Welcome to the ' + SIDE_BETS_EVENT.name + ' \u2B50 \uD83C\uDFF5 Welcome to the ' + SIDE_BETS_EVENT.name + ' \u2B50';
     tickerText.textContent = msg;
   }
-  // Pulse History icon if Side Bets record has unsettled bets
-  var histBtn = document.getElementById('ni-history');
+  // Check for unsettled Side Bets records in History
   var hasUnsettledInHistory = false;
   try{
     var hist = loadHistory();
@@ -13427,13 +13434,15 @@ function syncSideBetsButtons(){
       return r.isSideBets && r.bets && r.bets.some(function(b){ return !b.result; });
     });
   }catch(e){}
+
+  // Pulse History icon when unsettled bets in history
+  var histBtn = document.getElementById('ni-history');
   if(histBtn) histBtn.classList.toggle('update-available', hasUnsettledInHistory);
-  // Pulse 💰 button when in settling mode with unsettled bets (only if still visible)
-  var settling = G.sideBets && G.sideBets.settling;
-  var unsettled = G.sideBets && G.sideBets.bets && G.sideBets.bets.some(function(b){ return !b.result; });
-  var pulse = show && settling && unsettled;
-  if(navBtn)   navBtn.classList.toggle('update-available', !!pulse);
-  if(setupBtn) setupBtn.classList.toggle('update-available', !!pulse);
+
+  // Pulse Side Bets button when unsettled bets exist in history (round is done, go settle)
+  var sbPulse = hasUnsettledInHistory;
+  if(navBtn)   navBtn.classList.toggle('update-available', sbPulse);
+  if(setupBtn) setupBtn.classList.toggle('update-available', sbPulse);
 }
 
 // ── Hold-to-activate ──────────────────────────
@@ -13646,6 +13655,18 @@ function finaliseSideBets(){
 function openSideBets(){
   if(!SIDE_BETS_EVENT) return;
   if(!G.sideBets) G.sideBets={defaultAmount:100,teamSize:2,settling:false,bets:[]};
+  // If there are unsettled bets in History → go to History to settle there
+  var hasUnsettled = false;
+  try{
+    var hist = loadHistory();
+    hasUnsettled = hist.some(function(r){
+      return r.isSideBets && r.bets && r.bets.some(function(b){ return !b.result; });
+    });
+  }catch(e){}
+  if(hasUnsettled){
+    showS('history');
+    return;
+  }
   renderSideBetsOverlay();
 }
 
@@ -13788,10 +13809,22 @@ function renderSideBetsOverlay(){
     }
   } else {
     // SETUP MODE — sorted: active bets first, then A-Z
+    // Exclude the "Me" player from the team list
+    var _meName = '';
+    try{
+      var _meContact = loadContacts().find(function(c){ return c.me; });
+      if(_meContact && _meContact.name) _meName = _meContact.name.toLowerCase().trim();
+    }catch(e){}
     var betIdxs = bets.map(function(b){ return b.teamIdx; });
     var order = betIdxs.slice();
     var remaining = [];
-    ev.teams.forEach(function(_,i){ if(betIdxs.indexOf(i)<0) remaining.push(i); });
+    ev.teams.forEach(function(_,i){
+      if(betIdxs.indexOf(i)<0){
+        // Skip if this team name matches the Me player
+        if(_meName && ev.teams[i].toLowerCase().trim()===_meName) return;
+        remaining.push(i);
+      }
+    });
     remaining.sort(function(a,b){ return ev.teams[a].localeCompare(ev.teams[b]); });
     remaining.forEach(function(i){ order.push(i); });
 
@@ -15232,7 +15265,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v14.18. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v14.21. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -15720,7 +15753,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v14.18';
+const CURRENT_VERSION = 'pards-v14.21';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16174,7 +16207,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v14.18';
+const CACHE='pards-v14.21';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
