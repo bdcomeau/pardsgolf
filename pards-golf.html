@@ -486,7 +486,6 @@ input::placeholder{color:#bbb}
 @keyframes pulse-card{0%,100%{border-color:rgba(201,168,76,.95);box-shadow:0 0 0 3px rgba(201,168,76,.7),0 0 12px rgba(201,168,76,.4),var(--shadow)}50%{border-color:rgba(201,168,76,.2);box-shadow:0 0 0 1px rgba(201,168,76,.1),var(--shadow)}}
 @keyframes pulse-snake{0%,100%{box-shadow:0 0 0 2px rgba(108,52,131,.9)}50%{box-shadow:0 0 0 5px rgba(108,52,131,.2)}}
 @keyframes pulse-update{0%,100%{background:rgba(201,168,76,.18);border-color:rgba(201,168,76,.7);color:#c9a84c}50%{background:rgba(201,168,76,.45);border-color:#c9a84c;color:#fff}}
-@keyframes wx-ticker{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
 @keyframes sb-remind{0%,100%{opacity:1}50%{opacity:.45}}
 .sb-remind{animation:sb-remind 2.8s ease-in-out infinite!important}
 .update-available{animation:pulse-update 1.4s ease-in-out infinite!important}
@@ -860,7 +859,7 @@ input::placeholder{color:#bbb}
 
 <!-- ══════════ SCORECARD ══════════ -->
 <div class="screen" id="screen-score">
-  <div id="wxStrip" onclick="onWeatherStripTap()" style="display:none;padding:0;background:var(--gd);border-bottom:1px solid rgba(201,168,76,.2);font-size:12px;font-weight:600;color:#dce8e0;overflow:hidden;height:28px;cursor:pointer"><div id="wxTickerInner" style="white-space:nowrap;display:inline-block;padding:6px 16px;animation:none">…</div></div>
+  <div id="wxStrip" onclick="onWeatherStripTap()" style="display:none;padding:6px 16px 8px;background:var(--gd);border-bottom:1px solid rgba(201,168,76,.2);font-size:12px;font-weight:600;color:#dce8e0;text-align:center;cursor:pointer">…</div>
   <div class="shdr">
     <div class="hnav">
       <button class="hnav-btn" id="btnPrev" onclick="goH(-1)">◀</button>
@@ -3474,9 +3473,7 @@ async function refreshWeatherDisplay(){
     const courseId = G.courseId || 'derrick-gwc';
     const w = await fetchWeather(courseId);
     _wxLast = w;
-    if(w) el.innerHTML = '<div id="wxTickerInner" style="white-space:nowrap;display:inline-block;padding:6px 32px 6px 16px;animation:wx-ticker 22s linear infinite">'
-      + (w.label ? `${w.label} <span style="opacity:.5">· ${new Date(w.ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</span>` : 'Weather unavailable')
-      + '</div>';
+    if(w) el.innerHTML = w.label ? `${w.label} <span style="opacity:.5">· ${new Date(w.ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</span>` : 'Weather unavailable';
     el.style.display='block';
     // Capture round-start conditions the first time we get a good reading in a round.
     if(w && G.roundDate && !G.weatherStart && w.tempC!==null){ G.weatherStart=w; saveG(); }
