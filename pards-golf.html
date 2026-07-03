@@ -5738,7 +5738,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.91</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.96</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6447,7 +6447,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.91</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.96</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7227,7 +7227,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.91</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.96</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7800,7 +7800,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.91</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.96</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10117,6 +10117,7 @@ function buildRoundSnapshot(){
       settlements: computeSnakeSettlements()
     } : {enabled:false,holder:null,history:[]},
     matchCards: G.matchCards ? JSON.parse(JSON.stringify(G.matchCards)) : {enabled:false,opponents:[]},
+    sideBets: G.sideBets ? JSON.parse(JSON.stringify(G.sideBets)) : null,
     money,
     matches,
     ...(G._scoringMatchCards ? {isMatchCards:true} : {}),
@@ -10488,7 +10489,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.91</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.96</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -11082,6 +11083,26 @@ function renderHistory(){
         + 'cursor:pointer;-webkit-tap-highlight-color:transparent">\uD83D\uDD04 Rematch</button>'
         : '';
 
+      // Side Bets summary pill — shows on any history card that has side bets data
+      const sbData = r.sideBets && r.sideBets.bets && r.sideBets.bets.length ? r.sideBets : null;
+      const sideBetsBtn = sbData ? (function(){
+        var defaultAmt = sbData.defaultAmount||100;
+        var net = sbData.bets.reduce(function(s,b){
+          if(b.result==='win')  return s+(b.amount||defaultAmt);
+          if(b.result==='loss') return s-(b.amount||defaultAmt);
+          return s;
+        }, 0);
+        var netStr = net > 0 ? '+$'+net : net < 0 ? '-$'+Math.abs(net) : '$0 (unsettled)';
+        var netColor = net > 0 ? '#27ae60' : net < 0 ? '#e74c3c' : '#c9a84c';
+        return '<button onclick="event.stopPropagation();openSideBetsFromHistory(' + i + ')" '
+          + 'style="margin-top:6px;padding:7px 14px;background:rgba(201,168,76,.1);'
+          + 'border:1.5px solid rgba(201,168,76,.35);border-radius:20px;font-size:12px;font-weight:800;'
+          + 'cursor:pointer;-webkit-tap-highlight-color:transparent;display:inline-flex;align-items:center;gap:6px">'
+          + '<span style="color:#c9a84c">💰 Side Bets</span>'
+          + '<span style="color:' + netColor + ';font-size:11px">' + sbData.bets.length + ' bets · ' + netStr + '</span>'
+          + '</button>';
+      })() : '';
+
       const mcBorder = r.isMatchCards ? '#6a4c93' : borderCol;
 
       // Match Cards: needs scoring if any opponent (player idx>=1) has no scores entered yet,
@@ -11112,13 +11133,14 @@ function renderHistory(){
           ${gameSum}
           ${resumeBtn}
           ${rematchBtn}
+          ${sideBetsBtn}
           ${scoreRoundBtn}
           <div style="display:flex;justify-content:flex-end;margin-top:4px">${lockBtn}</div>
         </div>
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.91</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.96</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11391,7 +11413,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.91</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.96</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11531,7 +11553,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.91');
+  lines.push('— Pards Golf · v13.96');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12256,7 +12278,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.91 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.96 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13336,8 +13358,15 @@ function isSideBetsDay(){
          today.getDate()===ev.getDate();
 }
 
+function isSideBetsVisible(){
+  if(isSideBetsDay()) return true;
+  // Keep visible until every active bet has been settled (win or loss)
+  if(!G.sideBets || !G.sideBets.bets || !G.sideBets.bets.length) return false;
+  return G.sideBets.bets.some(function(b){ return !b.result; });
+}
+
 function syncSideBetsButtons(){
-  var show = isSideBetsDay();
+  var show = isSideBetsVisible();
   var setupBtn = document.getElementById('sideBetsSetupBtn');
   var navBtn   = document.getElementById('ni-sidebets');
   if(setupBtn) setupBtn.style.display = show ? '' : 'none';
@@ -13347,7 +13376,14 @@ function syncSideBetsButtons(){
 function openSideBets(){
   if(!SIDE_BETS_EVENT) return;
   if(!G.sideBets) G.sideBets = {enabled:false, defaultAmount:100, bets:[]};
-  renderSideBetsOverlay();
+  renderSideBetsOverlay(false);
+}
+
+function openSideBetsFromHistory(roundIdx){
+  var hist = loadHistory();
+  var r = hist[roundIdx];
+  if(!r || !r.sideBets || !r.sideBets.bets || !r.sideBets.bets.length) return;
+  renderSideBetsOverlay(true, r.sideBets, r);
 }
 
 function closeSideBets(){
@@ -13381,6 +13417,32 @@ function toggleSideBet(teamIdx){
   renderSideBetsOverlay();
 }
 
+let _sbHoldInterval=null, _sbHoldStart=0, _sbHoldTeam=-1;
+
+function sbHoldStart(teamIdx, btn){
+  if(_sbHoldInterval) return;
+  _sbHoldStart = Date.now();
+  _sbHoldTeam  = teamIdx;
+  var bar = btn ? btn.querySelector('.sb-hold-bar') : null;
+  var dur = 700; // ms
+  _sbHoldInterval = setInterval(function(){
+    var pct = Math.min(100, (Date.now()-_sbHoldStart)/dur*100);
+    if(bar) bar.style.width = pct+'%';
+    if(pct>=100){
+      clearInterval(_sbHoldInterval); _sbHoldInterval=null;
+      if(bar) bar.style.width='0%';
+      toggleSideBet(_sbHoldTeam);
+    }
+  }, 20);
+}
+
+function sbHoldEnd(btn){
+  if(_sbHoldInterval){ clearInterval(_sbHoldInterval); _sbHoldInterval=null; }
+  var bar = btn ? btn.querySelector('.sb-hold-bar') : null;
+  if(bar){ bar.style.transition='width .15s'; bar.style.width='0%';
+    setTimeout(function(){ if(bar) bar.style.transition='none'; }, 200); }
+}
+
 function setSideBetAmount(teamIdx, amount){
   if(!G.sideBets) return;
   var bet = G.sideBets.bets.find(function(b){ return b.teamIdx===teamIdx; });
@@ -13405,9 +13467,10 @@ function setSideBetResult(teamIdx, result){
   if(!G.sideBets) return;
   var bet = G.sideBets.bets.find(function(b){ return b.teamIdx===teamIdx; });
   if(!bet) return;
-  bet.result = bet.result===result ? null : result;  // toggle off if same
+  bet.result = bet.result===result ? null : result;
   saveG();
-  renderSideBetsOverlay();
+  syncSideBetsButtons();
+  renderSideBetsOverlay(false);
 }
 
 function sideBetsFilterTeams(query){
@@ -13422,35 +13485,56 @@ function sideBetsFilterTeams(query){
   });
 }
 
-function renderSideBetsOverlay(){
+function renderSideBetsOverlay(readOnly, histSideBets){
   var existing = document.getElementById('sideBetsOverlay');
   if(existing) existing.remove();
 
   if(!G.sideBets) G.sideBets={enabled:false,defaultAmount:100,bets:[]};
-  var ev = SIDE_BETS_EVENT;
-  var bets = G.sideBets.bets;
-  var defaultAmt = G.sideBets.defaultAmount||100;
-  var total = getSideBetsTotal();
-  var net   = getSideBetsNet();
-  var settled = bets.filter(function(b){ return b.result; }).length;
-  var isComplete = typeof isRoundComplete==='function' && isRoundComplete();
+  var ev = SIDE_BETS_EVENT || {name:'Side Bets', teams:[]};
+  var bets       = readOnly ? ((histSideBets&&histSideBets.bets)||[]) : G.sideBets.bets;
+  var defaultAmt = readOnly ? ((histSideBets&&histSideBets.defaultAmount)||100) : (G.sideBets.defaultAmount||100);
+  var total = bets.reduce(function(s,b){ return s+(b.amount||defaultAmt); }, 0);
+  var net   = bets.reduce(function(s,b){
+    if(b.result==='win')  return s+(b.amount||defaultAmt);
+    if(b.result==='loss') return s-(b.amount||defaultAmt);
+    return s;
+  }, 0);
+  var isComplete = readOnly || (typeof isRoundComplete==='function' && isRoundComplete());
 
   // Build team list
   var teamRows = '';
-  ev.teams.forEach(function(name, idx){
+  // Sort: active bets first (in original order), then remaining teams alphabetically
+  var teamOrder = [];
+  var betIdxs = bets.map(function(b){ return b.teamIdx; });
+  // Active bets first
+  betIdxs.forEach(function(idx){ if(idx < ev.teams.length) teamOrder.push(idx); });
+  // Then remaining teams alphabetically
+  var remaining = [];
+  ev.teams.forEach(function(_, idx){ if(betIdxs.indexOf(idx)<0) remaining.push(idx); });
+  remaining.sort(function(a,b){ return ev.teams[a].localeCompare(ev.teams[b]); });
+  remaining.forEach(function(idx){ teamOrder.push(idx); });
+
+  teamOrder.forEach(function(idx){
+    var name = ev.teams[idx];
     var bet = bets.find(function(b){ return b.teamIdx===idx; });
     var checked = !!bet;
     var result  = bet ? bet.result : null;
     var amt     = bet ? (bet.amount||defaultAmt) : defaultAmt;
 
     var cbStyle = checked
-      ? 'width:28px;height:28px;border-radius:7px;border:none;background:#c9a84c;color:#1a3a2a;font-size:16px;font-weight:900;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center'
-      : 'width:28px;height:28px;border-radius:7px;border:1.5px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:transparent;cursor:pointer;flex-shrink:0';
+      ? 'position:relative;overflow:hidden;width:34px;height:34px;border-radius:8px;border:none;background:#c9a84c;color:#1a3a2a;font-size:16px;font-weight:900;cursor:pointer;flex-shrink:0;touch-action:none'
+      : 'position:relative;overflow:hidden;width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:rgba(201,168,76,.5);cursor:pointer;flex-shrink:0;touch-action:none';
 
     teamRows += '<div class="sb-team-row" data-name="' + name.toLowerCase() + '" '
       + 'style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">'
-      // Checkbox / accepted indicator
-      + '<button onclick="toggleSideBet(' + idx + ')" title="Side bet accepted" style="' + cbStyle + '">✓</button>'
+      // Hold-to-activate checkbox
+      + '<button '
+      + 'onmousedown="sbHoldStart(' + idx + ',this)" onmouseup="sbHoldEnd(this)" onmouseleave="sbHoldEnd(this)" '
+      + 'ontouchstart="sbHoldStart(' + idx + ',this);event.preventDefault()" ontouchend="sbHoldEnd(this)" ontouchcancel="sbHoldEnd(this)" '
+      + 'title="Hold to ' + (checked?'remove':'add') + ' bet" style="' + cbStyle + '">'
+      + '<div class="sb-hold-bar" style="position:absolute;left:0;top:0;bottom:0;width:0%;background:rgba(201,168,76,.45);border-radius:8px;transition:none;pointer-events:none"></div>'
+      + '<span style="position:relative;pointer-events:none">' + (checked?'✓':'·') + '</span>'
+      + '</button>'
       // Team name
       + '<div style="flex:1;font-size:14px;font-weight:' + (checked?'700':'400') + ';color:' + (checked?'#fff':'rgba(255,255,255,.6)') + '">' + name + '</div>';
 
@@ -13513,27 +13597,33 @@ function renderSideBetsOverlay(){
   ov.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end';
 
   ov.innerHTML = '<div style="width:100%;max-height:90vh;background:#1a3a2a;border-radius:20px 20px 0 0;display:flex;flex-direction:column;overflow:hidden">'
-    // Header
-    + '<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;border-bottom:1px solid rgba(201,168,76,.3);flex-shrink:0">'
+    // Photo banner header
+    + '<div style="position:relative;overflow:hidden;border-radius:20px 20px 0 0;flex-shrink:0">'
+    + '<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAC0AyADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDzaiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP//Z" style="width:100%;height:110px;object-fit:cover;object-position:center;display:block;opacity:0.55">'
+    + '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,30,15,.3) 0%,rgba(10,30,15,.75) 100%)"></div>'
+    + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:12px 16px">'
+    + '<div style="font-size:24px;font-weight:900;letter-spacing:4px;color:#c9a84c;text-shadow:0 2px 10px rgba(0,0,0,.9);text-transform:uppercasease">'
+    + (readOnly ? '📋 SIDE BETS — RESULTS' : '💰 SIDE BETS') + '</div>'
     + '<div>'
-    + '<div style="font-size:16px;font-weight:800;color:#c9a84c">💰 SIDE BETS</div>'
-    + '<div style="font-size:12px;color:#a8d5b5;margin-top:2px">' + ev.name + '</div>'
+    + '<div style="font-size:20px;font-weight:900;color:#fff;letter-spacing:.5px;line-height:1.1;text-shadow:0 2px 8px rgba(0,0,0,.6)">' + ev.name + '</div>'
+    + '<div style="font-size:12px;color:#c9a84c;font-weight:700;margin-top:4px">July 02, 2026</div>'
     + '</div>'
-    + '<button onclick="closeSideBets()" style="background:rgba(255,255,255,.1);border:none;border-radius:20px;padding:6px 14px;color:#fff;font-size:13px;font-weight:700;cursor:pointer">Done</button>'
+    + '</div>'
+    + '<button onclick="closeSideBets()" style="position:absolute;top:10px;right:12px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:5px 14px;color:#fff;font-size:12px;font-weight:700;cursor:pointer">Done</button>'
     + '</div>'
     // Body
     + '<div style="overflow-y:auto;padding:14px 16px;flex:1">'
     + summaryBar
-    // Amount picker
-    + '<div style="margin-bottom:14px">'
+    // Amount picker — hidden in read-only mode
+    + (!readOnly ? '<div style="margin-bottom:14px">'
     + '<div style="font-size:11px;font-weight:700;color:#a8d5b5;letter-spacing:.5px;margin-bottom:8px">DEFAULT BET AMOUNT</div>'
     + '<div style="display:flex;gap:8px;flex-wrap:wrap">' + amtPicker + '</div>'
-    + '</div>'
-    // Search
-    + '<div style="margin-bottom:10px">'
+    + '</div>' : '')
+    // Search — hidden in read-only mode
+    + (!readOnly ? '<div style="margin-bottom:10px">'
     + '<input id="sbSearch" type="text" placeholder="🔍 Search teams…" oninput="sideBetsFilterTeams(this.value)" autocomplete="off" '
     + 'style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid rgba(168,213,181,.3);background:rgba(255,255,255,.06);color:#fff;font-size:14px;box-sizing:border-box">'
-    + '</div>'
+    + '</div>' : '')
     // Team list
     + '<div style="font-size:11px;font-weight:700;color:#a8d5b5;letter-spacing:.5px;margin-bottom:6px">'
     + 'TEAMS (' + ev.teams.length + ')'
@@ -13543,9 +13633,6 @@ function renderSideBetsOverlay(){
     + '</div>';
 
   document.body.appendChild(ov);
-  // Restore search if was open
-  var srch = document.getElementById('sbSearch');
-  if(srch) srch.focus();
 }
 
 function closeMatchManager(){
@@ -14842,7 +14929,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.91. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.96. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -15330,7 +15417,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.91';
+const CURRENT_VERSION = 'pards-v13.96';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -15784,7 +15871,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.91';
+const CACHE='pards-v13.96';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
