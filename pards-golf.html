@@ -5803,7 +5803,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.99</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.00</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6139,10 +6139,19 @@ function setScoreDirect(pi, h, val){
   _pending=null;
   G.scores[pi][h]=val;
   if(!G.firstScoreAt) { G.firstScoreAt=new Date().toISOString(); }
-  // If a score on hole 1-17 is added/changed after hole 18 was already reached,
-  // re-arm the International reminder so it fires again when returning to hole 18.
   if(h!==17 && prev!==val){ G._intlReminderShown=false; G._intlBannerDismissed=false; }
   checkBirdieJuice(pi,h,prev);
+  // Collapse live standings and who strokes if open
+  if(_liveStandOpen){
+    _liveStandOpen = false;
+    const lp=document.getElementById('liveStandPanel'); if(lp) lp.style.display='none';
+    const lc=document.getElementById('liveStandChev');  if(lc) lc.textContent='▼';
+  }
+  if(_whoStrokesOpen){
+    _whoStrokesOpen = false;
+    const wp=document.getElementById('whoStrokesPanel'); if(wp) wp.style.display='none';
+    const wc=document.getElementById('whoStrokesChev');  if(wc) wc.textContent='▼';
+  }
   saveG();
   renderCard();
   maybeAutoAdvance();
@@ -6512,7 +6521,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.99</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.00</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7313,7 +7322,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.99</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.00</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7886,7 +7895,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.99</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.00</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10575,7 +10584,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.99</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.00</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -11248,7 +11257,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.99</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.00</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11521,7 +11530,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.99</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.00</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11661,7 +11670,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v14.99');
+  lines.push('— Pards Golf · v15.00');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12386,7 +12395,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v14.99 · ${dateStr}</div>
+<div class="foot">Pards Golf · v15.00 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -15691,7 +15700,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v14.99. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v15.00. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -16179,7 +16188,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v14.99';
+const CURRENT_VERSION = 'pards-v15.00';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16633,7 +16642,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v14.99';
+const CACHE='pards-v15.00';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
