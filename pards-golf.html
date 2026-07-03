@@ -5803,7 +5803,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.04</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.05</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6514,7 +6514,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.04</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.05</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7328,7 +7328,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.04</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.05</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7901,7 +7901,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.04</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.05</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10590,7 +10590,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.04</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.05</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -11264,7 +11264,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.04</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.05</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11537,7 +11537,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.04</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.05</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11677,7 +11677,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v15.04');
+  lines.push('— Pards Golf · v15.05');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12402,7 +12402,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v15.04 · ${dateStr}</div>
+<div class="foot">Pards Golf · v15.05 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -14480,14 +14480,20 @@ function setMe(name){
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px';
     const sheet = document.createElement('div');
     sheet.style.cssText = 'background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:16px;padding:24px;max-width:340px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.5)';
-    sheet.innerHTML = '<div style="font-size:28px;text-align:center;margin-bottom:12px">\u26A0\uFE0F</div>'
-      + '<div style="font-size:16px;font-weight:800;color:#c9a84c;text-align:center;margin-bottom:10px">Change \u201cMe\u201d?</div>'
-      + '<div style="font-size:13px;color:rgba(255,255,255,.7);text-align:center;line-height:1.6;margin-bottom:20px">'
-      + 'Change scorekeeper from<br><b style="color:#f5e6b8">'+current.name+'</b><br>to<br><b style="color:#f5e6b8">'+name+'</b>?'
+    sheet.innerHTML = '<div style="font-size:36px;text-align:center;margin-bottom:10px">⛔</div>'
+      + '<div style="font-size:16px;font-weight:900;color:#e74c3c;text-align:center;margin-bottom:10px">WARNING — Read This First</div>'
+      + '<div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.6;margin-bottom:14px">'
+      + 'Changing <b style="color:#f5e6b8">Me</b> from <b style="color:#f5e6b8">'+current.name+'</b> to <b style="color:#f5e6b8">'+name+'</b>:'
       + '</div>'
+      + '<div style="background:rgba(231,76,60,.12);border:1.5px solid rgba(231,76,60,.4);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:rgba(255,255,255,.85);line-height:1.8">'
+      + '🏆 Career earnings will transfer to the new Me<br>'
+      + '📜 All round history &amp; stats attributed to new Me<br>'
+      + '⚠️ <b>This cannot be undone</b>'
+      + '</div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,.4);text-align:center;margin-bottom:16px">Only do this if setting up this device for a different player.</div>'
       + '<div style="display:flex;gap:10px">'
       + '<button id="setMeCancelBtn" style="flex:1;padding:12px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer">Cancel</button>'
-      + '<button id="setMeConfirmBtn" style="flex:1;padding:12px;background:#c9a84c;border:none;border-radius:10px;color:#1a3a2a;font-size:14px;font-weight:800;cursor:pointer">Yes, Change</button>'
+      + '<button id="setMeConfirmBtn" style="flex:1;padding:12px;background:#e74c3c;border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:800;cursor:pointer">I Understand — Change</button>'
       + '</div>';
     overlay.appendChild(sheet);
     document.body.appendChild(overlay);
@@ -15707,7 +15713,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v15.04. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v15.05. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -16195,7 +16201,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v15.04';
+const CURRENT_VERSION = 'pards-v15.05';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16649,7 +16655,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v15.04';
+const CACHE='pards-v15.05';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
