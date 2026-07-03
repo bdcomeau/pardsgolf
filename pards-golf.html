@@ -988,7 +988,7 @@ input::placeholder{color:#bbb}
   <div class="ni active" id="ni-score" onclick="showS('score')"><div class="ni-icon">⛳<span class="ni-badge ni-badge-gold" id="holeBadge" style="display:none">1</span><span class="ni-badge ni-badge-inprogress" id="inProgressDot" style="display:none;width:8px;min-width:8px;height:8px;padding:0;top:-2px;right:-4px"></span></div><div class="ni-lbl">Scorecard</div></div>
   <div class="ni" id="ni-games" onclick="showGamesMenu()"><div class="ni-icon">💵</div><div class="ni-lbl">Games</div></div>
   <div class="ni" id="ni-birdiejuice" onclick="showS('birdiejuice')"><div class="ni-icon">🐦🥃<span class="ni-badge" id="bjBadge" style="display:none">0</span></div><div class="ni-lbl">Birdie Juice</div></div>
-  <div class="ni" id="ni-sidebets" onclick="openSideBets()" style="display:none"><div class="ni-icon">💰</div><div class="ni-lbl">Side Bets</div></div>
+  <div class="ni" id="ni-sidebets" onclick="openSideBets()" style="display:none"><div class="ni-icon">💰<span class="ni-badge ni-badge-gold" id="sbExposureBadge" style="display:none;font-size:8px;min-width:0;padding:1px 4px;top:-6px;right:-10px"></span></div><div class="ni-lbl">Side Bets</div></div>
   <div class="ni" id="ni-history" onclick="showS('history')"><div class="ni-icon">📜</div><div class="ni-lbl">History</div></div>
   <div class="ni" id="ni-new" onclick="newRound()"><div class="ni-icon">🏁</div><div class="ni-lbl">Save/End Round</div></div>
   <!-- Hidden nav items kept for showS() active-state tracking -->
@@ -5750,7 +5750,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.15</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.17</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6459,7 +6459,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.15</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.17</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7239,7 +7239,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.15</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.17</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7812,7 +7812,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.15</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.17</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10501,7 +10501,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.15</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.17</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -11165,7 +11165,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.15</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.17</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11438,7 +11438,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.15</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.17</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11578,7 +11578,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v14.15');
+  lines.push('— Pards Golf · v14.17');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12303,7 +12303,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v14.15 · ${dateStr}</div>
+<div class="foot">Pards Golf · v14.17 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13399,6 +13399,14 @@ function syncSideBetsButtons(){
   var navBtn   = document.getElementById('ni-sidebets');
   if(setupBtn) setupBtn.style.display = show ? '' : 'none';
   if(navBtn)   navBtn.style.display   = show ? '' : 'none';
+  // Update exposure badge
+  var badge = document.getElementById('sbExposureBadge');
+  if(badge){
+    var total = (G.sideBets && G.sideBets.bets && G.sideBets.bets.length)
+      ? G.sideBets.bets.reduce(function(s,b){ return s+(b.amount||G.sideBets.defaultAmount||100); }, 0) : 0;
+    if(show && total > 0){ badge.style.display=''; badge.textContent='$'+total; }
+    else { badge.style.display='none'; }
+  }
   // Show event-day ticker
   var ticker = document.getElementById('sideBetsTicker');
   var tickerText = document.getElementById('sbTickerText');
@@ -13791,14 +13799,14 @@ function renderSideBetsOverlay(){
       var checked = !!bet;
       var amt     = bet ? bet.amount : defaultAmt;
       var cbStyle = checked
-        ? 'position:relative;overflow:hidden;width:34px;height:34px;border-radius:8px;border:none;background:#c9a84c;color:#1a3a2a;font-size:16px;font-weight:900;cursor:pointer;flex-shrink:0;touch-action:none'
-        : 'position:relative;overflow:hidden;width:34px;height:34px;border-radius:8px;border:1.5px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:rgba(201,168,76,.4);cursor:pointer;flex-shrink:0;touch-action:none';
+        ? 'position:relative;overflow:hidden;width:52px;height:38px;border-radius:10px;border:none;background:#c9a84c;color:#1a3a2a;font-size:18px;font-weight:900;cursor:pointer;flex-shrink:0;touch-action:none;user-select:none;-webkit-user-select:none'
+        : 'position:relative;overflow:hidden;width:52px;height:38px;border-radius:10px;border:1.5px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:rgba(201,168,76,.4);cursor:pointer;flex-shrink:0;touch-action:none;user-select:none;-webkit-user-select:none';
       teamRows += '<div class="sb-team-row" data-name="'+name.toLowerCase()+'" '
-        + 'style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">'
+        + 'style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);user-select:none;-webkit-user-select:none">'
         + '<button onmousedown="sbHoldStart('+idx+',this)" onmouseup="sbHoldEnd(this)" onmouseleave="sbHoldEnd(this)" '
         + 'ontouchstart="sbHoldStart('+idx+',this);event.preventDefault()" ontouchend="sbHoldEnd(this)" ontouchcancel="sbHoldEnd(this)" '
         + 'style="'+cbStyle+'">'
-        + '<div class="sb-hold-bar" style="position:absolute;left:0;top:0;bottom:0;width:0%;background:rgba(201,168,76,.45);border-radius:8px;transition:none;pointer-events:none"></div>'
+        + '<div class="sb-hold-bar" style="position:absolute;left:0;top:0;bottom:0;width:0%;background:rgba(201,168,76,.45);border-radius:10px;transition:none;pointer-events:none"></div>'
         + '<span style="position:relative;pointer-events:none">'+(checked?'\u2713':'\u00B7')+'</span></button>'
         + '<div style="flex:1;min-width:0">'
         + '<div style="font-size:14px;font-weight:'+(checked?'700':'400')+';color:'+(checked?'#fff':'rgba(255,255,255,.6)')+'">'+name+'</div>'
@@ -15222,7 +15230,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v14.15. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v14.17. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -15710,7 +15718,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v14.15';
+const CURRENT_VERSION = 'pards-v14.17';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16164,7 +16172,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v14.15';
+const CACHE='pards-v14.17';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
