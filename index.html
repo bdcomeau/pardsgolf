@@ -486,6 +486,9 @@ input::placeholder{color:#bbb}
 @keyframes pulse-card{0%,100%{border-color:rgba(201,168,76,.95);box-shadow:0 0 0 3px rgba(201,168,76,.7),0 0 12px rgba(201,168,76,.4),var(--shadow)}50%{border-color:rgba(201,168,76,.2);box-shadow:0 0 0 1px rgba(201,168,76,.1),var(--shadow)}}
 @keyframes pulse-snake{0%,100%{box-shadow:0 0 0 2px rgba(108,52,131,.9)}50%{box-shadow:0 0 0 5px rgba(108,52,131,.2)}}
 @keyframes pulse-update{0%,100%{background:rgba(201,168,76,.18);border-color:rgba(201,168,76,.7);color:#c9a84c}50%{background:rgba(201,168,76,.45);border-color:#c9a84c;color:#fff}}
+@keyframes wx-ticker{0%{transform:translateX(100vw)}100%{transform:translateX(-100%)}}
+@keyframes sb-remind{0%,100%{opacity:1}50%{opacity:.45}}
+.sb-remind{animation:sb-remind 2.8s ease-in-out infinite!important}
 .update-available{animation:pulse-update 1.4s ease-in-out infinite!important}
 .ni-badge.ni-badge-globe{background:transparent;font-size:13px;min-width:0;height:auto;padding:0;top:-6px;right:-10px}
 .ni-lbl{font-size:8.5px;color:var(--gl);margin-top:2px;white-space:nowrap;text-align:center}
@@ -857,7 +860,7 @@ input::placeholder{color:#bbb}
 
 <!-- ══════════ SCORECARD ══════════ -->
 <div class="screen" id="screen-score">
-  <div id="wxStrip" onclick="onWeatherStripTap()" style="display:none;padding:6px 16px 8px;background:var(--gd);border-bottom:1px solid rgba(201,168,76,.2);font-size:12px;font-weight:600;color:#dce8e0;text-align:center;cursor:pointer">…</div>
+  <div id="wxStrip" onclick="onWeatherStripTap()" style="display:none;padding:0;background:var(--gd);border-bottom:1px solid rgba(201,168,76,.2);font-size:12px;font-weight:600;color:#dce8e0;overflow:hidden;height:28px;cursor:pointer"><div id="wxTickerInner" style="white-space:nowrap;display:inline-block;padding:6px 16px;animation:none">…</div></div>
   <div class="shdr">
     <div class="hnav">
       <button class="hnav-btn" id="btnPrev" onclick="goH(-1)">◀</button>
@@ -3471,7 +3474,9 @@ async function refreshWeatherDisplay(){
     const courseId = G.courseId || 'derrick-gwc';
     const w = await fetchWeather(courseId);
     _wxLast = w;
-    if(w) el.innerHTML = w.label ? `${w.label} <span style="opacity:.5">· ${new Date(w.ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</span>` : 'Weather unavailable';
+    if(w) el.innerHTML = '<div id="wxTickerInner" style="white-space:nowrap;display:inline-block;padding:6px 32px 6px 16px;animation:wx-ticker 22s linear infinite">'
+      + (w.label ? `${w.label} <span style="opacity:.5">· ${new Date(w.ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</span>` : 'Weather unavailable')
+      + '</div>';
     el.style.display='block';
     // Capture round-start conditions the first time we get a good reading in a round.
     if(w && G.roundDate && !G.weatherStart && w.tempC!==null){ G.weatherStart=w; saveG(); }
@@ -5805,7 +5810,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.31</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.32</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6514,7 +6519,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.31</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.32</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7294,7 +7299,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.31</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.32</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7867,7 +7872,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.31</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.32</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10556,7 +10561,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.31</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.32</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -11229,7 +11234,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.31</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.32</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11502,7 +11507,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.31</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.32</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11642,7 +11647,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v14.31');
+  lines.push('— Pards Golf · v14.32');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12367,7 +12372,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v14.31 · ${dateStr}</div>
+<div class="foot">Pards Golf · v14.32 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13597,16 +13602,15 @@ function syncSideBetsButtons(){
   var pulse = show && settling && unsettled;
   if(navBtn)   navBtn.classList.toggle('update-available', !!pulse);
   if(setupBtn) setupBtn.classList.toggle('update-available', !!pulse);
-  // History icon pulses only for unsettled bets in history records (after 6AM expire)
+  // Slow reminder pulse from 6PM until 6AM — "time to settle up"
+  var _now = new Date();
+  var _hour = _now.getHours();
+  var inReminderWindow = show && (_hour >= 18 || _hour < 6);
+  if(navBtn)   navBtn.classList.toggle('sb-remind', inReminderWindow && !pulse);
+  if(setupBtn) setupBtn.classList.toggle('sb-remind', inReminderWindow && !pulse);
+  // Ensure History icon never pulses due to side bets
   var histBtn = document.getElementById('ni-history');
-  var hasUnsettledInHistory = false;
-  try{
-    var hist = loadHistory();
-    hasUnsettledInHistory = hist.some(function(r){
-      return r.isSideBets && r.bets && r.bets.some(function(b){ return !b.result; });
-    });
-  }catch(e){}
-  if(histBtn) histBtn.classList.toggle('update-available', hasUnsettledInHistory);
+  if(histBtn) histBtn.classList.remove('update-available');
 }
 
 // ── Hold-to-activate ──────────────────────────
@@ -15394,7 +15398,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v14.31. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v14.32. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -15882,7 +15886,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v14.31';
+const CURRENT_VERSION = 'pards-v14.32';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16336,7 +16340,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v14.31';
+const CACHE='pards-v14.32';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
