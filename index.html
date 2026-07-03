@@ -5808,7 +5808,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.54</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v14.58</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6517,7 +6517,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.54</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.58</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7297,7 +7297,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.54</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.58</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7870,7 +7870,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.54</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.58</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10559,7 +10559,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.54</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.58</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -11232,7 +11232,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.54</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v14.58</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11505,7 +11505,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.54</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v14.58</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11645,7 +11645,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v14.54');
+  lines.push('— Pards Golf · v14.58');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12370,7 +12370,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v14.54 · ${dateStr}</div>
+<div class="foot">Pards Golf · v14.58 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13783,42 +13783,77 @@ function finaliseSideBets(){
   saveG(); syncSideBetsButtons();
   closeSideBets();
 
-  // 4. Show confirmation
-  var shareStr = myShare>=0?'+$'+myShare:'-$'+Math.abs(myShare);
+  // Show settlement summary popup
+  var shareStr  = myShare>=0 ? '+$'+myShare : '-$'+Math.abs(myShare);
+  var netStr    = net>=0     ? '+$'+net     : '-$'+Math.abs(net);
+  var netColor  = net>=0     ? '#27ae60'    : '#e74c3c';
+  var shareColor= myShare>=0 ? '#27ae60'    : '#e74c3c';
+  var earningsVerb = myShare>=0 ? 'added to' : 'deducted from';
   setTimeout(function(){
-    var t=document.createElement('div');
-    t.style.cssText='position:fixed;bottom:130px;left:50%;transform:translateX(-50%);z-index:9999;background:#1a3a2a;border:2px solid #c9a84c;border-radius:20px;padding:10px 22px;color:#c9a84c;font-size:13px;font-weight:800;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)';
-    t.textContent='\uD83C\uDFC6 All Bets Settled \u2014 Your share: '+shareStr;
-    document.body.appendChild(t);
-    setTimeout(function(){ t.remove(); },3500);
-  },200);
+    var popup = document.createElement('div');
+    popup.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px';
+    popup.innerHTML =
+      '<div style="background:#1a3a2a;border:2px solid #c9a84c;border-radius:20px;padding:28px 24px;max-width:320px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.6)">'
+      + '<div style="font-size:44px;margin-bottom:10px">' + (net>=0?'🏆':'😬') + '</div>'
+      + '<div style="font-size:20px;font-weight:900;color:#c9a84c;margin-bottom:6px">All Side Bets Settled!</div>'
+      + '<div style="font-size:13px;color:#a8d5b5;margin-bottom:20px;line-height:1.5">' + SIDE_BETS_EVENT.name + '</div>'
+      + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:16px;margin-bottom:16px">'
+      + '<div style="display:flex;justify-content:space-between;margin-bottom:8px">'
+      + '<span style="font-size:13px;color:#a8d5b5">Total Net</span>'
+      + '<span style="font-size:16px;font-weight:800;color:'+netColor+'">'+netStr+'</span>'
+      + '</div>'
+      + '<div style="display:flex;justify-content:space-between">'
+      + '<span style="font-size:13px;color:#a8d5b5">Your Share ('+teamSize+'-Man)</span>'
+      + '<span style="font-size:18px;font-weight:900;color:'+shareColor+'">'+shareStr+'</span>'
+      + '</div>'
+      + '</div>'
+      + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6;margin-bottom:20px">'
+      + '<b style="color:'+shareColor+'">'+shareStr+'</b> has been ' + earningsVerb + ' your career earnings.<br>'
+      + 'Full results saved to <b style="color:#c9a84c">History</b> where they can be viewed or edited.'
+      + '</div>'
+      + '<button onclick="this.closest(\'div[style*=inset]\').remove()" style="width:100%;padding:13px;background:#c9a84c;color:#1a3a2a;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer">Done</button>'
+      + '</div>';
+    document.body.appendChild(popup);
+  }, 300);
 }
 
 function openSideBets(){
   if(!SIDE_BETS_EVENT) return;
   if(!G.sideBets) G.sideBets={defaultAmount:100,teamSize:2,settling:false,bets:[]};
 
-  // Check if there's already a finalised Side Bets record for today in History
+  // Check if there's already a settled Side Bets record for today in History
   var todaySettled = false;
   try{
     var hist = loadHistory();
     todaySettled = hist.some(function(r){
-      return r.isSideBets && r.finalized && r.eventDate === SIDE_BETS_EVENT.date;
+      if(!r.isSideBets || r.checkpoint) return false;
+      if(r.eventDate !== SIDE_BETS_EVENT.date) return false;
+      // Settled = finalized flag OR all bets have a result
+      if(r.finalized) return true;
+      if(r.bets && r.bets.length && r.bets.every(function(b){ return !!b.result; })) return true;
+      return false;
     });
   }catch(e){}
 
   if(todaySettled && (!G.sideBets.bets || !G.sideBets.bets.length)){
-    // Already settled — show a prompt
     var dlg = document.createElement('div');
-    dlg.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px';
-    dlg.innerHTML = '<div style="background:#1a3a2a;border:2px solid #c9a84c;border-radius:16px;padding:24px 20px;max-width:320px;width:100%;text-align:center">'
-      + '<div style="font-size:28px;margin-bottom:10px">🏆</div>'
-      + '<div style="font-size:15px;font-weight:800;color:#c9a84c;margin-bottom:8px">Side Bets Already Settled</div>'
-      + '<div style="font-size:13px;color:#a8d5b5;margin-bottom:20px;line-height:1.5">You have already settled your side bets for <b style="color:#fff">' + SIDE_BETS_EVENT.name + '</b>.<br>Go to History to review or edit your results.</div>'
+    dlg.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px';
+    dlg.innerHTML =
+      '<div style="background:#1a3a2a;border:2px solid #c9a84c;border-radius:20px;padding:28px 22px;max-width:320px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.6)">'
+      + '<div style="font-size:36px;margin-bottom:10px">💰</div>'
+      + '<div style="font-size:17px;font-weight:900;color:#c9a84c;margin-bottom:8px">Side Bets Already Settled</div>'
+      + '<div style="font-size:13px;color:#a8d5b5;line-height:1.6;margin-bottom:24px">'
+      + 'There is already a Side Bets game settled in your History for <b style="color:#fff">' + SIDE_BETS_EVENT.name + '</b>.'
+      + '</div>'
       + '<div style="display:flex;flex-direction:column;gap:10px">'
-      + '<button onclick="this.closest(\'div[style*=inset]\').remove();showS(\'history\')" style="padding:12px;background:#c9a84c;color:#1a3a2a;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer">📜 View in History</button>'
-      + '<button onclick="this.closest(\'div[style*=inset]\').remove();try{localStorage.removeItem(\'pards_sideBets_backup\')}catch(e){};G.sideBets={defaultAmount:100,teamSize:2,settling:false,bets:[]};saveG();syncSideBetsButtons();renderSideBetsOverlay()" style="padding:12px;background:rgba(201,168,76,.15);color:#c9a84c;border:1.5px solid rgba(201,168,76,.4);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer">💰 Start New Side Bets for Today</button>'
-      + '<button onclick="this.closest(\'div[style*=inset]\').remove()" style="padding:10px;background:none;color:rgba(255,255,255,.5);border:none;font-size:13px;cursor:pointer">Cancel</button>'
+      + '<button onclick="this.closest(\'div[style*=inset]\').remove();showS(\'history\')" '
+      + 'style="padding:14px;background:#c9a84c;color:#1a3a2a;border:none;border-radius:12px;font-size:14px;font-weight:900;cursor:pointer">'
+      + '📜 View Settled Bets in History</button>'
+      + '<button onclick="this.closest(\'div[style*=inset]\').remove();try{localStorage.removeItem(\'pards_sideBets_backup\')}catch(e){};G.sideBets={defaultAmount:100,teamSize:2,settling:false,bets:[]};saveG();syncSideBetsButtons();renderSideBetsOverlay()" '
+      + 'style="padding:14px;background:rgba(201,168,76,.12);color:#c9a84c;border:1.5px solid rgba(201,168,76,.45);border-radius:12px;font-size:14px;font-weight:800;cursor:pointer">'
+      + '💰 Start a New Side Bets Game</button>'
+      + '<button onclick="this.closest(\'div[style*=inset]\').remove()" '
+      + 'style="padding:10px;background:none;color:rgba(255,255,255,.4);border:none;font-size:13px;cursor:pointer">Cancel</button>'
       + '</div></div>';
     document.body.appendChild(dlg);
     return;
@@ -13849,9 +13884,9 @@ function setSideBetResultInHistory(roundIdx, teamIdx, result){
     return s;
   }, 0);
   r.myShare = Math.round(r.net / (r.teamSize||2));
-  saveHistoryList(hist);
-  // If all bets in this record are now settled, finalise
   var allDone = r.bets.every(function(b){ return !!b.result; });
+  if(allDone) r.finalized = true;
+  saveHistoryList(hist);
   if(allDone){
     // Add myShare to Me contact earnings
     try{
@@ -14067,6 +14102,7 @@ function renderSideBetsOverlay(){
     + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:12px 16px">'
     + '<div style="font-size:24px;font-weight:900;letter-spacing:4px;color:#c9a84c;text-shadow:0 2px 10px rgba(0,0,0,.9)">'
     + (settling ? '\uD83D\uDCB0 SETTLE BETS' : '\uD83D\uDCB0 SIDE BETS') + '</div>'
+    + (settling ? '<div style="font-size:11px;color:#a8d5b5;margin-top:3px;font-weight:700">Settled ' + settled + ' of ' + bets.length + ' bets</div>' : '')
     + '<div>'
     + '<div style="font-size:18px;font-weight:900;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6)">'+ev.name+'</div>'
     + '</div></div>'
@@ -15453,7 +15489,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v14.54. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v14.58. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -15941,7 +15977,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v14.54';
+const CURRENT_VERSION = 'pards-v14.58';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16395,7 +16431,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v14.54';
+const CACHE='pards-v14.58';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
