@@ -980,6 +980,7 @@ input::placeholder{color:#bbb}
   <div class="ni active" id="ni-score" onclick="showS('score')"><div class="ni-icon">⛳<span class="ni-badge ni-badge-gold" id="holeBadge" style="display:none">1</span><span class="ni-badge ni-badge-inprogress" id="inProgressDot" style="display:none;width:8px;min-width:8px;height:8px;padding:0;top:-2px;right:-4px"></span></div><div class="ni-lbl">Scorecard</div></div>
   <div class="ni" id="ni-games" onclick="showGamesMenu()"><div class="ni-icon">💵</div><div class="ni-lbl">Games</div></div>
   <div class="ni" id="ni-birdiejuice" onclick="showS('birdiejuice')"><div class="ni-icon">🐦🥃<span class="ni-badge" id="bjBadge" style="display:none">0</span></div><div class="ni-lbl">Birdie Juice</div></div>
+  <div class="ni" id="ni-sidebets" onclick="openSideBets()" style="display:none"><div class="ni-icon">💰</div><div class="ni-lbl">Side Bets</div></div>
   <div class="ni" id="ni-history" onclick="showS('history')"><div class="ni-icon">📜</div><div class="ni-lbl">History</div></div>
   <div class="ni" id="ni-new" onclick="newRound()"><div class="ni-icon">🏁</div><div class="ni-lbl">Save/End Round</div></div>
   <!-- Hidden nav items kept for showS() active-state tracking -->
@@ -995,6 +996,7 @@ input::placeholder{color:#bbb}
 <div class="setup-bar" id="setupBar">
   <a href="pardsgolf-help.html" target="_blank" rel="noopener" style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background:rgba(168,213,181,.12);border:1.5px solid rgba(168,213,181,.32);color:#a8d5b5;border-radius:10px;padding:6px 3px;font-size:10px;font-weight:700;text-decoration:none;-webkit-tap-highlight-color:transparent;line-height:1.1;text-align:center"><span class="sb-top">User</span><span class="sb-ico">❓</span><span class="sb-sub">Manual</span></a>
   <button onclick="manualCheckForUpdate(this)" id="updateAppBtn"><span class="sb-top">Update App</span><span class="sb-ico">⬆️</span><span class="sb-sub" id="versionLabel">v1.2</span></button>
+  <button id="sideBetsSetupBtn" onclick="openSideBets()" style="display:none"><span class="sb-top">Side</span><span class="sb-ico">💰</span><span class="sb-sub">Bets</span></button>
   <button onclick="showS('history')"><span class="sb-top">Round</span><span class="sb-ico">📜</span><span class="sb-sub">History</span></button>
   <button onclick="showS('backup')"><span class="sb-top">Backup</span><span class="sb-ico">💾</span><span class="sb-sub">Data</span></button>
 </div>
@@ -1205,9 +1207,9 @@ const PARDS_COURSES = [
   },
   {
     id: 'cougar-creek-gc',
-    logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAwCAIAAAAzV9XTAAAU50lEQVR4nFV4W4xk13Xd3vuc+6p3VVe/nzM9Mz095MyIpEiKFMWQkkIlNkNJFBJHTGQnFuAPIflw/GEk+QiCGDCQh2VHQSIHCOUgsKMkNoLIlkKLJiWSIjUckfPumelmz6sf1a/qet66dV9n73xUNRXd+ikc3Dp33bX2Xmufwk//m4soQAIIQAIG0QiyMBsGAAAQEQEhJAERFkIQBAEkRsdgQqlBcY0dW8gqtDlisARAgJEESBRbJBoJYXghokUkAALASIJIhESAiogACRABEFFrUggwAEcAAAgiJCRHW4mIiNBgM2YlyAiGUABSAUTMEKgYI1IpeVocGwAEEBgZlSCjMAkRwc+hARGCACAiISIhIQEpQEIkQERAJG1rBAEUIACUwaYoAiAkR8hABIlAQBCVIJMAiSEBBA6D/mG9nBvLWrkQtMOaKEFEYSLQhBogRkwREBFh+CFEARKEIRBEVABqgHOwRqg1EYiAiBKEAY8CInLEFgPQx+QhIjEigighSNkkZRfv311ZW/+LJ178pXymCD1D5ZyfJF6mECUmhZQElSjAIQJEBJCBqEhIKICAAApBExIgIQ6wa8siYAEWYKDBDwSEAQlFRGRA+wDlQAsiEuBUayK0G3dv5ZNQZ83qa9/xu+1+3Z888+jkidNNsGaWz1u5chhrkxIRAgACEiESADAgIAnhQA5SiARIAAqJkJBQW6AG9Y9KQACYAQAUIAwkBUARARjABQRljCiHtE7qG5d+1t1a79VuNXe2Iv8QNDio19+ueVE/MzH3+n/8qyefe2bq3Gfj/FQU9lNGURYotKBPOCw0hSADNRFJUCEikUJERG1/XJsIwgIABHIEBwCRFQsLGEKFCGQgSqLU07B68XXaulO7cqEf7qF2Hc8BZhJxLLx+6We/9puf3Vy7/uZ3fmd06Uen/9rLp849ArlSL00SBkAgRAQiAQUoJIigEElAKVKAAECIWisCAAGBgf6AAgiAIgyAgCBIQiJIw3VWlZy7fvENbO9srF7luO/YtkkTAYOgGYhUChylaMrVzCGZ/r1331l9/+bc6bPPvXj8sU8bpxhRblDmGokQBRkRBn4xXBFBQm3pI84EmFgNGpRFAEFARFCAEQWVQRQBBAv7Prd2osa239xDViYxtksAZsB0FMcj05N791burlw2LGnClbn5bLly//5GSxVPf/JpbeOg5BFEAQAREpDg0DXwSE1LKQBAGMJgEQYQYhEQEGAhJkEwSAiQCtjCHkpO8drddSY9f+Kx0mhp9cZPkrChwaCAcrx+s/bO//lvUaQqJz797Eu/cmz5rJUtR+h0IzaCgKIQByZFiDIgjFABDoxj4B1aazwyBRQREgEQESUD80dQpAwBASGCAtQoI252Le759d2pE+e/8rV/+MGH70exQaXEGAQxBl0OlTFjp574W7/1Tbs6F/W7QcJIZCthZlFAiMCCAAQoyABCgIoGlgGAgAhDNUWEmQeONRBFjkJAmAEAwRCIAaCMFbdrNy68Y3njjz/5xB/9wT9tHmxrx2LERCxCy2JO0IrQfenLr+TLE42Ob2uwlBpsLqQ0IiAyMsrAm4iZiUiEjAAiKiJQSltqWGfMNOzHYSAN+hWIiIUZwYCkqSl6dONH7zZ3bj3zS1/12Wsc7NhORtBImgqLESEtqUkzI9Mz84tJHDu2pTBFokHjA4ClAAF5YKmIwsKMvxBfIApBW1oNE0jJoNaGFwgAkIAWZEYGYRRxlHQaF9/8AWrrhS9+ebdPO7vN1vbtxu5dpfue41l2JuZuFMZ2JqctR2zNgHrwimrY/JoEEJQMjAwEQHig4s/TkMho29LMzMwA+DFdR+QBCiiWgQMxiLZtv53U9/affu6z27vbdvXkr//2v+odbH7327+7d+daIV9g0f1ugmQ3d9pbtd25yWWOEgtEwBAOWBEEQAIEEhAa5tUwXY5MQhBRO5Y2xgjTsD+HaXlE/dDfxIgQQWzSwuSxL/79r7c2Pvwv//73vvC3f2Pp/FP3dttjJ86fXT75zhtv+EGSy88UiyPV6nQ2WyDN2oAWJQiEONiTgGkYoYS/gGz4hUUIUdsKGPFjmhiABYZxOUQmLMO4si2lOPnrX/rqd/9w2zZ46S//VBI++7mvfP3r/+jVP/gdKFS/8dvfmJpaItJkexFgJ048rVAGEQ7DvhsMQjgIA5DhPPYxPkBBRMBv/eTw/1fQCJqjWWN4K/+CviwpImk0pr27ce29V7/1+//sd/9dY2fv9//17/3zb/6HmYfOHfoJohJhBFBDon7OCiII8MdUEQ6GoUEoHPXc4BX+84UWC3/8bAZlgAZOcVSSA0aH9yRaJ2IUpEUbMer+i2/8Pa7fa+z7X/+tf/nsF//Brm/IJRFGGEJSiGowvjADDGZbAUQaOBeiGiIbNKV8jFE7CgUUiLAwIhoWQGEeAiVSacKCwCyAoJRODacGLNvTaeJauZdf/o17N69/8jPPnP3U0002mFc2EAIBADMjgmNpjhMBARJSZNIUCbSl2TALa6UVACGIDKfsgcqIiN+90hm2JAsgerZO44iZAUBpHYWR5WbiOEGEKIo9z02jyHWzQRgjMCRBpTSutN0OOpH0hQBQpbEgoLBoS1uWk/R9ArYsW5FKTaqVEuEkiSzbOaoQhUBEGEcRKYWIjECI2tZqQDunqec4P337jdWb10+eOv3Q8vIPf/RmEMZnHj6by+WajebZc+fe/OFfPPPs06+//nrDD+fm5p5/5lNvvfma7/tf+tKLP/7Re9t3No/PLZ55+qk4NUiiyPzw+3/WPDj4xEMPt9rNZqvxyCOPbtx/0PY7n3rqUxcuXU6NeeLxx29/dHd8Ympvd+/Z5z8bhiHRsPLIJbQ0ieJKyd26cfHGhbd+9WtfPX/29J/+zz85e/7sK6/8ypV331y5+E6vvpVTaWNr/Z3XfpBV6pWXv/LImTMOc7t2/6MP3vHS0N/eqmTV/fVrKk1cTeVS9mfvvs7+xq+/8ndOzC/u3Ltd8vjBrcsHG+uZnD0+MbK+tlIpZkcrhRsXXrv+weunF6ctZWyXLBttDY4G8mzl2drVVCrY+7vbI5XiI+fnZqcn/W5nefn08qnxxYVj9d3d8ZFKtVQoF/J7WxufOLO0OFv64K2/Wr12qdtuEuDKyo2F+bkrV64sPXR6amJMARRy2cbe7vLS0qlTMwsLMwph7fbq3/wbLwBJuZSvjpQznlMpFUarFSTZenBvYX7WJvS0cm3ybOXaSrs2GySLddKLP/3cs5e/efHb3/qj8cnJJx87/7//1/84vXTKb7deevHF1/7yNY20V9t54Quf/7Pv/leT9B6sXmntb3z5Sy8R0ff//PvTMzOf+/zn19fWZhZWFk4schw+99zzf/zqf0oi8rJ523U/99gL3/ve96K+H/X8W9evAqed5uH1Sx9OjI+dWjr96h9++x//5j+JkhgVERIC4ofbPQGFoNmkrktBp3nt8uVKdfT0mYevXr/R8/2zp5dzudzt1Vs9P6hUKjMLC9ubD2rbG9WRqu1lq9VxRVSr1YhUPp9P07QfxaOT02GUFLJuvXb/o7t3xqfnFOrZqamtjfv9sNfpB9NT05wkB/sHM9PTqJLZuYWP1h5UR8czWYeZEZUI4Mp+gGKBKAZOMfUIso5lBLq9vu242lJhnAy60hgWMf0YXIs8JQIQMoVRajEorQTApKllWQgQRAaUApPkNIELQZJakEmi2HXIsgkUxFFMgJoUMrMyScqK3DROkBgREBQA4J1WiEIyGCgQkCMSA4iAJIBJagwiDU94QoSGLU6NRhEQRo3IFrFJDAEq1CAsyEjEAoiCYoQNEoFoBkAEACYArRQIghgAIWUQkEChgEJh0KnYgAa326EIgiDzIP+NIB8NIwKAPEiN4fluEKfDIygACLIhQ0LISEwEyJQKDE4zBCAEgsKCgESD47ViOIpzAWHEwdZISMQghGwBg9E57ClFiApJA8NgQoSj6RbYAIAwAgCBBaAEAsLBsQqJMBVjho8nMSwCKZjB/xQggkAGjShAEZSEhpllcABdBgOsFhExKTArBYypaCZl6Q9//B3bdqIoSRLjOm4Qx142o7XuBYFlWQTQajQKhaJWdrcTMEvGU55rO47LbPpBWMzbNqVhFPX8MJvPa20nSGkSmyjOZT0SSQG6/TDjZBRSzw9sx2YJ4jhQipIEkwjDNFAabEtZClxbJ6mKE297q64z3Eh9tlLmKOXQ0pwocQHQSZMgCBzHHXWd2G9qx8pRlJg0bUg9CG3HVqR29/bKhUzWtWq7+6nhfKnY7fVFZS0L241a1oWDve0zS/NRGDba0Uat7mUqytKOE7ouKk27O51OM20FQQpxtVLM5xyQhNk2SeXmjQ09W5pB0gCUJrFhUcDG9KI4tHPl99feP7Y4N14q37x1Qxe9NGkXClaxMJ+GmsUwm4qTtZ1sglgcmRWy7m3sfnDlQmAQRJr1LU5bGZeTqHViftzNehFHV6/eJA3nzs+gSWanp8qT2dJ4dt7Jg4I07AdB23W1VpogPzF/Uh8e3AEooUKl/TDwJfDcjH/ob9fr+UtXL5fGTevmwcqtq3Pz876/NTnlu+XYouPKdu4/WDMRLx47n6a9euMOWTnuw/LxY/vteq+vHVVVKvH7W/c3mzu1mmSsmcX5WS5HvilkJiInZFMpu7lEJzFK46BVyuVnF5f39g/SOJoaH0lTo6/d/YiTTKVYKJeViRIBa6/VubV+r9Uq2uXJ9d0g6hjMzu63rbure2EUjmSa+VHumXi7fVDMVTbbBwxgeGTErZTmeXG+zLAYs9Xpm/X19V6LgiQ/MTtSHS2BoqkTjq1sT/rvXr08Xqi62TDBw7hHUdyvN3udzmG3fRj2Gz3/fidgnZuep8i1CRqdukJP50fbidVKmz1087nSTtNnVu1mu5JzOv1cENm92L+7fXt9u7tZ3/Y6/uHNq1nPLjvzs6P1sUpXYcf3rX3fD4mCtFcoFfI6cewNO6wpy95u9Izncb8/PjVdP2x0m6EUXTurxxbLnbofdfbHRvtjlbG9ek5nJ/TKR2v1zdZYMWN7eOvuzs6eNT+3vLT02M133vW72yeXFqpjLmmvUpjc3Xlw0N6od7v7++1612p1/XJ1/IkzxzWE2M1GndsZrzdezV+42t5u9VNvJODEQODFB1PZYDFvaa8Q6pFr+7KzE02OenOFkaKDnDnWz84wuaNORPk7M5ntyYr+xPIjh+aEHimdma/kmwe1H198/0E76rfbWXfvo7W11DQXT8x5Vu/hpblr1zevXb/q94J2WC+Vw5vXY9Bj5x9dmJ8Y9xvrZIKKnU9lJ+o3LXh4+thnNmM2zvFMnjCt+zs/YXuHCpFTKOVHns/jiep4vuRaE/baaDZI8aEr8Vxs5YtOD4N20l2hbJrqWphOaKG1UDnZSXz+lxc39/zWQWAjzBwbyXljCzPTH36w+uc/uACcMbEC4ZMnztkWvvRCOjGaawZl5RUtZyHt9wLfZ8golWn03O3u5NTJhbBnVUum1Sntm65xUtaHRAbTpqe7mOLB+v3i6KZbKLa7rVrdCq3tVnA7035vtLrTD/qaqJBJte21ev2AhUTcrJNkpjJxxMdmJ4J2z9H4yPlT67W6Rm0pLhTmHTfevrO6OHE4PVZ953s3Y+e4329rsQoZlbXL1HChbTZ7F4rFn06RLLp849B7+72VX37aaXW6OU+r6FLF3e2mvt/ZjMuZdy81vPx+8/CTW3tbJ8qbFm9GRWunjt2Nj+zRtk4T9rwsKRXHWCiOmggxVaWMO5rLE2AmGyvb7cdtoL7jWEnCpXFJKYkxu3Rucm0jVTotl91ssWq5bqLS3d0a97p2tLM0VRiN00sH7oP12taUe3xaORNOc3/zVvO+Vylu78YrV+vdqGust3r2zsJsjsLt/cM108tYKt/qRIXI1vnceGISw0aYtfKcjPj1Vu1eU4MVmn5oIOjZtt0fmyhAYjd3W7UddOMxE/HFW3cnFioZj+7d3ekkrRgziZi8Z0941kTGTdtx7OL05MmHz3mFYuJYHRvVVKW4srevoszmZvvqlXammGOrHQRvny5PP/+Z8WZ97P0rjUav7RR0u97SrVbd8RzSGKe9w61DjOXcsYfH5qb8TtBO2iuba/vxIQXQ7iaKw4lq5fHHH3WkH/W6og4B4vGq49r2ai3sGctKOQoaAbSiPPuU9Zh+/OaFlZt6ujiqJuwkjXLO5OxoWez82UezqXWQpJzJ9BdKpadOpyeKe2qisraBmcmTq+t3Jt0RrZ1eP66jAVSScNfBypnlMyU90vODtz98S8ivzPFkeWksM+eibD24bKyDkepUr+25e9urqzUMczMz1XwTbnywYZNXzfL4iDOSdS23LBCfmJCovvXeu60XH5qKDB3Uwzf/7/bdvZCyGTtXdhVmCBanguVZ20o6MUfHZ8e//d+vPNhO5+ctbaRv2DdpbNn5Ur4YdPAHb71WdrOuRRt7N2KOH6wHb9xeL3iLiG7T36iWdTF3UCl5tdouc1QqYGV6dvN+QP3sk0+c1NzS2Aia0uRmtpR9+Kz62ovVMCTKmh5OKs02pRt7vpNl3gmDTmty3Hn2MSvB4sZWLPbek+dGNu6O/NtX164kvk76RlleZFSrnkaRbemMCUzXb7uuzozPVLJ6alaWjveL2VP1g9b97b2JkWzYS9uNrdnx8tRkdWLa7fV4c/OwflAnmjp1fBQSW1qHYdT1+5SowsyCB5JNMbq72apOl/7ury098XJ0cNhldnvtERMd5vJRvdm1o2BuMtNu1R59dPZX44mem9Ottm/YBGEa9t16PTrc3202gjhJ8pWsaC6XcmfmSsVC1rPUk4+dWzzmOKpXLuaBJQr6Yb/v97txlEGdcXNZ26KchyGnMaTacoI+9IQtJ7+/b/Je9b2fbj7+GRmZo9mcVEfsdqurJyXxtUNsJHSyEqVJoZIBak+NNXbjjj5stT3XrRarT33uC5orG/f9W6u7K3dqF6/d6vR6YNor3r1clmy4unzy9Oio0+/WigU9MeHNzo5kPSJV2GmmvX5C2orjOOy0o8S3NQX9OF8d3dkIxBufGD+2UXtwdzMq3z8sTk12W4lyLCXu/vYu9+P5mayy0zCNe77k8pxz08lqZnO99f8AhfTq7iKzhgMAAAAASUVORK5CYII=',
-    logoColor: 'data:image/png;base64,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',
-    logoDark: false,
+    logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD4AAAAwCAMAAAB+FTkGAAAAZlBMVEUAAAD////v7++jo6P8/Pyrq6vd3d3r6+vPz8/k5OTW1tbIyMjz8/O/v79jY2NSUlJZWVl/f3+zs7MODg6YmJiHh4c5OTl5eXlISEi5ublBQUFycnIvLy+Ojo4pKSlqamoeHh4XFxc9cCFqAAABlElEQVR4nO2VYXOCMAyGE6yWUpCuoCLIwP//J5e0lYG3uxX2yZ3vnTbFPOUtJhTgrf+mGvFPfI4lmEMN1y3wkMMNEyQNO7WaFuaID4HBehV8FyXOBBoxX4EjzGk0bmo30mTdj3EOjCiWeDktt4/A83ZJI4jvuP3du8EftItyTtpz9sUsH0AsDNBQ9idspd1Oz7iV5ts+/XNraubEj2mJf6y8+RNu4mkqmYKGsQ++01S6C5ESk9fjNZM5KZErOnZk65KCSuXq4b6K5xvhu6tRgL0tVKJP8TDwWwqxcVG26X3X2ML5VThsoFnKl+1GGvrVtbpQ9yf6NTT6BhH8LqJAaqpawZsuEwjd49SGLoaK25eCkdJbRu7A7SwdrnsIgOKRPhc/Rf81HFxkjZvR+UPjLfzmcNX5fF0qvpb5WXH3KYK+6MCyBZulyh6csRmedC62flM2HG56dCll433YIxfV/szLBWeah7Sv8bFU2vmRVanpDh4PsxPyJjGTnK9SVdNxqjOEZp7Ni3Oem2Ke3BTKaeW3XlBfoxwNRs0IbJYAAAAASUVORK5CYII=',
+    logoColor: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD4AAAAwCAMAAAB+FTkGAAAAZlBMVEUAAAD////v7++jo6P8/Pyrq6vd3d3r6+vPz8/k5OTW1tbIyMjz8/O/v79jY2NSUlJZWVl/f3+zs7MODg6YmJiHh4c5OTl5eXlISEi5ublBQUFycnIvLy+Ojo4pKSlqamoeHh4XFxc9cCFqAAABlElEQVR4nO2VYXOCMAyGE6yWUpCuoCLIwP//J5e0lYG3uxX2yZ3vnTbFPOUtJhTgrf+mGvFPfI4lmEMN1y3wkMMNEyQNO7WaFuaID4HBehV8FyXOBBoxX4EjzGk0bmo30mTdj3EOjCiWeDktt4/A83ZJI4jvuP3du8EftItyTtpz9sUsH0AsDNBQ9idspd1Oz7iV5ts+/XNraubEj2mJf6y8+RNu4mkqmYKGsQ++01S6C5ESk9fjNZM5KZErOnZk65KCSuXq4b6K5xvhu6tRgL0tVKJP8TDwWwqxcVG26X3X2ML5VThsoFnKl+1GGvrVtbpQ9yf6NTT6BhH8LqJAaqpawZsuEwjd49SGLoaK25eCkdJbRu7A7SwdrnsIgOKRPhc/Rf81HFxkjZvR+UPjLfzmcNX5fF0qvpb5WXH3KYK+6MCyBZulyh6csRmedC62flM2HG56dCll433YIxfV/szLBWeah7Sv8bFU2vmRVanpDh4PsxPyJjGTnK9SVdNxqjOEZp7Ni3Oem2Ke3BTKaeW3XlBfoxwNRs0IbJYAAAAASUVORK5CYII=',
+    logoDark: true,
     name: 'Cougar Creek Golf Resort',
     location: 'Carvel, AB',
     par:  [4,4,3,5,3,4,4,4,5, 4,5,4,4,3,4,5,3,4],
@@ -2160,6 +2162,7 @@ const G = {
   birdieJuice:{ earned:[], redeemed:0, enabled:true }, // earned:[{pi,h,actualHole,playerName}], redeemed:int
   snake:{ enabled:false, holder:null, history:[], bet:5, settlements:[], participants:[], h18confirmed:false },
   matchCards:{ enabled:false, opponents:[] }, // [{name,golfId,idx,hdcpBaseline,deck,bet}] — up to 2, scorekeeper plays 1v1 Nassau vs each
+  sideBets:{ enabled:false, defaultAmount:100, bets:[] }, // [{teamIdx, amount, result:null/'win'/'loss'}]
   autoAdvance: true,
 };
 
@@ -2256,6 +2259,134 @@ function loadG(){
   }catch(e){ return false; }
 }
 const BET_OPTIONS=[1,2,5,10];
+
+const SIDE_BETS_EVENT = {
+  name: 'DERRICK MEMBER GUEST',
+  date: '2026-07-02',
+  teams: [
+    'Don Coulter',
+    'Tyler Leicht',
+    'Matt Cruikshank',
+    'Colin Mizier',
+    'Thomas Chibri',
+    'Mike Morhart',
+    'Ross Hutchison',
+    'Tim Kantor',
+    'Scott James',
+    'Blair Oko',
+    'Ryan Bond',
+    'Kelley Hilton',
+    'Bernie Ferbey',
+    'Mike Dejong',
+    'Brandon Bruyer',
+    'Mark Curley',
+    'Ryan Lauber',
+    'Trevor Harrington',
+    'Larry Kennedy',
+    'Brendan Hance',
+    'Brett Wheadon',
+    'David Reynolds',
+    'Eric Hawrelak',
+    'Jack March',
+    'Graeme Nelson',
+    'Craig Compton',
+    'Matt Moroz',
+    'Curt Compton',
+    'Heiko Claasen',
+    'Michael McAdam',
+    'Ken Donnelly',
+    'Connor Honey',
+    'Jimmy Kasturi',
+    'Matt Fay',
+    'Steven McPhee',
+    'Cam Penner',
+    'Chad Langager',
+    'Ben Kantor',
+    'Matt Kozicky',
+    'Bruce Foster',
+    'Quinn Hamilton',
+    'Ryan Hoople',
+    'Ken Wicks',
+    'Frank Krupka',
+    'Doug McMahon',
+    'Scott Buchanan',
+    'Scott Janis',
+    'Robin Laurie',
+    'Philip Petryk',
+    'Tim Nelson',
+    'Jon Chia',
+    'Jeff Hoffart',
+    'Kent Simpson',
+    'Mathew Haupt',
+    'Wayne Berney',
+    'Peter Bevilacqua',
+    'Cory Collins',
+    'Don Edgecombe',
+    'Doug Woytkiw',
+    'Lachlan McLean',
+    'John Coulter',
+    'Terry Martens',
+    'Brent Buchanan',
+    'Stefano Bevilacqua',
+    'Stu Curley',
+    'Willem Kellerman',
+    'David Wolanski',
+    'Bruce Comeau',
+    'Dwayne Stang',
+    'Jim Schubert',
+    'Neil Kautz',
+    'Jared Milligan',
+    'Glenn Fisher',
+    'Birkley Elliott',
+    'Michael MacPhail',
+    'Dave Martin',
+    'Harman Bhatti',
+    'Thomas Buchanan',
+    'John Barnes',
+    'Ryan Hehr',
+    'Kyle Braithwaite',
+    'John Stephenson',
+    'Geoff Woodward',
+    'Ben Milligan',
+    'Greg McPhee',
+    'Allen Walter',
+    'Rob Quilley',
+    'Chris Neitsch',
+    'Conroy Ip',
+    'Jeff Ryks',
+    'Brent Penner',
+    'Craig Mcelroy',
+    'Tom Richards',
+    'Jay Hambleton',
+    'Dave Fath',
+    'Ron Holdinga',
+    'Gordon Hensel',
+    'James Busby',
+    'Ian Munro',
+    'Gordon Taylor',
+    'Randy Singh',
+    'Eric Tam',
+    'Darren Moroz',
+    'Ray Hawrelak',
+    'Andrew Simpson',
+    'Mark Smith',
+    'Geoff Stewart',
+    'Kevin Irish',
+    'Troy Van Heest',
+    'Fabian Perez-Parada',
+    'Bill Burch',
+    'Caleb Maksymchuk',
+    'Chris March',
+    'Mike Wolowyk',
+    'Santhosh Jayachandran',
+    'Bradley Gellhaus',
+    'Mike Fryer',
+    'Doug Comeau',
+    'Keith Kendrick',
+    'Quentin Nanninga'
+  ]
+};
+
 
 /* ═══════════════════════════════════════════════
    SETUP UI
@@ -5607,7 +5738,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.87</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v13.91</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6316,7 +6447,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.87</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.91</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7096,7 +7227,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.87</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.91</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7669,7 +7800,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.87</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.91</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10357,7 +10488,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.87</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.91</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10987,7 +11118,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.87</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v13.91</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11260,7 +11391,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.87</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v13.91</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11400,7 +11531,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v13.87');
+  lines.push('— Pards Golf · v13.91');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12125,7 +12256,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v13.87 · ${dateStr}</div>
+<div class="foot">Pards Golf · v13.91 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -13189,6 +13320,232 @@ async function mmFetchMCHandicap(k){
     if(btn){ btn.innerHTML='GC'; btn.disabled=false; }
     alert('Could not fetch handicap: '+e.message);
   }
+}
+
+
+// ═══════════════════════════════════════════════
+//  SIDE BETS — Tournament betting game
+// ═══════════════════════════════════════════════
+
+function isSideBetsDay(){
+  if(!SIDE_BETS_EVENT || !SIDE_BETS_EVENT.date) return false;
+  var today = new Date();
+  var ev    = new Date(SIDE_BETS_EVENT.date + 'T12:00:00');
+  return today.getFullYear()===ev.getFullYear() &&
+         today.getMonth()===ev.getMonth() &&
+         today.getDate()===ev.getDate();
+}
+
+function syncSideBetsButtons(){
+  var show = isSideBetsDay();
+  var setupBtn = document.getElementById('sideBetsSetupBtn');
+  var navBtn   = document.getElementById('ni-sidebets');
+  if(setupBtn) setupBtn.style.display = show ? '' : 'none';
+  if(navBtn)   navBtn.style.display   = show ? '' : 'none';
+}
+
+function openSideBets(){
+  if(!SIDE_BETS_EVENT) return;
+  if(!G.sideBets) G.sideBets = {enabled:false, defaultAmount:100, bets:[]};
+  renderSideBetsOverlay();
+}
+
+function closeSideBets(){
+  var ov = document.getElementById('sideBetsOverlay');
+  if(ov) ov.remove();
+}
+
+function getSideBetsTotal(){
+  if(!G.sideBets || !G.sideBets.bets) return 0;
+  return G.sideBets.bets.reduce(function(sum,b){ return sum + (b.amount||G.sideBets.defaultAmount||100); }, 0);
+}
+
+function getSideBetsNet(){
+  if(!G.sideBets || !G.sideBets.bets) return 0;
+  return G.sideBets.bets.reduce(function(sum,b){
+    if(b.result==='win')  return sum + (b.amount||G.sideBets.defaultAmount||100);
+    if(b.result==='loss') return sum - (b.amount||G.sideBets.defaultAmount||100);
+    return sum;
+  }, 0);
+}
+
+function toggleSideBet(teamIdx){
+  if(!G.sideBets) G.sideBets={enabled:false,defaultAmount:100,bets:[]};
+  var existing = G.sideBets.bets.findIndex(function(b){ return b.teamIdx===teamIdx; });
+  if(existing >= 0){
+    G.sideBets.bets.splice(existing,1);
+  } else {
+    G.sideBets.bets.push({teamIdx:teamIdx, amount:G.sideBets.defaultAmount||100, result:null});
+  }
+  saveG();
+  renderSideBetsOverlay();
+}
+
+function setSideBetAmount(teamIdx, amount){
+  if(!G.sideBets) return;
+  var bet = G.sideBets.bets.find(function(b){ return b.teamIdx===teamIdx; });
+  if(!bet) return;
+  bet.amount = amount;
+  saveG();
+  // Update total display only — don't re-render full list (would lose scroll position + close dropdown)
+  var totalEl = document.getElementById('sbTotalExposure');
+  if(totalEl) totalEl.textContent = '$' + getSideBetsTotal();
+  var countEl = document.getElementById('sbBetCount');
+  if(countEl) countEl.textContent = G.sideBets.bets.length;
+}
+
+function setSideBetDefault(amount){
+  if(!G.sideBets) G.sideBets={enabled:false,defaultAmount:100,bets:[]};
+  G.sideBets.defaultAmount = amount;
+  saveG();
+  renderSideBetsOverlay();
+}
+
+function setSideBetResult(teamIdx, result){
+  if(!G.sideBets) return;
+  var bet = G.sideBets.bets.find(function(b){ return b.teamIdx===teamIdx; });
+  if(!bet) return;
+  bet.result = bet.result===result ? null : result;  // toggle off if same
+  saveG();
+  renderSideBetsOverlay();
+}
+
+function sideBetsFilterTeams(query){
+  var q = (query||'').toLowerCase().trim();
+  var teams = SIDE_BETS_EVENT.teams;
+  var list = document.getElementById('sbTeamList');
+  if(!list) return;
+  var rows = list.querySelectorAll('.sb-team-row');
+  rows.forEach(function(row){
+    var name = (row.dataset.name||'').toLowerCase();
+    row.style.display = (!q || name.indexOf(q)>=0) ? '' : 'none';
+  });
+}
+
+function renderSideBetsOverlay(){
+  var existing = document.getElementById('sideBetsOverlay');
+  if(existing) existing.remove();
+
+  if(!G.sideBets) G.sideBets={enabled:false,defaultAmount:100,bets:[]};
+  var ev = SIDE_BETS_EVENT;
+  var bets = G.sideBets.bets;
+  var defaultAmt = G.sideBets.defaultAmount||100;
+  var total = getSideBetsTotal();
+  var net   = getSideBetsNet();
+  var settled = bets.filter(function(b){ return b.result; }).length;
+  var isComplete = typeof isRoundComplete==='function' && isRoundComplete();
+
+  // Build team list
+  var teamRows = '';
+  ev.teams.forEach(function(name, idx){
+    var bet = bets.find(function(b){ return b.teamIdx===idx; });
+    var checked = !!bet;
+    var result  = bet ? bet.result : null;
+    var amt     = bet ? (bet.amount||defaultAmt) : defaultAmt;
+
+    var cbStyle = checked
+      ? 'width:28px;height:28px;border-radius:7px;border:none;background:#c9a84c;color:#1a3a2a;font-size:16px;font-weight:900;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center'
+      : 'width:28px;height:28px;border-radius:7px;border:1.5px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);color:transparent;cursor:pointer;flex-shrink:0';
+
+    teamRows += '<div class="sb-team-row" data-name="' + name.toLowerCase() + '" '
+      + 'style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)">'
+      // Checkbox / accepted indicator
+      + '<button onclick="toggleSideBet(' + idx + ')" title="Side bet accepted" style="' + cbStyle + '">✓</button>'
+      // Team name
+      + '<div style="flex:1;font-size:14px;font-weight:' + (checked?'700':'400') + ';color:' + (checked?'#fff':'rgba(255,255,255,.6)') + '">' + name + '</div>';
+
+    if(checked && isComplete){
+      // Settlement mode — win/loss buttons
+      var winStyle  = result==='win'  ? 'background:#27ae60;color:#fff;border:none' : 'background:rgba(39,174,96,.12);color:#27ae60;border:1.5px solid rgba(39,174,96,.35)';
+      var lossStyle = result==='loss' ? 'background:#e74c3c;color:#fff;border:none' : 'background:rgba(231,76,60,.12);color:#e74c3c;border:1.5px solid rgba(231,76,60,.35)';
+      teamRows += '<div style="display:flex;gap:6px;align-items:center">'
+        + '<span style="font-size:12px;font-weight:700;color:#c9a84c;margin-right:2px">$'+amt+'</span>'
+        + '<button onclick="setSideBetResult(' + idx + ',\'win\')" style="' + winStyle + ';border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer">WIN</button>'
+        + '<button onclick="setSideBetResult(' + idx + ',\'loss\')" style="' + lossStyle + ';border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer">LOSS</button>'
+        + '</div>';
+    } else if(checked){
+      // Amount selector per team
+      var options = [10,25,50,100,150,200,250,500,1000];
+      var selectHtml = '<select onchange="setSideBetAmount(' + idx + ',parseInt(this.value))" '
+        + 'style="padding:6px 8px;border-radius:8px;border:1.5px solid rgba(201,168,76,.45);background:#1a3a2a;color:#c9a84c;font-size:14px;font-weight:700;cursor:pointer">';
+      options.forEach(function(v){
+        selectHtml += '<option value="' + v + '"' + (amt===v?' selected':'') + '>$' + v + '</option>';
+      });
+      selectHtml += '</select>';
+      teamRows += selectHtml;
+    }
+
+    teamRows += '</div>';
+  });
+
+  // Amount picker
+  var amtPicker = '';
+  [25,50,100,200,500].forEach(function(v){
+    var active = defaultAmt===v;
+    amtPicker += '<button onclick="setSideBetDefault(' + v + ')" style="padding:7px 12px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;'
+      + (active ? 'background:#c9a84c;color:#1a3a2a;border:none' : 'background:rgba(201,168,76,.12);color:#c9a84c;border:1.5px solid rgba(201,168,76,.35)') + '">$' + v + '</button>';
+  });
+
+  // Net color
+  var netColor = net > 0 ? '#27ae60' : net < 0 ? '#e74c3c' : '#c9a84c';
+  var netLabel = net > 0 ? '+$'+net : net < 0 ? '-$'+Math.abs(net) : '$0';
+
+  // Summary bar
+  var summaryBar = '<div style="display:flex;gap:10px;margin-bottom:14px">'
+    + '<div style="flex:1;background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.3);border-radius:10px;padding:10px;text-align:center">'
+    + '<div style="font-size:11px;color:#a8d5b5;font-weight:700;letter-spacing:.5px">ACTIVE BETS</div>'
+    + '<div id="sbBetCount" style="font-size:22px;font-weight:800;color:#c9a84c">' + bets.length + '</div>'
+    + '</div>'
+    + '<div style="flex:1;background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.3);border-radius:10px;padding:10px;text-align:center">'
+    + '<div style="font-size:11px;color:#a8d5b5;font-weight:700;letter-spacing:.5px">EXPOSURE</div>'
+    + '<div id="sbTotalExposure" style="font-size:22px;font-weight:800;color:#c9a84c">$' + total + '</div>'
+    + '</div>'
+    + (isComplete
+      ? '<div style="flex:1;background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.3);border-radius:10px;padding:10px;text-align:center">'
+        + '<div style="font-size:11px;color:#a8d5b5;font-weight:700;letter-spacing:.5px">NET</div>'
+        + '<div style="font-size:22px;font-weight:800;color:' + netColor + '">' + netLabel + '</div>'
+        + '</div>'
+      : '')
+    + '</div>';
+
+  var ov = document.createElement('div');
+  ov.id = 'sideBetsOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end';
+
+  ov.innerHTML = '<div style="width:100%;max-height:90vh;background:#1a3a2a;border-radius:20px 20px 0 0;display:flex;flex-direction:column;overflow:hidden">'
+    // Header
+    + '<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;border-bottom:1px solid rgba(201,168,76,.3);flex-shrink:0">'
+    + '<div>'
+    + '<div style="font-size:16px;font-weight:800;color:#c9a84c">💰 SIDE BETS</div>'
+    + '<div style="font-size:12px;color:#a8d5b5;margin-top:2px">' + ev.name + '</div>'
+    + '</div>'
+    + '<button onclick="closeSideBets()" style="background:rgba(255,255,255,.1);border:none;border-radius:20px;padding:6px 14px;color:#fff;font-size:13px;font-weight:700;cursor:pointer">Done</button>'
+    + '</div>'
+    // Body
+    + '<div style="overflow-y:auto;padding:14px 16px;flex:1">'
+    + summaryBar
+    // Amount picker
+    + '<div style="margin-bottom:14px">'
+    + '<div style="font-size:11px;font-weight:700;color:#a8d5b5;letter-spacing:.5px;margin-bottom:8px">DEFAULT BET AMOUNT</div>'
+    + '<div style="display:flex;gap:8px;flex-wrap:wrap">' + amtPicker + '</div>'
+    + '</div>'
+    // Search
+    + '<div style="margin-bottom:10px">'
+    + '<input id="sbSearch" type="text" placeholder="🔍 Search teams…" oninput="sideBetsFilterTeams(this.value)" autocomplete="off" '
+    + 'style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid rgba(168,213,181,.3);background:rgba(255,255,255,.06);color:#fff;font-size:14px;box-sizing:border-box">'
+    + '</div>'
+    // Team list
+    + '<div style="font-size:11px;font-weight:700;color:#a8d5b5;letter-spacing:.5px;margin-bottom:6px">'
+    + 'TEAMS (' + ev.teams.length + ')'
+    + (isComplete ? ' — TAP WIN / LOSS TO SETTLE' : ' — TAP ✓ TO ADD A BET') + '</div>'
+    + '<div id="sbTeamList">' + teamRows + '</div>'
+    + '</div>'
+    + '</div>';
+
+  document.body.appendChild(ov);
+  // Restore search if was open
+  var srch = document.getElementById('sbSearch');
+  if(srch) srch.focus();
 }
 
 function closeMatchManager(){
@@ -14485,7 +14842,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v13.87. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v13.91. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -14967,13 +15324,13 @@ function renderSnakeTab(){
   document.body.appendChild(overlay);
 })();
 
-seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();renderAllPairOptions();initSetup();startNamesPoll();
+seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();renderAllPairOptions();initSetup();startNamesPoll();syncSideBetsButtons();
 
 // ── Restore saved round on launch ──
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v13.87';
+const CURRENT_VERSION = 'pards-v13.91';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -15427,7 +15784,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v13.87';
+const CACHE='pards-v13.91';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
