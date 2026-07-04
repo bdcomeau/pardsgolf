@@ -5810,7 +5810,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v16.4</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v16.5</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6523,7 +6523,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v16.4</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v16.5</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7375,7 +7375,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v16.4</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v16.5</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7948,7 +7948,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v16.4</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v16.5</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10320,7 +10320,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v16.4</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v16.5</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10994,7 +10994,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v16.4</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v16.5</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11267,7 +11267,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v16.4</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v16.5</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11407,7 +11407,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v16.4');
+  lines.push('— Pards Golf · v16.5');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12132,7 +12132,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v16.4 · ${dateStr}</div>
+<div class="foot">Pards Golf · v16.5 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -14966,23 +14966,84 @@ function startRenameFav(safe){
 
 function deleteFavPlayer(name){
   const contacts = loadContacts();
-  if(!contacts.find(c=>c.name===name)) return;
-  // confirm() is blocked in iOS PWA standalone mode — use inline confirm UI instead
+  const contact  = contacts.find(c=>c.name===name);
+  if(!contact) return;
+
   const existing = document.getElementById('favDelConfirm');
   if(existing) existing.remove();
+
+  const safeName = name.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+
+  // Me contact: block deletion, show reassign instructions
+  if(contact.me){
+    const box = document.createElement('div');
+    box.id = 'favDelConfirm';
+    box.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px';
+    box.innerHTML =
+      '<div style="background:#1a3a2a;border:2px solid #c9a84c;border-radius:16px;padding:24px 20px;max-width:320px;width:100%;text-align:center">'
+      +'<div style="font-size:32px;margin-bottom:12px">&#x1F512;</div>'
+      +'<div style="font-size:16px;font-weight:900;color:#c9a84c;margin-bottom:10px">Cannot Delete Me Contact</div>'
+      +'<div style="font-size:13px;color:rgba(168,213,181,.85);line-height:1.7;margin-bottom:20px">'
+      +'<b style="color:#f5e6b8">'+safeName+'</b> is your <b style="color:#f5e6b8">Me</b> contact.<br><br>'
+      +'To delete this player, tap the <b style="color:#c9a84c">&#x2B50; Me</b> button on another player to reassign Me first, then return and delete.'
+      +'</div>'
+      +'<button id="favDelGotItBtn" style="width:100%;padding:13px;background:#c9a84c;border:none;border-radius:10px;color:#1a3a2a;font-size:15px;font-weight:900;cursor:pointer">Got It</button>'
+      +'</div>';
+    document.body.appendChild(box);
+    document.getElementById('favDelGotItBtn').onclick = function(){ box.remove(); };
+    box.addEventListener('click', function(e){ if(e.target===box) box.remove(); });
+    return;
+  }
+
+  // All other players: 2-second hold-to-confirm
   const box = document.createElement('div');
   box.id = 'favDelConfirm';
-  box.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px';
-  box.innerHTML = `
-    <div style="background:#fff;border-radius:14px;padding:20px;max-width:300px;width:100%;text-align:center">
-      <div style="font-size:16px;font-weight:700;color:#c0392b;margin-bottom:8px">⚠️ Remove Player</div>
-      <div style="font-size:14px;color:#333;margin-bottom:18px">Remove <b>${name}</b> from your player list?</div>
-      <div style="display:flex;gap:10px">
-        <button onclick="document.getElementById('favDelConfirm').remove()" style="flex:1;padding:11px;border-radius:10px;border:1.5px solid #ccc;background:#f5f5f5;font-size:14px;font-weight:600;cursor:pointer">Cancel</button>
-        <button onclick="confirmDeleteFavPlayer('${name.replace(/'/g,"\'")}')" style="flex:1;padding:11px;border-radius:10px;border:none;background:#c0392b;color:#fff;font-size:14px;font-weight:700;cursor:pointer">Remove</button>
-      </div>
-    </div>`;
+  box.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px';
+  box.innerHTML =
+    '<div style="background:#1a3a2a;border:2px solid #c0392b;border-radius:16px;padding:22px 20px;max-width:300px;width:100%;text-align:center">'
+    +'<div style="font-size:16px;font-weight:800;color:#e74c3c;margin-bottom:8px">&#x26A0;&#xFE0F; Remove Player</div>'
+    +'<div style="font-size:14px;color:#f5e6b8;margin-bottom:18px">Remove <b>'+safeName+'</b> from your player list?</div>'
+    +'<div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px;margin-bottom:18px">'
+    +'<div style="font-size:11px;color:rgba(255,255,255,.55);margin-bottom:8px">Hold the button for 2 seconds to confirm</div>'
+    +'<div style="height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden"><div id="favDelBar" style="height:100%;width:0%;background:#e74c3c;border-radius:3px"></div></div>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px">'
+    +'<button id="favDelCancelBtn" style="flex:1;padding:12px;border-radius:10px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:14px;font-weight:600;cursor:pointer">Cancel</button>'
+    +'<button id="favDelHoldBtn" style="flex:1;padding:12px;border-radius:10px;border:2px solid #e74c3c;background:#c0392b;color:#fff;font-size:13px;font-weight:800;cursor:pointer;touch-action:none;-webkit-user-select:none;user-select:none">Hold to Delete</button>'
+    +'</div></div>';
   document.body.appendChild(box);
+
+  document.getElementById('favDelCancelBtn').onclick = function(){ box.remove(); };
+  box.addEventListener('click', function(e){ if(e.target===box) box.remove(); });
+
+  var holdMs=2000, holdTimer=null, rafId=null, holdStart=null;
+  var bar=document.getElementById('favDelBar');
+  var btn=document.getElementById('favDelHoldBtn');
+
+  function onStart(e){
+    e.preventDefault(); e.stopPropagation();
+    if(holdStart) return;
+    holdStart=Date.now();
+    rafId=requestAnimationFrame(tick);
+    holdTimer=setTimeout(function(){ holdStart=null; cancelAnimationFrame(rafId); confirmDeleteFavPlayer(name); }, holdMs);
+  }
+  function onEnd(){
+    if(!holdStart) return;
+    clearTimeout(holdTimer); holdTimer=null; cancelAnimationFrame(rafId); rafId=null;
+    holdStart=null; bar.style.width='0%';
+  }
+  function tick(){
+    if(!holdStart){ bar.style.width='0%'; return; }
+    var p=Math.min(100,(Date.now()-holdStart)/holdMs*100);
+    bar.style.width=p+'%';
+    if(p<100) rafId=requestAnimationFrame(tick);
+  }
+
+  btn.addEventListener('mousedown',  onStart);
+  btn.addEventListener('touchstart', onStart, {passive:false});
+  btn.addEventListener('mouseup',    onEnd);
+  btn.addEventListener('touchend',   onEnd, {passive:false});
+  btn.addEventListener('touchcancel',onEnd, {passive:false});
 }
 
 function confirmDeleteFavPlayer(name){
@@ -15526,7 +15587,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v16.4. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v16.5. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -16014,7 +16075,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v16.4';
+const CURRENT_VERSION = 'pards-v16.5';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16269,16 +16330,16 @@ const RELEASE_NOTES = [
   'v16.52 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
   'v16.51 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
   'v16.50 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v16.49 — Version number now shown beside Help button on every screen',
-  'v16.48 — Snake: resets every 3 holes; participant selection added to setup',
-  'v16.47 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v16.46 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v16.45 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v16.44 — New Round blocked if on hole 18 with missing scores',
-  'v16.43 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v16.42 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v16.41 — Fixed: ℹ️ update info button now appears correctly',
-  'v16.40 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v16.59 — Version number now shown beside Help button on every screen',
+  'v16.58 — Snake: resets every 3 holes; participant selection added to setup',
+  'v16.57 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v16.56 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v16.55 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v16.54 — New Round blocked if on hole 18 with missing scores',
+  'v16.53 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v16.52 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v16.51 — Fixed: ℹ️ update info button now appears correctly',
+  'v16.50 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -16468,7 +16529,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v16.4';
+const CACHE='pards-v16.5';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
