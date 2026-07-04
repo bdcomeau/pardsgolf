@@ -5793,7 +5793,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.21</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.25</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6505,7 +6505,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.21</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.25</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7340,9 +7340,9 @@ function renderCard(){
   html += '<div id="liveStandBar" style="display:'+(G.scorecardOnly?'none':'block')+';border-top:1px solid rgba(201,168,76,.15);padding:4px 12px"><div style="display:flex;align-items:center;justify-content:center;gap:16px"><button onclick="toggleLiveStandings()" style="background:none;border:none;padding:3px 0;display:flex;align-items:center;gap:5px;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.3px">📊 LIVE STANDINGS</span><span id="liveStandChev" style="font-size:9px;color:rgba(201,168,76,.6)">▼</span></button><span style="color:rgba(201,168,76,.3);font-size:12px">|</span><button onclick="toggleWhoStrokes()" style="background:none;border:none;padding:3px 0;display:flex;align-items:center;gap:5px;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.3px">🏌️ WHO STROKES?</span><span id="whoStrokesChev" style="font-size:9px;color:rgba(201,168,76,.6)">▼</span></button></div></div>';
   html += '<div id="liveStandPanel" style="display:none;background:rgba(0,20,10,.95);border:1px solid rgba(201,168,76,.2);border-radius:0 0 8px 8px;margin:0 10px 6px;padding:8px 12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch"><div id="liveStandContent" style="font-size:11px;color:rgba(255,255,255,.9);line-height:1.7"></div></div>';
   html += '<div id="whoStrokesPanel" style="display:none;background:rgba(0,20,10,.95);border:1px solid rgba(201,168,76,.2);border-radius:0 0 8px 8px;margin:0 10px 6px;padding:8px 12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch"><div id="whoStrokesContent" style="font-size:11px;color:rgba(255,255,255,.9);line-height:1.8"></div></div>';
-  html += '<div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:4px 12px 2px">'
-    + '<button onclick="showMidRoundInfo()" style="display:flex;align-items:center;gap:5px;background:none;border:1.5px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 10px;color:rgba(201,168,76,.7);font-size:11px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">ℹ Info</button>'
-    + '<button onclick="openMatchManager()" style="display:flex;align-items:center;gap:5px;background:none;border:1.5px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 10px;color:rgba(201,168,76,.7);font-size:11px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">⚙️ Settings</button>'
+  html += '<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 12px 2px">'
+    + '<button onclick="openMatchManager()" style="display:flex;align-items:center;gap:5px;background:none;border:1.5px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 12px;color:rgba(201,168,76,.7);font-size:11px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">⚙️ Mid Round Settings</button>'
+    + '<button onclick="showMidRoundInfo()" style="width:22px;height:22px;border-radius:50%;background:none;border:1.5px solid rgba(201,168,76,.3);color:rgba(201,168,76,.7);font-size:11px;font-weight:900;font-style:italic;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">i</button>'
     + '</div>';
 
 
@@ -7355,7 +7355,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.21</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.25</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7928,7 +7928,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.21</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.25</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10300,7 +10300,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.21</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.25</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10974,7 +10974,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.21</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.25</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11247,7 +11247,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.21</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.25</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11387,7 +11387,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v15.21');
+  lines.push('— Pards Golf · v15.25');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12112,7 +12112,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v15.21 · ${dateStr}</div>
+<div class="foot">Pards Golf · v15.25 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -12603,34 +12603,69 @@ function showMidRoundInfo(){
     + '<div style="font-size:12px;color:rgba(168,213,181,.6);margin-bottom:20px">Tap the ⚙️ button anytime during your round</div>'
     + '<div style="display:flex;flex-direction:column;gap:14px">'
 
-    + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
-    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">👥 Add or Swap Players</div>'
-    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Change who\'s in the round mid-game. Add a late arrival, remove someone who had to leave, or swap a player for another.</div>'
+    + '<div style="background:rgba(231,76,60,.1);border:1.5px solid rgba(231,76,60,.4);border-radius:12px;padding:14px">'
+    + '<div style="font-size:13px;font-weight:900;color:#e74c3c;margin-bottom:6px">🚨 Shotgun Start — Scored the Wrong Hole?</div>'
+    + '<div style="font-size:12px;color:rgba(255,200,200,.85);line-height:1.6">If your group started on hole 7 but the app is showing hole 1 — don\'t panic. Use <b>Shift Scores</b> in Mid Round Settings to slide all your entered scores forward or backward to the correct holes instantly. No re-entry needed. Fix it and keep playing.</div>'
     + '</div>'
 
     + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
-    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🏌️ Change Handicaps &amp; Tees</div>'
-    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Adjust any player\'s handicap index or tee deck on the fly. Useful when someone forgets their correct handicap at the start.</div>'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">⚡ Auto-Advance or Confirm Scores?</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Toggle between auto-advance (app moves to the next hole automatically after all scores are entered) and manual confirm (you tap a button to advance). Switch anytime mid-round.</div>'
     + '</div>'
 
     + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
-    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">💰 Add or Modify Betting Games</div>'
-    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Start a Nassau, 6-Point, Skins, Vegas, or Stableford game after the round has begun. Change bet amounts, add presses, or modify team pairings.</div>'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🍺 Birdie Juice Tracking</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Turn Birdie Juice on or off mid-round. When enabled, birdies and eagles earn credits that can be redeemed for cash. Past scores will be retroactively counted.</div>'
     + '</div>'
 
     + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
-    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🐍 Snake &amp; Birdie Juice</div>'
-    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Toggle Snake 3-Putt tracking or Birdie Juice on or off during the round. Scores already entered will be retroactively recalculated.</div>'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🚩 Change Starting Hole / Shift Scores</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Change which hole the round started on and shift all entered scores to match. Essential for shotgun starts where scoring began on the wrong hole.</div>'
     + '</div>'
 
     + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
-    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🏌 Shift Scores Between Holes</div>'
-    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">If you started scoring on the wrong hole (e.g. shotgun start mixup), use Shift Scores to move all entered scores forward or backward to the correct holes.</div>'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">👥 Players</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Add, remove, or swap players mid-round. Change any player\'s handicap index or tee deck. Add a late arrival or remove someone who had to leave.</div>'
+    + '</div>'
+
+    + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">💰 2v2 &amp; 1v1 Nassau Games</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Add new Nassau matches, change bet amounts, add presses, or modify team pairings for both 2v2 and 1v1 formats. Existing scores are retroactively applied.</div>'
+    + '</div>'
+
+    + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🎯 6-Point Game</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Start or modify a 6-Point game mid-round. Points are awarded per hole based on the group\'s scores relative to each other. Retroactively calculated from hole 1.</div>'
+    + '</div>'
+
+    + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🐍 Snake 3-Putt Game</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Toggle Snake on or off. The snake passes to anyone who 3-putts. Whoever holds the snake at the end of the round pays a set amount to each other player.</div>'
+    + '</div>'
+
+    + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🏆 Stableford Game</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Add or modify a Stableford points game. Points awarded based on score vs par. Retroactively calculated from hole 1 using entered scores.</div>'
+    + '</div>'
+
+    + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">💵 Skins Game</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Start or modify a Skins game. A skin is won outright on each hole with the low score. Ties carry the skin over to the next hole. Set the value per skin.</div>'
+    + '</div>'
+
+    + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🎲 Vegas Game</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Start or modify a Vegas game between two 2-person teams. Each team combines their scores into a two-digit number (lowest score first). Teams play the difference per point.</div>'
+    + '</div>'
+
+    + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
+    + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">✂️ Match Cards</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">Set up head-to-head Match Play cards between any two players. Tracks who is up or down on the match hole by hole with strokes applied.</div>'
     + '</div>'
 
     + '<div style="background:rgba(0,0,0,.2);border-radius:12px;padding:14px">'
     + '<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:6px">🌍 The International</div>'
-    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">After hole 17 is complete, you can call The International on any Nassau match — doubling the stakes for the final hole. Must be called before entering hole 18 scores.</div>'
+    + '<div style="font-size:12px;color:rgba(168,213,181,.8);line-height:1.6">After hole 17 is complete, call The International on any Nassau match to double the stakes on the final hole. Must be called before entering hole 18 scores — once it\'s in, it\'s in.</div>'
     + '</div>'
 
     + '</div>'
@@ -15471,7 +15506,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v15.21. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v15.25. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -15959,7 +15994,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v15.21';
+const CURRENT_VERSION = 'pards-v15.25';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16413,7 +16448,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v15.21';
+const CACHE='pards-v15.25';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
