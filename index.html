@@ -5803,7 +5803,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.08</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.11</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6514,7 +6514,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.08</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.11</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7232,6 +7232,55 @@ function renderCard(){
           <div style="font-size:11px;font-weight:700;color:var(--gold);white-space:nowrap;min-width:56px">${p.deck||defaultTeeName()}</div>
         </div>
       </div>
+      ${(()=>{
+        // ── Score strip ──
+        const scores = G.scores[pi];
+        const pars   = G.par;
+        let cells = '';
+        for(let i=0;i<18;i++){
+          const s = scores[i];
+          const isCur = i===h;
+          const diff = s!==null ? s-pars[i] : null;
+          let col = 'rgba(255,255,255,.25)';
+          if(s!==null){
+            if(diff<=-2)      col='#e74c3c';
+            else if(diff===-1) col='#e74c3c';
+            else if(diff===0)  col='rgba(255,255,255,.7)';
+            else if(diff===1)  col='rgba(255,255,255,.55)';
+            else               col='rgba(255,255,255,.45)';
+          }
+          const bg = isCur ? 'rgba(201,168,76,.25)' : 'transparent';
+          let inner = '';
+          if(s===null){
+            inner = '<span style="font-size:6px;color:rgba(255,255,255,.2)">●</span>';
+          } else if(diff<=-2){
+            inner = '<span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid #e74c3c;border-radius:50%;box-shadow:0 0 0 2px #e74c3c;font-size:9px;color:#e74c3c;font-weight:800">'+s+'</span>';
+          } else if(diff===-1){
+            inner = '<span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1.5px solid #e74c3c;border-radius:50%;font-size:9px;color:#e74c3c;font-weight:800">'+s+'</span>';
+          } else if(diff===0){
+            inner = '<span style="font-size:10px;font-weight:600;color:rgba(255,255,255,.75)">'+s+'</span>';
+          } else if(diff===1){
+            inner = '<span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid rgba(255,255,255,.45);border-radius:2px;font-size:9px;color:rgba(255,255,255,.7);font-weight:700">'+s+'</span>';
+          } else if(diff===2){
+            inner = '<span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border:1px solid rgba(255,255,255,.45);border-radius:2px;box-shadow:0 0 0 2px rgba(255,255,255,.3);font-size:9px;color:rgba(255,255,255,.6);font-weight:700">'+s+'</span>';
+          } else {
+            inner = '<span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;background:rgba(255,255,255,.3);border-radius:2px;font-size:9px;color:#fff;font-weight:700">'+s+'</span>';
+          }
+          if(i===9){
+            const front = scores.slice(0,9).filter(x=>x!==null);
+            const fTot = front.length===9 ? front.reduce((a,b)=>a+b,0) : null;
+            cells += '<div style="display:flex;align-items:center;justify-content:center;padding:0 4px;background:rgba(201,168,76,.1);border-left:1px solid rgba(201,168,76,.25);border-right:1px solid rgba(201,168,76,.25);min-width:22px"><span style="font-size:9px;font-weight:800;color:'+(fTot!==null?'#c9a84c':'rgba(201,168,76,.3)')+'">'+( fTot!==null?fTot:'·')+'</span></div>';
+          }
+          cells += '<div style="display:flex;align-items:center;justify-content:center;flex:1;background:'+bg+'">'+inner+'</div>';
+        }
+        const back = scores.slice(9,18).filter(x=>x!==null);
+        const bTot = back.length===9 ? back.reduce((a,b)=>a+b,0) : null;
+        const all  = scores.filter(x=>x!==null);
+        const tot  = all.length===18 ? all.reduce((a,b)=>a+b,0) : null;
+        cells += '<div style="display:flex;align-items:center;justify-content:center;padding:0 4px;background:rgba(201,168,76,.1);border-left:1px solid rgba(201,168,76,.25);border-right:1px solid rgba(201,168,76,.25);min-width:22px"><span style="font-size:9px;font-weight:800;color:'+(bTot!==null?'#c9a84c':'rgba(201,168,76,.3)')+'">'+( bTot!==null?bTot:'·')+'</span></div>';
+        cells += '<div style="display:flex;align-items:center;justify-content:center;padding:0 5px;background:rgba(201,168,76,.15);min-width:26px"><span style="font-size:10px;font-weight:900;color:'+(tot!==null?'#fff':'rgba(255,255,255,.2)')+'">'+( tot!==null?tot:'·')+'</span></div>';
+        return '<div style="display:flex;align-items:center;width:100%;background:#1a2e1a;height:22px;border-top:1px solid rgba(201,168,76,.35)">'+cells+'</div>';
+      })()}
       <div class="pcard-body">
         <div class="drum-row">
           ${(()=>{
@@ -7317,8 +7366,6 @@ function renderCard(){
   const _mbAction = _anyScore ? 'openMatchManager()' : 'editRoundSettings()';
   html += `<button id="manageBtn" onclick="${_mbAction}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 20px);margin:6px 10px 12px;padding:12px;background:rgba(201,168,76,.1);border:1.5px solid var(--gold);border-radius:10px;color:var(--gold);font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;letter-spacing:.2px">${_mbLabel}</button>`;
 
-  // ── Master scorecard only (match cards live under 💵 Games → Nassau) ──
-  html += renderMasterScorecard();
 
   // "What if you'd played Nassau?" banner — scorecard-only rounds, once all 18 are in
   if(G.scorecardOnly && isRoundComplete()){
@@ -7328,7 +7375,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.08</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.11</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7901,7 +7948,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.08</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.11</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -8028,6 +8075,388 @@ function renderMasterScorecard(){
 }
 
 
+function renderMatchCards(){
+  let html='';
+  const matchups = buildMatchups();
+  matchups.forEach((m,mi)=>{
+    html += renderOneMatchCard(m, mi);
+  });
+  // 6-point games
+  if(G.sixPointGames && G.sixPointGames.length){
+    G.sixPointGames.forEach((game,gi)=>{ html += renderSixPointCard(game, gi); });
+  }
+  // Stableford games
+  if(G.stablefordGames && G.stablefordGames.length && G.stablefordGames[0].players && G.stablefordGames[0].players.length >= 2){
+    G.stablefordGames.forEach((game,gi)=>{ html += renderStablefordCard(game, gi); });
+  }
+  return html;
+}
+
+function renderOneMatchCard(m, mi){
+  const allIdxs=[...m.sideA,...m.sideB];
+  const playHdcps=matchPlayHdcps(allIdxs);
+  const strokeMaps=playHdcps.map(ph=>matchStrokes(ph));
+  const games=computeMatchGames(m);
+  const playerCount=allIdxs.length;
+
+  // International eligibility
+  const intlActive=(G.internationals||{})[m.matchId];
+  const intl17=computeInternational(m);
+  const bucketed=(intlActive&&intl17)?intl17.bucketedLabels:new Set();
+  // Only use preview hints while round is still in progress and International not yet called
+  const previewBucketed=(intl17&&!intlActive&&!isRoundComplete())?intl17.bucketedLabels:new Set();
+  function intlKey(g){ return g.isFrontPress?g.label+'#leg18':g.label; }
+  function intlMarker(g){
+    // Only show 🌍 on column headers if International is actually active,
+    // OR if round is still in progress (preview hint). Never show if round
+    // is complete and International was not called.
+    const showPreview = !intlActive && !isRoundComplete();
+    if(g.isFrontPress){
+      if(bucketed.has(g.label+'#leg9')||bucketed.has(g.label+'#leg18')) return '🌍';
+      if(showPreview && (previewBucketed.has(g.label+'#leg9')||previewBucketed.has(g.label+'#leg18'))) return '🌍';
+      return '';
+    }
+    if(bucketed.has(g.label)) return '🌍';
+    if(showPreview && previewBucketed.has(g.label)) return '🌍';
+    return '';
+  }
+
+  // Build per-hole running state for each game column
+  const cols=games.map(g=>{
+    const cells=Array(18).fill('');
+    let running=0,counting=false;
+    for(let playIdx=0;playIdx<18;playIdx++){
+      if(playIdx<g.startH||playIdx>g.endH) continue;
+      const r=holeResult(m,playIdx);
+      if(r===null) continue;
+      if(g.isPress&&playIdx===g.startH){cells[playIdx]='P';counting=true;continue;}
+      if(g.isPress&&!counting) continue;
+      running+=r;
+      cells[playIdx]=running>0?`+${running}`:running<0?`${running}`:'E';
+    }
+    return{label:g.label,cells,game:g};
+  });
+
+  // Only include press columns that have actually been declared (have at least one non-empty cell or 'P')
+  const nassCols=cols.filter(c=>!c.game.isPress);
+  const pressCols=cols.filter(c=>c.game.isPress&&c.cells.some(v=>v!==''));
+
+  // ── Column widths ──
+  // Player cols get a generous fixed width — table scrolls right for presses.
+  // This ensures players are NEVER squeezed out no matter how many presses.
+  const holeW=40, hcpW=24, parW=22;
+  const nassauW=40, pressW=32;
+  const playerColW = Math.max(52, Math.floor((320 - holeW - hcpW - parW - nassCols.length*nassauW) / playerCount));
+  const totalTableW = holeW + hcpW + parW + playerCount*playerColW + nassCols.length*nassauW + pressCols.length*pressW;
+
+  // Course logo
+  const course=activeCourse();
+  const logoHtml=course.logo
+    ?`<img src="${course.logo}" style="width:40px;height:40px;object-fit:contain;display:block;margin:0 auto 2px;border-radius:5px" alt="">`
+    :'';
+
+  const cardId=`matchCard${mi}`;
+  let html=`<div id="${cardId}" style="background:#fff;border-radius:12px;overflow:hidden;margin-top:10px">`;
+  html+=`<div style="background:var(--gd);padding:10px 14px;display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:10px">
+      ${course.logo?`<img src="${course.logo}" style="height:30px;width:auto;object-fit:contain;border-radius:4px" alt="">`:''}
+      <div><div style="font-size:14px;font-weight:700;color:var(--gold)">${m.labelA} vs ${m.labelB}</div>
+      <div style="font-size:11px;color:var(--gl)">${m.type==='2v2-combined'?'2v2 High-Low':'1v1'} · $${m.bet}/side${(INTERNATIONAL_ENABLED&&(G.internationals||{})[m.matchId])?' · 🌍 International':''}</div></div>
+    </div>
+    <button class="export-btn" onclick="printMatchCard(${mi})" ontouchstart="">🖨️ Print</button>
+  </div>`;
+
+  // Adjusted handicap note
+  const hcpNote=allIdxs.map((pi,ii)=>`${G.players[pi].name.split(/\s+/)[0]} ${playHdcps[ii]>0?'+'+playHdcps[ii]:'scratch'}`).join(' · ');
+  html+=`<div style="padding:5px 14px;font-size:10px;color:var(--inkl);background:#f9f7f3">Adjusted match handicaps: ${hcpNote}</div>`;
+
+  // ── Table ──
+  html+=`<div class="dck-wrap"><table class="dck" style="width:${totalTableW}px;min-width:100%"><colgroup>
+    <col style="width:${holeW}px">
+    <col style="width:${hcpW}px">
+    <col style="width:${parW}px">
+    ${allIdxs.map(()=>`<col style="width:${playerColW}px">`).join('')}
+    ${nassCols.map(()=>`<col style="width:${nassauW}px">`).join('')}
+    ${pressCols.map(()=>`<col style="width:${pressW}px">`).join('')}
+    </colgroup><thead><tr>
+    <th class="d-hdr d-holehdr" style="vertical-align:middle;text-align:center;width:${holeW}px">${logoHtml}<div class="d-holetxt" style="font-size:9px">HOLE</div></th>
+    <th class="d-hdr d-vert" style="font-size:8px;width:${hcpW}px">HCP</th>
+    <th class="d-hdr" style="font-size:8px;width:${parW}px">PAR</th>`;
+
+  // Player headers: name / adj HCP / deck — horizontal layout
+  allIdxs.forEach((pi,ii)=>{
+    const p=G.players[pi];
+    const firstName=p.name.trim().split(/\s+/)[0];
+    const dk=(p.deck||defaultTeeName()).replace('Deck ','D').replace('DECK','D');
+    const adjHcp=playHdcps[ii];
+    html+=`<th class="d-hdr" style="font-size:9px;padding:3px 1px;vertical-align:bottom;text-align:center;white-space:normal;word-break:break-word;width:${playerColW}px">${firstName}<br><span style="font-size:8px;font-weight:600;opacity:.8">${adjHcp>0?'+'+adjHcp:'scratch'}</span><br><span style="font-size:7px;opacity:.55">${dk}</span></th>`;
+  });
+
+  // Nassau column headers
+  nassCols.forEach(c=>{
+    const lbl=c.label.replace('Front 9','Nassau F9').replace('Back 9','Nassau B9').replace('Full 18','Nassau 18');
+    const globe=intlMarker(c.game);
+    html+=`<th class="d-matchhdr d-vert" style="min-height:52px">${lbl}${globe?'<br><span style="font-size:9px">'+globe+'</span>':''}</th>`;
+  });
+
+  // Press column headers — compact "P1", "P2" etc
+  pressCols.forEach(c=>{
+    const lbl=c.label.replace(/Press (\d+).*/,'P$1');
+    const globe=intlMarker(c.game);
+    html+=`<th class="d-matchhdr" style="font-size:8px;padding:2px 1px">${lbl}${globe?'<br><span style="font-size:9px">'+globe+'</span>':''}</th>`;
+  });
+  html+=`</tr></thead><tbody>`;
+
+  // ── Hole rows ──
+  function row(playIdx){
+    const h=actualHoleIdx(playIdx);
+    let r=`<tr><td class="d-hole">${h+1}</td><td class="d-hcp">${G.si[h]}</td><td class="d-par">${G.par[h]}</td>`;
+
+    // ── Work out which scores "counted" for their team this hole ──
+    // For 2v2: each hole is high-ball vs high-ball AND low-ball vs low-ball.
+    // The score that IS the team's low ball or high ball gets a gold border.
+    // For 1v1: the single score on each side always counts — both get the border
+    // only when that side won the hole.
+    const winnerPis = new Set(); // player indices whose score gets highlighted
+
+    if(m.type === '2v2-combined'){
+      const allScored = allIdxs.every(pi => G.scores[pi][h] !== null);
+      if(allScored){
+        // Get each player's net score for this hole using the full match playHdcps
+        // playHdcps[0..1] = sideA, playHdcps[2..3] = sideB
+        const netA = m.sideA.map((pi,ii) => matchNetS(pi, h, playHdcps[ii]));
+        const netB = m.sideB.map((pi,ii) => matchNetS(pi, h, playHdcps[m.sideA.length + ii]));
+
+        // Each team's low ball (best score) and high ball (second-best score)
+        const aLow  = Math.min(...netA);
+        const bLow  = Math.min(...netB);
+        const aHigh = Math.max(...netA);
+        const bHigh = Math.max(...netB);
+
+        // Helper: add the first unused player on a side whose net equals targetNet
+        function markBall(side, nets, targetNet, usedSet){
+          const idx = side.findIndex((pi,ii) => nets[ii]===targetNet && !usedSet.has(pi));
+          if(idx !== -1){ winnerPis.add(side[idx]); usedSet.add(side[idx]); }
+        }
+        const aWinsLow  = aLow  < bLow;
+        const bWinsLow  = bLow  < aLow;
+        const aWinsHigh = aHigh < bHigh;
+        const bWinsHigh = bHigh < aHigh;
+
+        // Highlight rules:
+        // - One team wins one ball only → highlight that ONE contributing score
+        // - One team sweeps both balls → highlight BOTH their contributing scores
+        // - Split (each team wins one) → nobody highlighted
+        // - Full halve (both tied) → nobody highlighted
+        const aPoints = (aWinsLow?1:0) + (aWinsHigh?1:0);
+        const bPoints = (bWinsLow?1:0) + (bWinsHigh?1:0);
+
+        if(aPoints > 0 && bPoints === 0){
+          // Team A wins one or both — highlight their contributing score(s)
+          const u = new Set();
+          if(aWinsLow)  markBall(m.sideA, netA, aLow,  u);
+          if(aWinsHigh) markBall(m.sideA, netA, aHigh, u);
+        } else if(bPoints > 0 && aPoints === 0){
+          // Team B wins one or both — highlight their contributing score(s)
+          const u = new Set();
+          if(bWinsLow)  markBall(m.sideB, netB, bLow,  u);
+          if(bWinsHigh) markBall(m.sideB, netB, bHigh, u);
+        }
+        // Split → aPoints===1 && bPoints===1 → no highlight
+      }
+    } else if(m.type === '1v1'){
+      const allScored = allIdxs.every(pi => G.scores[pi][h] !== null);
+      if(allScored){
+        const ph1v1 = matchPlayHdcps([...m.sideA, ...m.sideB]);
+        const aNet = matchNetS(m.sideA[0], h, ph1v1[0]);
+        const bNet = matchNetS(m.sideB[0], h, ph1v1[1]);
+        if(aNet < bNet) winnerPis.add(m.sideA[0]);
+        else if(bNet < aNet) winnerPis.add(m.sideB[0]);
+      }
+    }
+
+    allIdxs.forEach((pi,ii)=>{
+      const g=G.scores[pi][h];
+      const stk=strokeMaps[ii][h];
+      const won = winnerPis.has(pi);
+      const tick = won ? '<span style="color:#c9a84c;font-size:8px;font-weight:900;line-height:1;vertical-align:top;margin-left:1px">✓</span>' : '';
+      let cell;
+      if(g===null){
+        cell=stk===2?'<span class="circle-empty2">·</span>':stk===1?'<span class="circle-empty1">·</span>':'·';
+      } else {
+        cell=stk===2?`<span class="circle2">${g}</span>`:stk===1?`<span class="circle1">${g}</span>`:`${g}`;
+      }
+      r+=`<td class="d-score">${cell}${tick}</td>`;
+    });
+    nassCols.forEach(c=>{
+      const v=c.cells[playIdx];
+      const cls=v==='P'?'d-press':'d-match d-nassaucell';
+      r+=`<td class="${cls}">${v}</td>`;
+    });
+    pressCols.forEach(c=>{
+      const v=c.cells[playIdx];
+      const cls=v==='P'?'d-press':'d-match';
+      r+=`<td class="${cls}">${v}</td>`;
+    });
+    return r+'</tr>';
+  }
+
+  // ── Sub rows (OUT / IN) ──
+  function matchSubRow(label,start,end){
+    const isOut=(start===0),isIn=(start===9);
+    let parTot=0; for(let i=start;i<end;i++) parTot+=G.par[actualHoleIdx(i)];
+    const inPot=(lbl)=>bucketed.has(lbl)||(previewBucketed.has(lbl)&&!intlActive&&!isRoundComplete());
+    let r=`<tr><td class="d-sub">${label}</td><td class="d-sub"></td><td class="d-subpar">${parTot}</td>`;
+    allIdxs.forEach(pi=>{
+      let sum=0,all=true;
+      for(let i=start;i<end;i++){const g=G.scores[pi][actualHoleIdx(i)];if(g!==null)sum+=g;else all=false;}
+      r+=`<td class="d-sub" style="background:#5a5a5a">${all?sum:'·'}</td>`;
+    });
+    // Nassau cols — show $ settlement and globes in OUT/IN
+    nassCols.forEach(c=>{
+      let content='';
+      if(isOut){
+        if(!c.game.isPress&&c.game.label==='Front 9'&&inPot('Front 9')) content='🌍';
+        else if(c.game.isFrontPress&&inPot(c.game.label+'#leg9')) content='🌍';
+        else if(!c.game.isPress&&c.game.label==='Front 9'&&c.game.settled){
+          const v=c.game.winner==='A'?c.game.value:c.game.winner==='B'?-c.game.value:0;
+          content=v>0?`+$${v}`:v<0?`-$${Math.abs(v)}`:'$0';
+        }
+      }
+      if(isIn){
+        if(!c.game.isPress&&c.game.label==='Back 9'&&inPot('Back 9')) content='🌍';
+        else if(!c.game.isPress&&c.game.label==='Full 18'&&inPot('Full 18')) content='🌍';
+        else if(!c.game.isPress&&c.game.label==='Back 9'&&c.game.settled){
+          const v=c.game.winner==='A'?c.game.value:c.game.winner==='B'?-c.game.value:0;
+          content=v>0?`+$${v}`:v<0?`-$${Math.abs(v)}`:'$0';
+        }
+      }
+      r+=`<td class="d-sub" style="text-align:center;font-size:9px">${content}</td>`;
+    });
+    pressCols.forEach(c=>{
+      let globe='';
+      if(isOut){
+        if(c.game.isFrontPress&&inPot(c.game.label+'#leg9')) globe='🌍';
+        else if(c.game.isPress&&!c.game.isFrontPress&&c.game.label==='Front 9'&&inPot(c.game.label)) globe='🌍';
+      }
+      if(isIn){
+        if(c.game.isPress&&!c.game.isFrontPress&&inPot(c.game.label)) globe='🌍';
+        else if(c.game.isFrontPress&&inPot(c.game.label+'#leg18')) globe='🌍';
+      }
+      r+=`<td class="d-sub" style="text-align:center">${globe}</td>`;
+    });
+    return r+'</tr>';
+  }
+
+  for(let i=0;i<9;i++) html+=row(i);
+  html+=matchSubRow('OUT',0,9);
+  for(let i=9;i<18;i++) html+=row(i);
+  html+=matchSubRow('IN',9,18);
+
+  // ── WINS row ──
+  let grandTotalA=0;
+  games.forEach(g=>{
+    const key=g.isFrontPress?g.label+'#leg18':g.label;
+    if(g.isFrontPress){
+      const pay9=(!bucketed.has(g.label+'#leg9')&&g.leg9.settled)?(g.leg9.score>0?(m.bet||2):g.leg9.score<0?-(m.bet||2):0):0;
+      const pay18=(!bucketed.has(g.label+'#leg18')&&g.leg18.settled)?(g.leg18.score>0?(m.bet||2):g.leg18.score<0?-(m.bet||2):0):0;
+      grandTotalA+=pay9+pay18;
+    } else if(!bucketed.has(key)&&g.settled&&g.winner!=='tie'){
+      grandTotalA+=g.winner==='A'?g.value:-g.value;
+    }
+  });
+  let pressNoteA=null;
+  if(intlActive&&intl17){ pressNoteA=intlNetToA(m,intl17); grandTotalA+=pressNoteA; }
+
+  const totalCols=3+allIdxs.length+nassCols.length+pressCols.length;
+  const done=isRoundComplete();
+  const winVerb=m.type==='2v2-combined'?'win':'wins';
+  let resultLine=null;
+  if(intlActive&&intl17&&holeResult(m,17)===null){
+    resultLine=`🌍 International ON — $${intl17.largePress} pot, double-or-nothing on hole 18`;
+  } else if(done){
+    if(grandTotalA>0) resultLine=`${m.labelA} ${winVerb} $${Math.abs(grandTotalA)}`;
+    else if(grandTotalA<0) resultLine=`${m.labelB} ${winVerb} $${Math.abs(grandTotalA)}`;
+    else resultLine='All square — $0';
+  }
+  if(resultLine!==null){
+    html+=`<tr><td colspan="${totalCols}" style="background:var(--gd);color:var(--gold);font-weight:800;font-size:12px;text-align:center;padding:7px 4px">${resultLine}</td></tr>`;
+  }
+
+  // ── Result banner — show mid-round running total, not just at round end ──
+  {
+    let runningA = 0;
+    games.forEach(g=>{
+      const key = g.isFrontPress ? g.label+'#leg18' : g.label;
+      if(g.isFrontPress){
+        const pay9  = (!bucketed.has(g.label+'#leg9')  && g.leg9.settled)  ? (g.leg9.score>0?(m.bet||2):g.leg9.score<0?-(m.bet||2):0)  : 0;
+        const pay18 = (!bucketed.has(g.label+'#leg18') && g.leg18.settled) ? (g.leg18.score>0?(m.bet||2):g.leg18.score<0?-(m.bet||2):0) : 0;
+        runningA += pay9+pay18;
+      } else if(!bucketed.has(key) && g.settled && g.winner!=='tie'){
+        runningA += g.winner==='A' ? g.value : -g.value;
+      }
+    });
+    if(intlActive&&intl17) runningA += intlNetToA(m,intl17);
+    const done = isRoundComplete();
+    const winVerb = m.type==='2v2-combined'?'win':'wins';
+    let banner='';
+    if(intlActive&&intl17&&holeResult(m,17)===null){
+      banner=`🌍 International ON — $${intl17.largePress} pot, double-or-nothing on hole 18`;
+    } else if(runningA>0){
+      banner=`${done?'':'📊 '} ${m.labelA} ${winVerb} $${Math.abs(runningA)}${done?'':' so far'}`;
+    } else if(runningA<0){
+      banner=`${done?'':'📊 '} ${m.labelB} ${winVerb} $${Math.abs(runningA)}${done?'':' so far'}`;
+    } else if(done){
+      banner='All square — $0';
+    } else {
+      banner='📊 All square so far';
+    }
+    html+=`<tr><td colspan="${totalCols}" style="background:var(--gd);color:var(--gold);font-weight:800;font-size:12px;text-align:center;padding:7px 4px">${banner}</td></tr>`;
+  }
+
+  // WINS row — show $ for settled games, projected ~ for unsettled live games
+  html+=`<tr><td class="d-wins" colspan="3">WINS</td>`;
+  allIdxs.forEach(()=>html+=`<td class="d-wins"></td>`);
+  const allGameCols=[...nassCols,...pressCols];
+  allGameCols.forEach(c=>{
+    const g=c.game;
+    const key=intlKey(g);
+    let amt='',neg=false,proj=false;
+    if(bucketed.has(key)){
+      amt='🌍';
+    } else if(g.settled&&g.winner!=='tie'){
+      let signed;
+      if(g.isFrontPress){ signed=g.combinedPay||0; }
+      else { signed=g.winner==='A'?g.value:-g.value; }
+      neg=signed<0;
+      amt=neg?'-$'+Math.abs(signed):'$'+Math.abs(signed);
+    } else if(g.settled&&g.winner==='tie'){
+      amt='$0';
+    } else {
+      // Unsettled — show running projected value with ~ prefix
+      let running=0;
+      if(g.isFrontPress){
+        if(g.leg9.score!==0||g.leg9.holesPlayed>0) running=g.leg9.score>0?(m.bet||2):g.leg9.score<0?-(m.bet||2):0;
+      } else {
+        running = g.score>0?(m.bet||2):g.score<0?-(m.bet||2):0;
+      }
+      if(running!==0){
+        neg=running<0;
+        proj=true;
+        amt=(neg?'-':'')+'~$'+Math.abs(running);
+      }
+    }
+    html+=`<td class="d-wins" style="${neg?'color:var(--red)':''}${proj?';opacity:.65;font-size:9px':''}">${amt}</td>`;
+  });
+  html+='</tr>';
+
+  html+=`</tbody></table></div>`;
+  html+=`<div style="padding:6px 14px;font-size:10px;color:var(--inkl)">🔴 thin circle = 1 shot · double = 2 shots (off low player) · E = even · P = press${INTERNATIONAL_ENABLED?' · 🌍 = International-eligible':''}</div>`;
+  html+=`<div style="padding:0 14px 8px;font-size:10px;color:var(--inkl);font-weight:600">⏱️ ${paceOfPlayStr()}</div>`;
+  html+=buildInternationalPanel(m);
+  html+=`</div>`;
+  return html;
+}
 function renderSixPointCard(game, gi){
   const r=computeSixPoint(game);
   const idxs=game.players;
@@ -9980,7 +10409,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.08</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.11</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -10654,7 +11083,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.08</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.11</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -10927,7 +11356,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.08</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.11</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11067,7 +11496,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v15.08');
+  lines.push('— Pards Golf · v15.11');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -11792,7 +12221,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v15.08 · ${dateStr}</div>
+<div class="foot">Pards Golf · v15.11 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -15103,7 +15532,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v15.08. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v15.11. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -15591,7 +16020,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v15.08';
+const CURRENT_VERSION = 'pards-v15.11';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16045,7 +16474,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v15.08';
+const CACHE='pards-v15.11';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
