@@ -5818,7 +5818,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.37</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v15.43</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -6530,7 +6530,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.37</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.43</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -7385,7 +7385,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.37</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.43</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -7958,7 +7958,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.37</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.43</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10330,7 +10330,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.37</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.43</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -11004,7 +11004,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.37</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v15.43</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -11277,7 +11277,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.37</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v15.43</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -11417,7 +11417,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v15.37');
+  lines.push('— Pards Golf · v15.43');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -12142,7 +12142,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v15.37 · ${dateStr}</div>
+<div class="foot">Pards Golf · v15.43 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -14336,6 +14336,149 @@ function confirmSetMe(name){
 
 
 
+function openAddFavPlayerForm(){
+  var existing = document.getElementById('favAddFormBox');
+  if(existing){ existing.remove(); return; }
+  var teeNames = activeTeenames();
+  var defTee   = defaultTeeName();
+  var teeOpts  = teeNames.map(function(t){
+    return '<option value="'+t+'"'+(t===defTee?' selected':'')+'>'+t+'</option>';
+  }).join('');
+
+  var form = document.createElement('div');
+  form.id = 'favAddFormBox';
+  form.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:3000;display:flex;align-items:flex-end;justify-content:center;overflow-y:auto';
+
+  function field(label, inputHtml, hint){
+    return '<div style="margin-bottom:14px">'
+      +'<div style="font-size:11px;font-weight:800;color:#a8d5b5;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px">'+label+'</div>'
+      +inputHtml
+      +(hint?'<div style="font-size:10px;color:rgba(168,213,181,.5);margin-top:3px">'+hint+'</div>':'')
+      +'</div>';
+  }
+  var inp = 'width:100%;padding:11px 12px;background:rgba(255,255,255,.08);border:1.5px solid rgba(201,168,76,.3);border-radius:8px;color:#fff;font-size:14px;box-sizing:border-box;outline:none';
+  var sel = 'width:100%;padding:11px 36px 11px 12px;background:rgba(255,255,255,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:8px;color:#f5e6b8;font-size:14px;box-sizing:border-box;outline:none;appearance:none;-webkit-appearance:none;background-image:url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"><path d="M1 1l5 5 5-5" stroke="%23c9a84c" stroke-width="2" fill="none" stroke-linecap="round"/></svg>\');background-repeat:no-repeat;background-position:right 12px center';
+
+  form.innerHTML =
+    '<div style="background:#1a3a2a;border-radius:20px 20px 0 0;width:100%;max-width:440px;padding:22px 20px 40px">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">'
+    +'<div style="font-size:17px;font-weight:900;color:#c9a84c">➕ Add New Player</div>'
+    +'<button onclick="document.getElementById(\'favAddFormBox\').remove()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:30px;height:30px;color:#fff;font-size:18px;cursor:pointer">&times;</button>'
+    +'</div>'
+
+    +field('Full Name *','<input id="newFavName" type="text" placeholder="e.g. Bruce Comeau" autocomplete="off" style="'+inp+'">')
+
+    +field('Golf Canada ID',
+      '<div style="display:flex;gap:8px">'
+      +'<input id="newFavGolfId" type="text" placeholder="10-digit ID" maxlength="10" inputmode="numeric" style="flex:1;padding:11px 12px;background:rgba(255,255,255,.08);border:1.5px solid rgba(201,168,76,.3);border-radius:8px;color:#fff;font-size:14px;box-sizing:border-box;outline:none">'
+      +'<button id="newFavFetchBtn" onclick="fetchHandicapForNewFavPlayer()" style="padding:11px 14px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);border:1.5px solid #c9a84c;border-radius:8px;color:#c9a84c;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0">🍁 Fetch HCP</button>'
+      +'</div>','Optional — fetches handicap automatically')
+
+    +field('Handicap Index *','<input id="newFavHdcp" type="number" placeholder="e.g. 8.5" step="0.1" min="0" max="54" style="'+inp+'">')
+
+    +field('Preferred Tee Box','<select id="newFavDeck" style="'+sel+'">'+teeOpts+'</select>')
+
+    +'<div style="margin-bottom:18px">'
+    +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">'
+    +'<div style="font-size:11px;font-weight:800;color:#a8d5b5;letter-spacing:.8px;text-transform:uppercase">Typical Score</div>'
+    +'<button onclick="showNewFavTypicalInfo()" style="width:18px;height:18px;border-radius:50%;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:#c9a84c;font-size:10px;font-style:italic;font-weight:900;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent">i</button>'
+    +'</div>'
+    +'<select id="newFavTypical" style="'+sel+'">'
+    +'<option value="-1">Birdie (−1)</option>'
+    +'<option value="0" selected>Par (0)</option>'
+    +'<option value="1">Bogey (+1)</option>'
+    +'<option value="2">Double Bogey (+2)</option>'
+    +'</select>'
+    +'</div>'
+
+    +'<button onclick="saveNewFavPlayer()" style="width:100%;padding:14px;background:#c9a84c;border:none;border-radius:12px;color:#1a3a2a;font-size:15px;font-weight:900;cursor:pointer">Save Player</button>'
+    +'</div>';
+
+  form.addEventListener('click', function(e){ if(e.target===form) form.remove(); });
+  document.body.appendChild(form);
+  setTimeout(function(){ var el=document.getElementById('newFavName'); if(el) el.focus(); },100);
+}
+
+function showNewFavTypicalInfo(){
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:4000;display:flex;align-items:center;justify-content:center;padding:24px';
+  overlay.innerHTML =
+    '<div style="background:#1a3a2a;border:1.5px solid rgba(201,168,76,.4);border-radius:16px;padding:22px 20px;max-width:310px;text-align:center">'
+    +'<div style="font-size:16px;font-weight:800;color:#c9a84c;margin-bottom:10px">🎯 Typical Score</div>'
+    +'<div style="font-size:13px;color:rgba(168,213,181,.9);line-height:1.7;margin-bottom:18px">'
+    +'This sets the <b style="color:#f5e6b8">centre of the score wheel</b> for this player.<br><br>'
+    +'Par = wheel centred on par for the hole.<br>'
+    +'Bogey = wheel pre-set one above par.<br>'
+    +'Double = wheel pre-set two above par.<br><br>'
+    +'<span style="color:rgba(168,213,181,.6);font-size:11px">You can always change it later in Manage My Players.</span>'
+    +'</div>'
+    +'<button onclick="this.closest(\'div[style*=inset]\').remove()" style="width:100%;padding:12px;background:#c9a84c;color:#1a3a2a;border:none;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer">Got It</button>'
+    +'</div>';
+  document.body.appendChild(overlay);
+}
+
+  var form = document.createElement('div');
+  form.id = 'favAddFormBox';
+  form.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto';
+  form.innerHTML =
+    '<div style="background:#1a3a2a;border:1.5px solid rgba(201,168,76,.4);border-radius:16px;padding:22px 20px;max-width:340px;width:100%">'
+    +'<div style="font-size:16px;font-weight:800;color:#c9a84c;margin-bottom:16px">➕ Add New Player</div>'
+
+    // Name
+    +'<div style="font-size:11px;font-weight:700;color:rgba(168,213,181,.7);margin-bottom:4px;letter-spacing:.5px">FULL NAME *</div>'
+    +'<input id="newFavName" type="text" placeholder="e.g. Bruce Comeau" autocomplete="off" style="width:100%;padding:10px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);border-radius:8px;color:#fff;font-size:14px;margin-bottom:12px;box-sizing:border-box;outline:none">'
+function updateNewFavTypicalLabel(){
+  var v = parseInt(document.getElementById('newFavTypical').value||0);
+  var lbl = document.getElementById('newFavTypicalLabel');
+  if(!lbl) return;
+  lbl.textContent = v===0 ? 'Par (0)' : (v>0 ? '+'+v+' (Bogey range)' : v+' (Birdie range)');
+}
+
+async function fetchHandicapForNewFavPlayer(){
+  var golfId = (document.getElementById('newFavGolfId').value||'').trim();
+  if(!/^\d{10}$/.test(golfId)){ alert('Enter a valid 10-digit Golf Canada ID first.'); return; }
+  var btn = document.getElementById('newFavFetchBtn');
+  btn.textContent='Fetching…'; btn.disabled=true;
+  try{
+    var cfg = gcConfig();
+    if(!cfg.worker||!cfg.username||!cfg.password){
+      if(!promptGcSetup()) return;
+      cfg = gcConfig();
+    }
+    var token = await gcGetToken(cfg);
+    var res = await fetch(cfg.worker.replace(/\/+$/,'')+'/handicap?cardId='+encodeURIComponent(golfId),{
+      headers:{'Authorization':'Bearer '+token}
+    });
+    if(!res.ok) throw new Error('Lookup failed ('+res.status+')');
+    var data = await res.json();
+    var rec = Array.isArray(data.data) ? data.data[0] : data;
+    if(!rec||rec.handicapValue===undefined) throw new Error('No handicap found');
+    document.getElementById('newFavHdcp').value = rec.handicapValue;
+    btn.textContent='✓ Fetched'; btn.disabled=false;
+  }catch(e){
+    btn.textContent='Fetch HCP'; btn.disabled=false;
+    alert('Could not fetch handicap: '+e.message);
+  }
+}
+
+function saveNewFavPlayer(){
+  var name   = (document.getElementById('newFavName').value||'').trim();
+  var hdcp   = parseFloat(document.getElementById('newFavHdcp').value);
+  var golfId = (document.getElementById('newFavGolfId').value||'').trim();
+  var deck   = (document.getElementById('newFavDeck').value||'').trim();
+  var typical= parseInt(document.getElementById('newFavTypical').value||0);
+  if(golfId && !/^\d{10}$/.test(golfId)){ alert('Golf Canada ID must be 10 digits.'); return; }
+  if(!golfId && isNaN(hdcp)){ alert('Please enter a handicap index.'); return; }
+  var contacts = loadContacts();
+  if(contacts.find(function(c){ return c.name.toLowerCase()===name.toLowerCase(); })){
+    alert(name+' is already in your player list.'); return;
+  }
+  contacts.push({name:name, idx:isNaN(hdcp)?null:hdcp, golfId:golfId||'', deck:deck||'', typicalScore:typical||0});
+  saveContacts(contacts);
+  document.getElementById('favAddFormBox').remove();
+  renderFavoritesList();
+}
+
 function openFavDeckModal(name, currentDeck){
   const ex = document.getElementById('favDeckModal'); if(ex) ex.remove();
   const tees = getTeeNames();
@@ -14579,6 +14722,7 @@ function openFavorites(){
       <button onclick="document.getElementById('favOverlay').remove()" style="position:fixed;top:env(safe-area-inset-top,12px);right:12px;z-index:10001;background:#c9a84c;color:#1a3a2a;border:none;border-radius:20px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);-webkit-tap-highlight-color:transparent">Done ✓</button>
       </div>
       <div style="font-size:12px;color:#666;margin:0 0 8px">Star up to ${MAX_FAVORITES} players as favorites — they’ll auto-fill each new round. Mark one as <b>“Me”</b> (scorekeeper). Tap ✕ to remove a player entirely.</div>
+      <button onclick="openAddFavPlayerForm()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.35);border-radius:10px;padding:10px;margin-bottom:8px;font-size:13px;font-weight:700;color:#c9a84c;cursor:pointer;-webkit-tap-highlight-color:transparent">➕ Add New Player</button>
       <button id="favRefreshAllBtn" onclick="refreshAllHandicaps()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">
         <img src="${GC_LOGO}" alt="Golf Canada" style="height:14px;width:auto"> <span id="favRefreshAllLbl">Refresh All Handicaps</span>
       </button>
@@ -15584,7 +15728,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v15.37. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v15.43. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -16072,7 +16216,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v15.37';
+const CURRENT_VERSION = 'pards-v15.43';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -16526,7 +16670,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v15.37';
+const CACHE='pards-v15.43';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
