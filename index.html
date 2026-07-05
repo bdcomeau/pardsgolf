@@ -4195,7 +4195,7 @@ function _buildCoursePickerList(filter){
       + _flagImg
       + '<div style="flex:1;min-width:0">'
       + '<div style="font-size:13px;font-weight:800;color:' + (expanded ? 'var(--gold)' : '#f5e6b8') + '">' + region.name + activeDot + '</div>'
-      + '<div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px">' + items.length + ' venue' + (items.length===1?'':'s') + '</div>'
+      + '<div style="font-size:10px;color:rgba(255,255,255,.6);margin-top:1px">' + items.reduce(function(n,it){ return n+(it.type==='course'?1:it.courses.length); },0) + ' courses' + '</div>'
       + '</div>'
       + '<div style="color:' + (expanded ? 'var(--gold)' : 'rgba(255,255,255,.6)') + ';font-size:18px;font-weight:700">' + chevron + '</div>'
       + '</div>';
@@ -4211,7 +4211,6 @@ function toggleCoursePicker(){
   const panel = document.getElementById('coursePickerPanel');
   if(!panel) return;
   if(panel.style.display==='none' || !panel.style.display){
-    _expandedGroups = new Set();
     _expandedRegions = new Set();
     _regionsInitialized = false;
     panel.innerHTML = `
@@ -7505,7 +7504,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v18.07</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v18.09</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -8218,7 +8217,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.07</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.09</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -9090,7 +9089,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.07</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.09</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -9663,7 +9662,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.07</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.09</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -12035,7 +12034,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.07</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.09</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -12716,7 +12715,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.07</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.09</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -12989,7 +12988,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.07</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.09</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -13129,7 +13128,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v18.07');
+  lines.push('— Pards Golf · v18.09');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -13854,7 +13853,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v18.07 · ${dateStr}</div>
+<div class="foot">Pards Golf · v18.09 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -17310,7 +17309,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v18.07. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v18.09. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -17798,7 +17797,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v18.07';
+const CURRENT_VERSION = 'pards-v18.09';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -18022,47 +18021,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v18.072 — Games menu: ✕ close button added to sheet header',
-  'v18.071 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v18.070 — Snake tab: 3-putt log now sorted by hole number',
-  'v18.079 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v18.078 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v18.077 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v18.076 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v18.075 — Score entry: hole navigation arrows larger and more visible',
-  'v18.074 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v18.073 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v18.072 — Games tab icon changed to 💵',
-  'v18.071 — Birdie Juice tab restored to bottom nav',
-  'v18.070 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v18.079 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v18.078 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v18.077 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v18.076 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v18.075 — Setup: Snake participant names now sync live with player name changes',
-  'v18.074 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v18.073 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v18.072 — Fixed: player entry section now displays correctly',
-  'v18.079 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v18.078 — Setup: Round Setup header moved to the very top of the screen',
-  'v18.077 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v18.076 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v18.075 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v18.074 — Fixed: update notes modal now scrollable on iOS',
-  'v18.073 — Snake tab: current holder hidden after round is complete',
-  'v18.072 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v18.071 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v18.070 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v18.079 — Version number now shown beside Help button on every screen',
-  'v18.078 — Snake: resets every 3 holes; participant selection added to setup',
-  'v18.077 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v18.076 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v18.075 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v18.074 — New Round blocked if on hole 18 with missing scores',
-  'v18.073 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v18.072 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v18.071 — Fixed: ℹ️ update info button now appears correctly',
-  'v18.070 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v18.092 — Games menu: ✕ close button added to sheet header',
+  'v18.091 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v18.090 — Snake tab: 3-putt log now sorted by hole number',
+  'v18.099 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v18.098 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v18.097 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v18.096 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v18.095 — Score entry: hole navigation arrows larger and more visible',
+  'v18.094 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v18.093 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v18.092 — Games tab icon changed to 💵',
+  'v18.091 — Birdie Juice tab restored to bottom nav',
+  'v18.090 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v18.099 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v18.098 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v18.097 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v18.096 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v18.095 — Setup: Snake participant names now sync live with player name changes',
+  'v18.094 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v18.093 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v18.092 — Fixed: player entry section now displays correctly',
+  'v18.099 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v18.098 — Setup: Round Setup header moved to the very top of the screen',
+  'v18.097 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v18.096 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v18.095 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v18.094 — Fixed: update notes modal now scrollable on iOS',
+  'v18.093 — Snake tab: current holder hidden after round is complete',
+  'v18.092 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v18.091 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v18.090 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v18.099 — Version number now shown beside Help button on every screen',
+  'v18.098 — Snake: resets every 3 holes; participant selection added to setup',
+  'v18.097 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v18.096 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v18.095 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v18.094 — New Round blocked if on hole 18 with missing scores',
+  'v18.093 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v18.092 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v18.091 — Fixed: ℹ️ update info button now appears correctly',
+  'v18.090 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -18252,7 +18251,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v18.07';
+const CACHE='pards-v18.09';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
