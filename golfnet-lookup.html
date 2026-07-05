@@ -36,6 +36,7 @@
   .btn:disabled { opacity:.5;cursor:not-allowed; }
   .btn-p { background:var(--green-mid);color:#fff; } .btn-p:hover:not(:disabled){background:var(--green-light);}
   .btn-s { background:var(--gray-1);color:var(--text);border:1.5px solid var(--gray-2); } .btn-s:hover:not(:disabled){background:var(--gray-2);}
+  .btn-gold { background:#c9a84c; color:#1a3a2a; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; margin:4px; }
   .btn-g { background:var(--gold);color:var(--green-dark);font-size:13px; } .btn-g:hover:not(:disabled){background:var(--gold-light);}
   .status { border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:10px 14px;font-size:13px;color:var(--text-muted);margin-bottom:16px;display:none;background:#f7f3ec; }
   .status.err { border-left-color:var(--red);color:var(--red); }
@@ -297,9 +298,9 @@ function renderCols(id1,c1,id2,c2){
   const eb=document.getElementById('exportBar');
   eb.style.display='flex';
   eb.innerHTML=`
-    <button class="btn btn-g" onclick="copyJSON(1)">Copy #${id1} JSON</button>
+    <button class="btn btn-g" onclick="copyJSON(1)">Copy #${id1} JSON</button><button class="btn btn-gold" onclick="downloadJSON(1)">⬇️ Download #${id1} JSON</button>
     <button class="btn btn-g" onclick="copyPards(1)">Copy #${id1} Pards Format</button>
-    ${id2?`<button class="btn btn-g" onclick="copyJSON(2)">Copy #${id2} JSON</button><button class="btn btn-g" onclick="copyPards(2)">Copy #${id2} Pards Format</button>`:''}
+    ${id2?`<button class="btn btn-g" onclick="copyJSON(2)">Copy #${id2} JSON</button><button class="btn btn-gold" onclick="downloadJSON(2)">⬇️ Download #${id2} JSON</button><button class="btn btn-g" onclick="copyPards(2)">Copy #${id2} Pards Format</button>`:''}
     <span>Paste Pards Format directly into course data</span>`;
 
   el.scrollIntoView({behavior:'smooth',block:'start'});
@@ -422,6 +423,16 @@ function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 function copyJSON(slot){
   const d=courseData[slot];if(!d)return;
   navigator.clipboard.writeText(JSON.stringify(d.course,null,2)).then(()=>showStatus('✓ Raw JSON for ID '+d.id+' copied.'));
+}
+
+function downloadJSON(slot){
+  const d=courseData[slot];if(!d)return;
+  const blob=new Blob([JSON.stringify(d.course,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='golfnet-'+d.id+'.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 function copyPards(slot){
