@@ -114,10 +114,9 @@
   <!-- Keyword search -->
   <div class="panel">
     <h2>Search by Keyword + Location</h2>
-    <div class="grid4">
+    <div class="grid3">
       <div class="field"><label>Keyword</label><input id="keywords" value="Derrick"></div>
-      <div class="field"><label>Latitude</label><input id="latitude" value="53.46752451538905"></div>
-      <div class="field"><label>Longitude</label><input id="longitude" value="-113.54290708863726"></div>
+      <div class="field"><label>Coordinates — paste from Google Maps (any format)</label><input id="coords" placeholder="53.46752, -113.54290  or  (33.5202, -82.0201)" value="53.46752451538905, -113.54290708863726"></div>
       <button class="btn btn-p" id="btnSearch" onclick="searchCourses()">Search</button>
     </div>
   </div>
@@ -151,7 +150,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(c.username) document.getElementById('gcUser').value=c.username;
   if(c.password) document.getElementById('gcPass').value=c.password;
   if(c.worker&&c.username&&c.password) credNote('✓ Credentials loaded — ready to search.',true);
-  ['keywords','id1','id2'].forEach(id=>{
+  ['keywords','coords','id1','id2'].forEach(id=>{
     document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')(id==='keywords'?searchCourses:directLookup)()});
   });
 });
@@ -189,11 +188,20 @@ async function getToken(){
 function showStatus(msg,err=false){const el=document.getElementById('statusBar');el.innerHTML=msg;el.className='status on'+(err?' err':'');}
 function hideStatus(){document.getElementById('statusBar').className='status';}
 
+// ── Parse coordinates — handles multiple Google Maps formats ──
+function parseCoords(raw) {
+  // Strip parens, whitespace, and common wrappers
+  const clean = raw.replace(/[()°]/g, '').trim();
+  // Match two decimal numbers (with optional sign)
+  const match = clean.match(/(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)/);
+  if (match) return { lat: match[1], lon: match[2] };
+  return { lat: '53.46752', lon: '-113.5429' }; // Edmonton fallback
+}
+
 // ── Keyword search ──
 async function searchCourses(){
   const kw=document.getElementById('keywords').value.trim();
-  const lat=document.getElementById('latitude').value.trim();
-  const lon=document.getElementById('longitude').value.trim();
+  const {lat, lon} = parseCoords(document.getElementById('coords').value);
   if(!kw){showStatus('Enter a keyword.',true);return;}
   const btn=document.getElementById('btnSearch');
   btn.disabled=true;btn.innerHTML='<span class="spin"></span>Searching…';
