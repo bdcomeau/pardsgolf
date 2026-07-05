@@ -116,7 +116,7 @@
     <h2>Search by Keyword + Location</h2>
     <div class="grid3">
       <div class="field"><label>Keyword</label><input id="keywords" value="Derrick"></div>
-      <div class="field"><label>Coordinates — paste from Google Maps (any format)</label><input id="coords" placeholder="53.46752, -113.54290  or  (33.5202, -82.0201)" value="53.46752451538905, -113.54290708863726"></div>
+      <div class="field"><label>Coordinates — paste from Google Maps (any format)</label><div style="display:flex;gap:6px;align-items:center"><input id="coords" placeholder="53.46752, -113.54290  or  (33.5202, -82.0201)" value="53.46752451538905, -113.54290708863726" style="flex:1"><button class="btn btn-s" style="height:40px;padding:0 12px;font-size:12px;flex-shrink:0" onclick="document.getElementById('coords').value='';document.getElementById('coords').focus()">Clear</button></div></div>
       <button class="btn btn-p" id="btnSearch" onclick="searchCourses()">Search</button>
     </div>
   </div>
