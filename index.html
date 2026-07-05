@@ -1147,14 +1147,18 @@ const PARDS_COURSES = [
     location: 'Scottsdale, AZ',
     par: [4,4,3,4,3,4,5,4,5,4,4,4,3,5,4,5,3,4],
     si:  [1,5,17,7,13,11,15,9,3, 12,10,18,16,6,4,8,14,2],    tees: [
-      { name:"Black", rating:73.1, slope:127, par:72, yards:7017, frontRating:36.7, backRating:36.4, frontSlope:128, backSlope:126,
-        pars:[4,4,3,4,3,4,5,4,5,4,4,4,3,5,4,5,3,4], yards:[440,418,188,423,200,412,532,431,495,395,410,333,187,521,468,547,190,427], handicaps:[1,3,9,4,7,6,8,5,2,6,5,9,8,3,2,4,7,1] },
-      { name:"Copper", rating:69.7, slope:123, par:72, yards:6340, frontRating:34.9, backRating:34.8, frontSlope:125, backSlope:121,
-        pars:[4,4,3,4,3,4,5,4,5,4,4,4,3,5,4,5,3,4], yards:[405,394,136,376,165,379,485,365,474,353,375,293,154,498,423,497,158,410], handicaps:[1,3,9,4,7,6,8,5,2,6,5,9,8,3,2,4,7,1] },
-      { name:"Indigo", rating:67.2, slope:113, par:72, yards:5851, frontRating:33.7, backRating:33.5, frontSlope:113, backSlope:113,
-        pars:[4,4,3,4,3,4,5,4,5,4,4,4,3,5,4,5,3,4], yards:[377,364,119,357,139,347,456,331,453,319,349,274,132,470,369,470,142,383], handicaps:[1,3,9,4,7,6,8,5,2,6,5,9,8,3,2,4,7,1] },
-      { name:"Jade", rating:65.6, slope:109, par:72, yards:5432, frontRating:33.1, backRating:32.5, frontSlope:110, backSlope:108,
-        pars:[4,4,3,4,3,4,5,4,5,4,4,4,3,5,4,5,3,4], yards:[352,303,105,357,139,347,432,288,453,319,307,274,110,470,338,419,142,277], handicaps:[1,3,9,4,7,6,8,5,2,6,5,9,8,3,2,4,7,1] },
+      { name:"Cinder",    rating:73.1, slope:127, par:72, yards:7017, frontRating:36.4, backRating:36.7, frontSlope:126, backSlope:128,
+        pars:[4,4,4,3,5,4,5,3,4,4,4,3,4,3,4,5,4,5], yards:[395,410,333,187,521,468,547,190,427,440,418,188,423,200,412,532,431,495], handicaps:[12,10,18,16,6,4,8,14,2,1,5,17,7,13,11,15,9,3] },
+      { name:"Copper",    rating:69.7, slope:123, par:72, yards:6340, frontRating:34.8, backRating:34.9, frontSlope:125, backSlope:121,
+        pars:[4,4,4,3,5,4,5,3,4,4,4,3,4,3,4,5,4,5], yards:[353,375,293,154,498,423,497,158,410,405,394,136,376,165,379,485,365,474], handicaps:[12,10,18,16,6,4,8,14,2,1,5,17,7,13,11,15,9,3] },
+      { name:"Indigo",    rating:67.2, slope:113, par:72, yards:5851, frontRating:33.5, backRating:33.7, frontSlope:113, backSlope:113,
+        pars:[4,4,4,3,5,4,5,3,4,4,4,3,4,3,4,5,4,5], yards:[319,349,274,132,470,369,470,142,383,377,364,119,357,139,347,456,331,453], handicaps:[12,10,18,16,6,4,8,14,2,1,5,17,7,13,11,15,9,3] },
+      { name:"Turquoise", rating:65.6, slope:109, par:72, yards:5432, frontRating:32.5, backRating:33.1, frontSlope:108, backSlope:110,
+        pars:[4,4,4,3,5,4,5,3,4,4,4,3,4,3,4,5,4,5], yards:[319,307,274,110,470,338,419,142,277,352,303,105,357,139,347,432,288,453], handicaps:[12,10,18,16,6,4,8,14,2,1,5,17,7,13,11,15,9,3] },
+      { name:"Lava",      rating:63.7, slope:105, par:72, yards:5017, frontRating:31.6, backRating:32.1, frontSlope:104, backSlope:105,
+        pars:[4,4,4,3,5,4,5,3,4,4,4,3,4,3,4,5,4,5], yards:[299,307,211,110,405,338,419,99,277,352,303,105,289,87,298,432,288,398], handicaps:[12,10,18,16,6,4,8,14,2,1,5,17,7,13,11,15,9,3] },
+      { name:"Junior",    rating:57.0, slope:91,  par:72, yards:5851, frontRating:28.3, backRating:28.7, frontSlope:94,  backSlope:87,
+        pars:[4,4,4,3,5,4,5,3,4,4,4,3,4,3,4,5,4,5], yards:[319,349,274,132,470,369,470,142,383,377,364,119,357,139,347,456,331,453], handicaps:[12,10,18,16,6,4,8,14,2,1,5,17,7,13,11,15,9,3] }
     ],
   },
   {
@@ -1729,19 +1733,27 @@ const PARDS_COURSES = [
     logoDark: true,
     name: 'PGA West — TPC Stadium Course',
     location: 'La Quinta, CA',
-    par: [4,4,3,4,3,4,4,5,4,4,3,4,4,4,5,4,3,5],
-    si:  [7,5,15,1,9,17,13,11,3,2,14,12,16,6,8,10,18,4],
+    par: [4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4],
+    si:  [9,15,3,17,7,5,11,13,1,6,8,18,10,12,4,16,14,2],
     tees: [
-      { name:"Players",    rating:70.5, slope:128, par:71, yards:6518, frontRating:35.7, backRating:34.8, frontSlope:123, backSlope:132,
-        pars:[4,4,3,4,3,4,4,5,4,4,3,4,4,4,5,4,3,5], yards:[420,439,169,430,223,352,390,495,435,420,177,365,297,398,491,377,130,510], handicaps:[7,5,15,1,9,17,13,11,3,2,14,12,16,6,8,10,18,4] },
-      { name:"Member",     rating:69.4, slope:125, par:71, yards:6278, frontRating:35.0, backRating:34.4, frontSlope:121, backSlope:128,
-        pars:[4,4,3,4,3,4,4,5,4,4,3,4,4,4,5,4,3,5], yards:[399,425,169,405,184,352,390,495,402,370,177,365,297,374,491,343,130,510], handicaps:[7,5,15,1,9,17,13,11,3,2,14,12,16,6,8,10,18,4] },
-      { name:"Phoenician", rating:68.0, slope:122, par:71, yards:6003, frontRating:34.5, backRating:33.5, frontSlope:118, backSlope:125,
-        pars:[4,4,3,4,3,4,4,5,4,4,3,4,4,4,5,4,3,5], yards:[399,425,149,405,184,300,350,470,402,370,156,348,285,374,459,343,109,475], handicaps:[7,5,15,1,9,17,13,11,3,2,14,12,16,6,8,10,18,4] },
-      { name:"Canyon",     rating:64.7, slope:112, par:71, yards:5350, frontRating:32.6, backRating:32.1, frontSlope:111, backSlope:112,
-        pars:[4,4,3,4,3,4,4,5,4,4,3,4,4,4,5,4,3,5], yards:[371,383,105,321,174,276,295,398,389,308,132,324,249,338,453,303,102,429], handicaps:[7,5,15,1,9,17,13,11,3,2,14,12,16,6,8,10,18,4] },
-      { name:"Jokake",     rating:61.0, slope:100, par:71, yards:4594, frontRating:30.6, backRating:30.4, frontSlope:103, backSlope:97,
-        pars:[4,4,3,4,3,4,4,5,4,4,3,4,4,4,5,4,3,5], yards:[348,310,124,287,122,231,267,339,341,250,101,278,197,302,410,252,69,366], handicaps:[7,5,15,1,9,17,13,11,3,2,14,12,16,6,8,10,18,4] }
+      { name:"Black",      rating:75.8, slope:148, par:72, yards:7266, frontRating:37.7, backRating:38.1, frontSlope:147, backSlope:149,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[445,371,471,192,535,255,346,559,452,416,617,363,214,389,468,566,168,439], handicaps:[9,15,3,17,7,5,11,13,1,6,8,18,10,12,4,16,14,2] },
+      { name:"Blue",       rating:73.1, slope:140, par:72, yards:6739, frontRating:36.3, backRating:36.8, frontSlope:138, backSlope:142,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[382,348,448,170,514,223,309,526,430,380,591,347,195,372,436,517,146,405], handicaps:[9,15,3,17,7,5,11,13,1,6,8,18,10,12,4,16,14,2] },
+      { name:"Blue/White", rating:71.2, slope:136, par:72, yards:5321, frontRating:35.5, backRating:35.7, frontSlope:133, backSlope:139,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[334,290,356,111,460,133,240,471,313,300,482,287,105,328,367,328,98,318], handicaps:[9,15,3,17,7,5,11,13,1,6,8,18,10,12,4,16,14,2] },
+      { name:"White",      rating:70.2, slope:133, par:72, yards:6166, frontRating:35.0, backRating:35.2, frontSlope:130, backSlope:136,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[358,328,383,151,496,187,295,486,382,351,530,308,167,348,404,474,131,387], handicaps:[9,15,3,17,7,5,11,13,1,6,8,18,10,12,4,16,14,2] },
+      { name:"White/Gold", rating:69.0, slope:129, par:72, yards:5838, frontRating:34.6, backRating:34.4, frontSlope:127, backSlope:131,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[334,328,356,133,496,146,295,486,362,327,482,308,167,328,367,474,131,318], handicaps:[9,15,1,17,5,7,11,13,3,6,8,18,10,12,2,16,14,4] },
+      { name:"Gold",       rating:67.9, slope:125, par:72, yards:5700, frontRating:34.0, backRating:33.9, frontSlope:122, backSlope:128,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[334,320,356,133,460,146,281,471,362,327,482,287,153,328,367,463,112,318], handicaps:[9,15,3,17,7,5,11,13,1,6,8,18,10,12,4,16,14,2] },
+      { name:"Gold/Red",   rating:66.4, slope:120, par:72, yards:5371, frontRating:33.3, backRating:33.1, frontSlope:117, backSlope:122,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[334,320,356,133,460,146,281,471,362,294,442,249,105,293,338,428,83,276], handicaps:[7,5,3,17,9,15,13,11,1,2,8,14,18,12,6,4,16,10] },
+      { name:"Red",        rating:65.1, slope:115, par:72, yards:5092, frontRating:32.8, backRating:32.3, frontSlope:114, backSlope:116,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[304,290,327,111,437,133,240,429,313,294,442,249,105,293,338,428,83,276], handicaps:[9,15,3,17,7,5,11,13,1,6,8,18,10,12,4,16,14,2] },
+      { name:"Silver",     rating:60.9, slope:106, par:72, yards:4084, frontRating:30.6, backRating:30.3, frontSlope:106, backSlope:106,
+        pars:[4,4,4,3,5,3,4,5,4,4,5,4,3,4,4,5,3,4], yards:[239,230,262,106,335,112,190,358,231,237,350,220,94,209,270,343,66,232], handicaps:[9,15,1,17,5,7,11,13,3,6,8,18,10,12,2,16,14,4] }
     ],
   },
     {
@@ -2820,6 +2832,7 @@ const PARDS_COURSES = [
     si:  [7,5,15,1,9,17,13,11,3, 2,14,12,16,6,8,10,18,4],
     tees: [
       { name:'Players',    slope:128, rating:70.5, yards:[420,439,169,430,223,352,390,495,435, 420,177,365,297,398,491,377,130,510] },
+      { name:'Member',     slope:125, rating:69.4, yards:[399,425,169,405,184,352,390,495,402, 370,177,365,297,374,491,343,130,510] },
       { name:'Phoenician', slope:122, rating:68.0, yards:[399,425,149,405,184,300,350,470,402, 370,156,348,285,374,459,343,109,475] },
       { name:'Canyon',     slope:112, rating:64.7, yards:[371,383,124,321,174,276,295,398,389, 308,132,324,249,338,453,303,102,429] },
       { name:'Jokake',     slope:100, rating:61.0, yards:[348,310,105,287,122,231,267,339,341, 250,101,278,197,302,410,252,69,366] },
@@ -6819,7 +6832,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v17.66</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v17.69</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -7532,7 +7545,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v17.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v17.69</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -8404,7 +8417,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v17.66</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v17.69</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -8977,7 +8990,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v17.66</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v17.69</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -11349,7 +11362,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v17.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v17.69</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -12030,7 +12043,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v17.66</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v17.69</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -12303,7 +12316,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v17.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v17.69</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -12443,7 +12456,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v17.66');
+  lines.push('— Pards Golf · v17.69');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -13168,7 +13181,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v17.66 · ${dateStr}</div>
+<div class="foot">Pards Golf · v17.69 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -16624,7 +16637,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v17.66. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v17.69. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -17112,7 +17125,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v17.66';
+const CURRENT_VERSION = 'pards-v17.69';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -17336,47 +17349,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v17.662 — Games menu: ✕ close button added to sheet header',
-  'v17.661 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v17.660 — Snake tab: 3-putt log now sorted by hole number',
-  'v17.669 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v17.668 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v17.667 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v17.666 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v17.665 — Score entry: hole navigation arrows larger and more visible',
-  'v17.664 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v17.663 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v17.662 — Games tab icon changed to 💵',
-  'v17.661 — Birdie Juice tab restored to bottom nav',
-  'v17.660 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v17.669 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v17.668 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v17.667 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v17.666 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v17.665 — Setup: Snake participant names now sync live with player name changes',
-  'v17.664 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v17.663 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v17.662 — Fixed: player entry section now displays correctly',
-  'v17.669 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v17.668 — Setup: Round Setup header moved to the very top of the screen',
-  'v17.667 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v17.666 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v17.665 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v17.664 — Fixed: update notes modal now scrollable on iOS',
-  'v17.663 — Snake tab: current holder hidden after round is complete',
-  'v17.662 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v17.661 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v17.660 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v17.669 — Version number now shown beside Help button on every screen',
-  'v17.668 — Snake: resets every 3 holes; participant selection added to setup',
-  'v17.667 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v17.666 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v17.665 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v17.664 — New Round blocked if on hole 18 with missing scores',
-  'v17.663 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v17.662 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v17.661 — Fixed: ℹ️ update info button now appears correctly',
-  'v17.660 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v17.692 — Games menu: ✕ close button added to sheet header',
+  'v17.691 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v17.690 — Snake tab: 3-putt log now sorted by hole number',
+  'v17.699 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v17.698 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v17.697 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v17.696 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v17.695 — Score entry: hole navigation arrows larger and more visible',
+  'v17.694 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v17.693 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v17.692 — Games tab icon changed to 💵',
+  'v17.691 — Birdie Juice tab restored to bottom nav',
+  'v17.690 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v17.699 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v17.698 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v17.697 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v17.696 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v17.695 — Setup: Snake participant names now sync live with player name changes',
+  'v17.694 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v17.693 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v17.692 — Fixed: player entry section now displays correctly',
+  'v17.699 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v17.698 — Setup: Round Setup header moved to the very top of the screen',
+  'v17.697 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v17.696 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v17.695 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v17.694 — Fixed: update notes modal now scrollable on iOS',
+  'v17.693 — Snake tab: current holder hidden after round is complete',
+  'v17.692 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v17.691 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v17.690 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v17.699 — Version number now shown beside Help button on every screen',
+  'v17.698 — Snake: resets every 3 holes; participant selection added to setup',
+  'v17.697 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v17.696 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v17.695 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v17.694 — New Round blocked if on hole 18 with missing scores',
+  'v17.693 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v17.692 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v17.691 — Fixed: ℹ️ update info button now appears correctly',
+  'v17.690 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -17566,7 +17579,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v17.66';
+const CACHE='pards-v17.69';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
