@@ -8331,7 +8331,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v20.32</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v20.33</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -9173,7 +9173,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v20.32</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v20.33</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -10619,7 +10619,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v20.32</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v20.33</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -11657,6 +11657,7 @@ function viewAndShareResults(){
   localStorage.removeItem('pards_G');
   G.roundDate = null;
   G.roundEnd = null;
+  G.scores = [];
   hideRoundBar();
   showS('history');
   setTimeout(function(){
@@ -13142,7 +13143,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v20.32</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v20.33</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -13916,7 +13917,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v20.32</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v20.33</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -14192,7 +14193,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v20.32</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v20.33</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -14332,7 +14333,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v20.32');
+  lines.push('— Pards Golf · v20.33');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -15060,7 +15061,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v20.32 · ${dateStr}</div>
+<div class="foot">Pards Golf · v20.33 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -18496,7 +18497,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v20.32. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v20.33. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -18982,7 +18983,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v20.32';
+const CURRENT_VERSION = 'pards-v20.33';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -19174,20 +19175,20 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v20.32 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v20.32 — Manage Favorites: COPY label added above the copy icon',
-  'v20.32 — Manage Favorites: copy button now dark background with white icon for better visibility',
-  'v20.32 — Manage Favorites: Idx label changed to Index',
-  'v20.32 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
-  'v20.32 — Setup: Snake game description updated with correct wording',
-  'v20.32 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
-  'v20.32 — Setup: Load My Favorites button colour matches Manage Favorites green',
-  'v20.32 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v20.32 — UI: tab references updated to reflect Games hub navigation',
-  'v20.32 — Score wheel: 2 cells each side, centred on typical score',
-  'v20.32 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v20.32 — Score wheel: left/right cells now relative to typical score, not par',
-  'v20.32 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v20.33 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v20.33 — Manage Favorites: COPY label added above the copy icon',
+  'v20.33 — Manage Favorites: copy button now dark background with white icon for better visibility',
+  'v20.33 — Manage Favorites: Idx label changed to Index',
+  'v20.33 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
+  'v20.33 — Setup: Snake game description updated with correct wording',
+  'v20.33 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
+  'v20.33 — Setup: Load My Favorites button colour matches Manage Favorites green',
+  'v20.33 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
+  'v20.33 — UI: tab references updated to reflect Games hub navigation',
+  'v20.33 — Score wheel: 2 cells each side, centred on typical score',
+  'v20.33 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v20.33 — Score wheel: left/right cells now relative to typical score, not par',
+  'v20.33 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -19206,47 +19207,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v20.32 — Games menu: ✕ close button added to sheet header',
-  'v20.32 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v20.32 — Snake tab: 3-putt log now sorted by hole number',
-  'v20.32 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v20.32 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v20.32 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v20.32 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v20.32 — Score entry: hole navigation arrows larger and more visible',
-  'v20.32 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v20.32 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v20.32 — Games tab icon changed to 💵',
-  'v20.32 — Birdie Juice tab restored to bottom nav',
-  'v20.32 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v20.32 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v20.32 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v20.32 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v20.32 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v20.32 — Setup: Snake participant names now sync live with player name changes',
-  'v20.32 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v20.32 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v20.32 — Fixed: player entry section now displays correctly',
-  'v20.32 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v20.32 — Setup: Round Setup header moved to the very top of the screen',
-  'v20.32 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v20.32 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v20.32 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v20.32 — Fixed: update notes modal now scrollable on iOS',
-  'v20.32 — Snake tab: current holder hidden after round is complete',
-  'v20.32 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v20.32 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v20.32 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v20.32 — Version number now shown beside Help button on every screen',
-  'v20.32 — Snake: resets every 3 holes; participant selection added to setup',
-  'v20.32 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v20.32 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v20.32 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v20.32 — New Round blocked if on hole 18 with missing scores',
-  'v20.32 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v20.32 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v20.32 — Fixed: ℹ️ update info button now appears correctly',
-  'v20.32 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v20.33 — Games menu: ✕ close button added to sheet header',
+  'v20.33 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v20.33 — Snake tab: 3-putt log now sorted by hole number',
+  'v20.33 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v20.33 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v20.33 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v20.33 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v20.33 — Score entry: hole navigation arrows larger and more visible',
+  'v20.33 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v20.33 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v20.33 — Games tab icon changed to 💵',
+  'v20.33 — Birdie Juice tab restored to bottom nav',
+  'v20.33 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v20.33 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v20.33 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v20.33 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v20.33 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v20.33 — Setup: Snake participant names now sync live with player name changes',
+  'v20.33 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v20.33 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v20.33 — Fixed: player entry section now displays correctly',
+  'v20.33 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v20.33 — Setup: Round Setup header moved to the very top of the screen',
+  'v20.33 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v20.33 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v20.33 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v20.33 — Fixed: update notes modal now scrollable on iOS',
+  'v20.33 — Snake tab: current holder hidden after round is complete',
+  'v20.33 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v20.33 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v20.33 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v20.33 — Version number now shown beside Help button on every screen',
+  'v20.33 — Snake: resets every 3 holes; participant selection added to setup',
+  'v20.33 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v20.33 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v20.33 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v20.33 — New Round blocked if on hole 18 with missing scores',
+  'v20.33 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v20.33 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v20.33 — Fixed: ℹ️ update info button now appears correctly',
+  'v20.33 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -19469,7 +19470,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v20.32';
+const CACHE='pards-v20.33';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
