@@ -138,8 +138,8 @@ input::placeholder{color:#bbb}
 .bet-inp{display:flex;align-items:center;gap:6px}
 .bet-inp span{font-size:16px;color:var(--inkl)}
 .chip{background:var(--gp);color:var(--gd);border-radius:8px;padding:8px 12px;font-size:13px;margin-top:8px}
-.errmsg{color:var(--red);font-size:13px;padding:8px 0;text-align:center}
-.errmsg:empty{padding:0}
+.errmsg{background:#c0392b;color:#fff;font-size:13px;font-weight:700;padding:10px 14px;text-align:center;border-radius:8px;margin:4px 0;line-height:1.4}
+.errmsg:empty{display:none;padding:0;background:none;margin:0}
 
 .cnt-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:4px}
 .cnt-btn{width:36px;height:36px;background:var(--gp);border:none;border-radius:50%;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gd);font-weight:700;-webkit-tap-highlight-color:transparent}
@@ -768,7 +768,7 @@ input::placeholder{color:#bbb}
   <div id="bettingSections">
 
   <div id="snakeSection">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px 8px 0 0;padding:10px 14px;margin:0;cursor:pointer"><span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#9b59b6;margin:0;padding:0;background:none;font-size:13px">🐍 Snake 3-Putt Game</span><span id="activeLabelSnake" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#9b59b6;font-size:12px">▶</span></div>
+  <div  style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px 8px 0 0;padding:10px 14px;margin:0"><span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#9b59b6;margin:0;padding:0;background:none;font-size:13px">🐍 Snake 3-Putt Game</span><span id="activeLabelSnake" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#9b59b6;font-size:12px;display:none"></span></div>
   <div style="display:none;margin-bottom:8px">
   <div class="card" style="background:#ede8f5;border:1.5px solid #6c3483;border-top:none;border-radius:0 0 8px 8px">
     <div style="font-size:12px;color:#3a2a4a;margin:0 0 10px">Whoever holds the 3-putt snake after your 3rd, 6th, 9th, 12th, 15th and 18th holes pays each other participant the selected wager. The Snake resets after each settlement hole.</div>
@@ -795,8 +795,8 @@ input::placeholder{color:#bbb}
   </div><!-- /snakeSection -->
 
   <div id="teamSection">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">2v2 Nassau Games (High-Low)</span><span id="activeLabel2v2" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+  <div  style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px">
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">2v2 Nassau Games (High-Low)</span><span id="activeLabel2v2" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px;display:none"></span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="teamGamesCard" style="background:#e8eef5">
@@ -809,8 +809,8 @@ input::placeholder{color:#bbb}
   </div>
 
     <div id="nassau1v1Section">
-<div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">1v1 Nassau Games</span><span id="activeLabel1v1" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+<div  style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px">
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">1v1 Nassau Games</span><span id="activeLabel1v1" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px;display:none"></span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="singlesCard" style="background:#e8eef5">
@@ -823,8 +823,8 @@ input::placeholder{color:#bbb}
   </div><!-- /nassau1v1Section -->
 
   <div id="sixPointSection">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎯 6-Point Game</span><span id="activeLabel6pt" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+  <div  style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px">
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎯 6-Point Game</span><span id="activeLabel6pt" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px;display:none"></span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="sixPointCard" style="background:#e8eef5">
@@ -839,8 +839,8 @@ input::placeholder{color:#bbb}
 </div>
 
   <div id="stablefordSetupWrap">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🏆 Stableford</span><span id="activeLabelSF" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+  <div  style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px">
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🏆 Stableford</span><span id="activeLabelSF" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px;display:none"></span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="stablefordSetupCard" style="background:#e8eef5">
@@ -853,8 +853,8 @@ input::placeholder{color:#bbb}
   </div>
 
   <div id="skinsSetupWrap">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">💰 Skins</span><span id="activeLabelSkins" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+  <div  style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px">
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">💰 Skins</span><span id="activeLabelSkins" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px;display:none"></span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="skinsSetupCard" style="background:#e8eef5">
@@ -867,8 +867,8 @@ input::placeholder{color:#bbb}
   </div>
 
   <div id="vegasSetupWrap">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎲 Vegas</span><span id="activeLabelVegas" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
+  <div  style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px">
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎲 Vegas</span><span id="activeLabelVegas" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px;display:none"></span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="vegasSetupCard" style="background:#e8eef5">
@@ -881,8 +881,8 @@ input::placeholder{color:#bbb}
   </div>
 
   <div id="matchCardsSetupWrap">
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1px solid rgba(154,108,201,.4);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#b389d4;margin:0;padding:0;background:none;font-size:13px">⚔️ Match Cards</span><span id="activeLabelMC" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#b389d4;font-size:12px">▶</span>
+  <div  style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1px solid rgba(154,108,201,.4);border-radius:8px;padding:10px 14px;margin:0 0 4px">
+    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#b389d4;margin:0;padding:0;background:none;font-size:13px">⚔️ Match Cards</span><span id="activeLabelMC" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#b389d4;font-size:12px;display:none"></span>
   </div>
   <div style="display:none;margin-bottom:8px">
     <div class="card" id="matchCardsSetupCard" style="background:#efe8f5">
@@ -6362,7 +6362,7 @@ function refreshPlayerTabs(){
 }
 
 var _activeGameTab = 0;
-var _gameTabExpanded = true;
+var _gameTabExpanded = false;
 
 var _GAME_TABS = [
   { label: 'SNAKE',       id: 'snakeSection' },
@@ -6396,14 +6396,14 @@ var _GAME_INFO = [
 
 function _isGameEnabled(i){
   switch(i){
-    case 0: return !!(G.snake&&G.snake.enabled)||(document.getElementById('snakeEnabled')&&document.getElementById('snakeEnabled').checked)||false;
+    case 0: return !!(G.snake&&G.snake.enabled);
     case 1: return !!(G.teamGames&&G.teamGames.length>0&&G.teamGames.some(function(g){return g.bet>0;}));
     case 2: return !!(G.singleGames&&G.singleGames.length>0&&G.singleGames.some(function(g){return g.bet>0;}));
     case 3: return !!(G.sixPointGames&&G.sixPointGames.length>0);
     case 4: return !!(G.stablefordGames&&G.stablefordGames.length>0&&G.stablefordGames[0].players&&G.stablefordGames[0].players.length>0);
     case 5: return !!(G.skinsGames&&G.skinsGames.length>0&&G.skinsGames[0].players&&G.skinsGames[0].players.length>0);
     case 6: return !!(G.vegasGames&&G.vegasGames.length>0);
-    case 7: return !!(G.matchCards&&G.matchCards.enabled)||(document.getElementById('mcEnable')&&document.getElementById('mcEnable').checked)||false;
+    case 7: return !!(G.matchCards&&G.matchCards.enabled);
     default: return false;
   }
 }
@@ -6459,14 +6459,9 @@ function _applyGameTabVisibility(){
     if(i === _activeGameTab && _gameTabExpanded){
       if(meetsMin){
         section.style.display = '';
-        var header = section.querySelector('[onclick*="nextElementSibling"]');
-        if(header){
-          var body = header.nextElementSibling;
-          if(body){
-            body.style.display = 'block';
-            var chev = header.querySelector('.sc');
-            if(chev) chev.textContent = '▼';
-          }
+        // Content div is the second child — force it open
+        if(section.children.length >= 2){
+          section.children[1].style.display = 'block';
         }
       } else {
         section.style.display = 'none';
@@ -6645,8 +6640,10 @@ function showResetConfirm(){
     pop.style.display='block';
   }
   const se=document.getElementById('setupErr'); if(se) se.textContent='';
+  _activeGameTab = 0;
+  _gameTabExpanded = false;
+  renderGameTabs();
 }
-
 function hideResetConfirm(){
   const pop=document.getElementById('resetConfirmPop');
   if(pop) pop.style.display='none';
@@ -6891,6 +6888,16 @@ function startRound(){
     const vegasActive = (G.vegasGames||[]).some(g=>g&&Array.isArray(g.teamA)&&g.teamA.length===2&&Array.isArray(g.teamB)&&g.teamB.length===2);
     if(G.n>1&&G.teamGames.length===0&&G.singleGames.length===0&&G.sixPointGames.length===0&&!snakeChecked&&!stablefordActive&&!skinsActive&&!vegasActive){err.textContent='Add at least one game (Nassau, 6-Point, Snake, Stableford, Skins, or Vegas) — or switch on "Score Keep Only".';return;}
     if(G.teamGames.length>0&&G.n<4){err.textContent='Need 4 players for 2v2 games.';return;}
+    if(stablefordActive){
+      const sfPlayers=(G.stablefordGames[0]&&G.stablefordGames[0].players)||[];
+      if(sfPlayers.length>G.n){err.textContent='Stableford has more players selected than your current player count. Remove players from Stableford or increase player count.';return;}
+      if(sfPlayers.length<2){err.textContent='Stableford needs at least 2 players selected.';return;}
+    }
+    if(skinsActive){
+      const skPlayers=(G.skinsGames[0]&&G.skinsGames[0].players)||[];
+      if(skPlayers.length>G.n){err.textContent='Skins has more players selected than your current player count. Remove players from Skins or increase player count.';return;}
+      if(skPlayers.length<2){err.textContent='Skins needs at least 2 players selected.';return;}
+    }
   }
 
   // Strokes are calculated per-matchup, not globally.
@@ -7567,6 +7574,14 @@ function renderStablefordOptions(){
   if(G.n < 2){ el.innerHTML = '<div style="font-size:13px;color:var(--red);padding:4px 0">Need 2+ players for Stableford.</div>'; return; }
   const nm = names();
   // Show each player as a toggle button
+  // Auto-select all players if none selected yet
+  if(!G.stablefordGames.length || !G.stablefordGames[0].players.length){
+    if(!G.stablefordGames.length) G.stablefordGames.push({players:[], points:{...STABLEFORD_DEFAULTS}, betPerPoint:1});
+    for(var _spi=0; _spi<G.n; _spi++){
+      if(!G.stablefordGames[0].players.includes(_spi)) G.stablefordGames[0].players.push(_spi);
+    }
+    saveG();
+  }
   const active = (G.stablefordGames[0] && G.stablefordGames[0].players) || [];
   let h = '<div style="font-size:11px;color:#888;margin-bottom:6px">Select players to include:</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">';
   for(let pi = 0; pi < G.n; pi++){
@@ -7590,6 +7605,14 @@ function renderSkinsOptions(){
   if(!el) return;
   if(G.n < 2){ el.innerHTML = '<div style="font-size:13px;color:var(--red);padding:4px 0">Need 2+ players for Skins.</div>'; return; }
   const nm = names();
+  // Auto-select all players if none selected yet
+  if(!G.skinsGames.length || !G.skinsGames[0].players.length){
+    if(!G.skinsGames.length) G.skinsGames.push({players:[], perSkin:5, mode:'net', carry:true, endgame:'void'});
+    for(var _skpi=0; _skpi<G.n; _skpi++){
+      if(!G.skinsGames[0].players.includes(_skpi)) G.skinsGames[0].players.push(_skpi);
+    }
+    saveG();
+  }
   const active = (G.skinsGames[0] && G.skinsGames[0].players) || [];
   let h = '<div style="font-size:11px;color:#888;margin-bottom:6px">Select players to include:</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">';
   for(let pi = 0; pi < G.n; pi++){
@@ -11985,6 +12008,8 @@ function confirmNewRound(){
     G.players=[];
   }
   renderPlayers();
+  _activeGameTab = 0;
+  _gameTabExpanded = false;
   renderAllPairOptions();
   renderSinglesOptions();
   renderSnakeSetupOptions();
@@ -19136,8 +19161,8 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v20.13 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v20.13 — Manage Favorites: COPY label added above the copy icon',
+  'v20.21 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v20.21 — Manage Favorites: COPY label added above the copy icon',
   'v20.6 — Manage Favorites: copy button now dark background with white icon for better visibility',
   'v20.5 — Manage Favorites: Idx label changed to Index',
   'v20.4 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
@@ -19170,7 +19195,7 @@ const RELEASE_NOTES = [
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
   'v20.22 — Games menu: ✕ close button added to sheet header',
   'v20.21 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v20.20 — Snake tab: 3-putt log now sorted by hole number',
+  'v20.21 — Snake tab: 3-putt log now sorted by hole number',
   'v20.29 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
   'v20.28 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
   'v20.27 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
@@ -19180,7 +19205,7 @@ const RELEASE_NOTES = [
   'v20.23 — Snake tab: current holder now shows which hole they 3-putted on',
   'v20.22 — Games tab icon changed to 💵',
   'v20.21 — Birdie Juice tab restored to bottom nav',
-  'v20.20 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v20.21 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
   'v20.29 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
   'v20.28 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
   'v20.27 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
@@ -19198,7 +19223,7 @@ const RELEASE_NOTES = [
   'v20.23 — Snake tab: current holder hidden after round is complete',
   'v20.22 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
   'v20.21 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v20.20 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v20.21 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
   'v20.29 — Version number now shown beside Help button on every screen',
   'v20.28 — Snake: resets every 3 holes; participant selection added to setup',
   'v20.27 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
@@ -19208,7 +19233,7 @@ const RELEASE_NOTES = [
   'v20.23 — New Round dialog is now context-aware: completed rounds show a green confirmation',
   'v20.22 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
   'v20.21 — Fixed: ℹ️ update info button now appears correctly',
-  'v20.20 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v20.21 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
