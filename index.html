@@ -501,6 +501,60 @@ input::placeholder{color:#bbb}
   position:fixed;left:-9999px;top:0;width:1px;height:1px;border:none;visibility:hidden;
 }
 
+
+/* ── Round-in-progress slim bar ───────────────────────────────────── */
+#roundBar{
+  position:fixed;bottom:0;left:0;right:0;
+  height:calc(52px + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:#1a3a2a;
+  border-top:1.5px solid rgba(201,168,76,.5);
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  padding-left:16px;padding-right:12px;
+  z-index:200;
+  -webkit-tap-highlight-color:transparent;
+}
+#roundBar .rb-hole{
+  font-size:13px;font-weight:800;color:#c9a84c;letter-spacing:.3px;
+}
+#roundBar .rb-sub{
+  font-size:10px;color:rgba(201,168,76,.6);font-weight:600;margin-top:1px;
+}
+#roundBar .rb-more{
+  background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);
+  color:#c9a84c;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:800;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  display:flex;align-items:center;gap:6px;
+}
+#roundMenuOverlay{
+  display:none;position:fixed;inset:0;z-index:300;
+  background:rgba(0,0,0,.5);
+}
+#roundMenuSheet{
+  position:absolute;bottom:0;left:0;right:0;
+  background:#1a2a1a;border-radius:20px 20px 0 0;
+  padding:16px 0 max(32px,calc(16px + env(safe-area-inset-bottom))) 0;
+  transform:translateY(100%);
+  transition:transform .28s cubic-bezier(.32,0,.67,0);
+}
+#roundMenuSheet.open{ transform:translateY(0); }
+.rm-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 20px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.rm-item:active{ background:rgba(255,255,255,.05); }
+.rm-icon{ font-size:22px;width:32px;text-align:center; }
+.rm-label{ font-size:14px;font-weight:700;color:#e8e8e8; }
+.rm-sub{ font-size:11px;color:rgba(255,255,255,.45);margin-top:1px; }
+.rm-return{
+  background:#1a3a2a;border-bottom:2px solid rgba(201,168,76,.4);
+  margin-bottom:4px;
+}
+.rm-return .rm-label{ color:#c9a84c;font-size:15px; }
 </style>
 </head>
 <body>
@@ -968,6 +1022,42 @@ input::placeholder{color:#bbb}
   <div style="display:none" id="ni-sixpoint"></div>
   <div style="display:none" id="ni-snake"></div>
 </div>
+<!-- ══ ROUND IN PROGRESS SLIM BAR ══ -->
+<div id="roundBar">
+  <div onclick="showS('score')" style="flex:1;cursor:pointer">
+    <div class="rb-hole" id="roundBarHole">⛳ Hole 1</div>
+    <div class="rb-sub">Round in Progress — tap to return</div>
+  </div>
+  <button class="rb-more" onclick="openRoundMenu()">☰ Menu</button>
+</div>
+
+<!-- ══ ROUND MENU SHEET ══ -->
+<div id="roundMenuOverlay" onclick="if(event.target===this)closeRoundMenu()">
+  <div id="roundMenuSheet">
+    <div style="width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 16px"></div>
+    <div class="rm-item rm-return" onclick="closeRoundMenu();showS('score')">
+      <div class="rm-icon">⛳</div>
+      <div><div class="rm-label">Return to Scorecard</div><div class="rm-sub">Get back to scoring</div></div>
+    </div>
+    <div class="rm-item" id="rmGames" onclick="closeRoundMenu();showGamesMenu()">
+      <div class="rm-icon">💵</div>
+      <div><div class="rm-label">Games</div><div class="rm-sub">Nassau, 6-Point, Vegas &amp; more</div></div>
+    </div>
+    <div class="rm-item" id="rmBJ" onclick="closeRoundMenu();showS('birdiejuice')">
+      <div class="rm-icon">🐦🥃</div>
+      <div><div class="rm-label">Birdie Juice</div><div class="rm-sub" id="rmBJSub">Track birdies &amp; earnings</div></div>
+    </div>
+    <div class="rm-item" id="rmHistory" onclick="closeRoundMenu();showS('history')">
+      <div class="rm-icon">📜</div>
+      <div><div class="rm-label">Round History</div><div class="rm-sub">View past rounds</div></div>
+    </div>
+    <div class="rm-item" id="rmSavEnd" onclick="closeRoundMenu();newRound()">
+      <div class="rm-icon">🏁</div>
+      <div><div class="rm-label">Save &amp; End Round</div><div class="rm-sub">Complete and save this round</div></div>
+    </div>
+  </div>
+</div>
+
 
 <!-- ══════════ PERSISTENT HELP BAR (all screens) ══════════ -->
 <a class="help-bar" href="pardsgolf-help.html" target="_blank" rel="noopener">❓ Help <span id="helpBarVersion" style="opacity:.5;font-weight:400;font-size:11px;margin-left:6px"></span></a>
@@ -6410,7 +6500,7 @@ function setBirdieJuice(enabled){
 function syncScoreOnlyBar(){
   const bar=document.getElementById('scoreOnlyBar');
   if(!bar) return;
-  const roundActive=document.getElementById('bnav')&&document.getElementById('bnav').style.display!=='none';
+  const roundActive=document.getElementById('roundBar')&&document.getElementById('roundBar').style.display==='flex';
   if(!roundActive){ bar.style.display='none'; return; }
   bar.style.display='flex';
   bar.textContent=G.scorecardOnly ? 'Round in Progress — Scorekeeping LIVE' : '⛳ Round in Progress — Games LIVE';
@@ -6600,7 +6690,7 @@ function startRound(){
     if(G.snake.participants.length<2) G.snake.participants=G.players.map((_,i)=>i); // need at least 2
   }
   saveG();
-  document.getElementById('bnav').style.display='flex';
+  hideRoundBar(); showRoundBar();
   applyScorecardOnlyNav();
   document.getElementById('badge').textContent='HOLE '+G.startHole;{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='none';if(_bd)_bd.style.display='inline-block';}
   showS('score');renderCard();
@@ -7997,7 +8087,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v18.48</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v18.49</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -8737,7 +8827,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.48</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.49</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -9609,9 +9699,10 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.48</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.49</div>';
 
   document.getElementById('sbody').innerHTML=html;
+  updateRoundBar();
 
   // Attach mouse events for desktop swipe
   document.addEventListener('mousemove',swipeMove,{passive:false});
@@ -10182,7 +10273,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.48</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.49</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -11210,7 +11301,7 @@ function showS(name){
   if(name==='birdiejuice') renderBirdieJuice();
   if(name==='history'){
     renderHistory();
-    const bnavVisible = document.getElementById('bnav').style.display!=='none';
+    const bnavVisible = document.getElementById('roundBar')&&document.getElementById('roundBar').style.display==='flex';
     document.getElementById('historyBackHdr').style.display = bnavVisible ? 'none' : 'flex';
   }
   if(name==='backup') renderBackup();
@@ -11456,7 +11547,7 @@ function saveAndEndRound(){
   G.scorecardOnly=false; G.startHole=1; G.hole=0;
   saveG();
   // Go to clean setup screen
-  document.getElementById('bnav').style.display='none';
+  hideRoundBar();
   document.getElementById('badge').textContent='SETUP';{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='flex';if(_bd)_bd.style.display='none';}
   document.getElementById('holeBadge').style.display='none';
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -11490,7 +11581,7 @@ function abandonRound(){
   G.autoAdvance=false;
   G.firstScoreAt=null;
   // Go to clean setup screen
-  document.getElementById('bnav').style.display='none';
+  hideRoundBar();
   document.getElementById('badge').textContent='SETUP';{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='flex';if(_bd)_bd.style.display='none';}
   document.getElementById('holeBadge').style.display='none';
   document.getElementById('intlBadge').style.display='none';
@@ -11537,7 +11628,7 @@ function confirmNewRound(){
   const overlay=document.getElementById('newRoundConfirm');
   if(overlay) overlay.remove();
 
-  document.getElementById('bnav').style.display='none';
+  hideRoundBar();
   document.getElementById('badge').textContent='SETUP';{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='flex';if(_bd)_bd.style.display='none';}
   document.getElementById('holeBadge').style.display='none';
   document.getElementById('intlBadge').style.display='none';
@@ -12687,7 +12778,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.48</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.49</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -13461,7 +13552,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.48</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.49</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -13737,7 +13828,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.48</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.49</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -13877,7 +13968,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v18.48');
+  lines.push('— Pards Golf · v18.49');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -13945,7 +14036,7 @@ function scoreMatchCardsRound(i){
 
   // Go to scorecard — normal active round, no edit-mode buttons
   _renderReadOnly = false;
-  document.getElementById('bnav').style.display='flex';
+  showRoundBar();
   document.getElementById('badge').textContent='HOLE '+(G.hole+1);{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='none';if(_bd)_bd.style.display='inline-block';}
   document.getElementById('holeBadge').style.display='';
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -14027,7 +14118,7 @@ function editHistoryRound(){
   // Switch to scorecard
   document.getElementById('badge').textContent='HOLE '+(G.hole+1);{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='none';if(_bd)_bd.style.display='inline-block';}
   document.getElementById('holeBadge').style.display='';
-  document.getElementById('bnav').style.display='flex';
+  showRoundBar();
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-score').classList.add('active');
   showS('score');
@@ -14120,7 +14211,7 @@ function resumeRound(i){
 
   // Go to scorecard — no edit mode, just a normal active round
   _renderReadOnly = false;
-  document.getElementById('bnav').style.display='flex';
+  showRoundBar();
   document.getElementById('badge').textContent='HOLE '+(G.hole+1);{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='none';if(_bd)_bd.style.display='inline-block';}
   document.getElementById('holeBadge').style.display='';
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -14144,7 +14235,7 @@ function discardHistoryEdit(){
   G.scorecardOnly=false; G.startHole=1; G.hole=0;
   saveG();
   // Show history detail of the original round, then return to setup
-  document.getElementById('bnav').style.display='none';
+  hideRoundBar();
   document.getElementById('badge').textContent='SETUP';{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='flex';if(_bd)_bd.style.display='none';}
   document.getElementById('holeBadge').style.display='none';
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -14213,7 +14304,7 @@ function updateHistoryRound(){
   saveG();
 
   // Go to setup screen
-  document.getElementById('bnav').style.display='none';
+  hideRoundBar();
   document.getElementById('badge').textContent='SETUP';{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='flex';if(_bd)_bd.style.display='none';}
   document.getElementById('holeBadge').style.display='none';
   document.getElementById('intlBadge').style.display='none';
@@ -14606,7 +14697,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v18.48 · ${dateStr}</div>
+<div class="foot">Pards Golf · v18.49 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -18051,7 +18142,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v18.48. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v18.49. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -18539,7 +18630,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v18.48';
+const CURRENT_VERSION = 'pards-v18.49';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -18763,47 +18854,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v18.482 — Games menu: ✕ close button added to sheet header',
-  'v18.481 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v18.480 — Snake tab: 3-putt log now sorted by hole number',
-  'v18.489 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v18.488 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v18.487 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v18.486 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v18.485 — Score entry: hole navigation arrows larger and more visible',
-  'v18.484 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v18.483 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v18.482 — Games tab icon changed to 💵',
-  'v18.481 — Birdie Juice tab restored to bottom nav',
-  'v18.480 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v18.489 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v18.488 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v18.487 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v18.486 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v18.485 — Setup: Snake participant names now sync live with player name changes',
-  'v18.484 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v18.483 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v18.482 — Fixed: player entry section now displays correctly',
-  'v18.489 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v18.488 — Setup: Round Setup header moved to the very top of the screen',
-  'v18.487 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v18.486 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v18.485 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v18.484 — Fixed: update notes modal now scrollable on iOS',
-  'v18.483 — Snake tab: current holder hidden after round is complete',
-  'v18.482 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v18.481 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v18.480 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v18.489 — Version number now shown beside Help button on every screen',
-  'v18.488 — Snake: resets every 3 holes; participant selection added to setup',
-  'v18.487 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v18.486 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v18.485 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v18.484 — New Round blocked if on hole 18 with missing scores',
-  'v18.483 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v18.482 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v18.481 — Fixed: ℹ️ update info button now appears correctly',
-  'v18.480 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v18.492 — Games menu: ✕ close button added to sheet header',
+  'v18.491 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v18.490 — Snake tab: 3-putt log now sorted by hole number',
+  'v18.499 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v18.498 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v18.497 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v18.496 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v18.495 — Score entry: hole navigation arrows larger and more visible',
+  'v18.494 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v18.493 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v18.492 — Games tab icon changed to 💵',
+  'v18.491 — Birdie Juice tab restored to bottom nav',
+  'v18.490 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v18.499 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v18.498 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v18.497 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v18.496 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v18.495 — Setup: Snake participant names now sync live with player name changes',
+  'v18.494 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v18.493 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v18.492 — Fixed: player entry section now displays correctly',
+  'v18.499 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v18.498 — Setup: Round Setup header moved to the very top of the screen',
+  'v18.497 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v18.496 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v18.495 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v18.494 — Fixed: update notes modal now scrollable on iOS',
+  'v18.493 — Snake tab: current holder hidden after round is complete',
+  'v18.492 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v18.491 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v18.490 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v18.499 — Version number now shown beside Help button on every screen',
+  'v18.498 — Snake: resets every 3 holes; participant selection added to setup',
+  'v18.497 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v18.496 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v18.495 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v18.494 — New Round blocked if on hole 18 with missing scores',
+  'v18.493 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v18.492 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v18.491 — Fixed: ℹ️ update info button now appears correctly',
+  'v18.490 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -18911,7 +19002,7 @@ setInterval(checkForUpdate,90000);
 
 (function(){
   if(loadG()){
-    document.getElementById('bnav').style.display='flex';
+    showRoundBar();
     applyScorecardOnlyNav();
     document.getElementById('badge').textContent='HOLE '+(G.hole+1);{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='none';if(_bd)_bd.style.display='inline-block';}
     document.getElementById('cntVal').textContent=G.n;
@@ -18957,11 +19048,46 @@ setInterval(checkForUpdate,90000);
 // Re-apply the correct bottom-bar state for whichever screen is active.
 // Used on bfcache restore (e.g. returning from help.html via the back button),
 // which doesn't re-run boot or showS.
+
+function openRoundMenu(){
+  updateRoundBar();
+  const ov=document.getElementById('roundMenuOverlay');
+  const sh=document.getElementById('roundMenuSheet');
+  if(!ov||!sh) return;
+  ov.style.display='block';
+  requestAnimationFrame(function(){ sh.classList.add('open'); });
+}
+function closeRoundMenu(){
+  const ov=document.getElementById('roundMenuOverlay');
+  const sh=document.getElementById('roundMenuSheet');
+  if(!sh) return;
+  sh.classList.remove('open');
+  setTimeout(function(){ if(ov) ov.style.display='none'; }, 280);
+}
+function updateRoundBar(){
+  const bar=document.getElementById('roundBar');
+  if(!bar) return;
+  const hole=document.getElementById('roundBarHole');
+  if(hole) hole.textContent='⛳ Hole '+(G.hole+1);
+  // Update BJ badge in menu
+  const bjSub=document.getElementById('rmBJSub');
+  if(bjSub && G.birdieJuice && G.birdieJuice.earned && G.birdieJuice.earned.length){
+    bjSub.textContent=G.birdieJuice.earned.length+' birdie'+(G.birdieJuice.earned.length!==1?'s':'');
+  }
+}
+function showRoundBar(){
+  document.getElementById('roundBar').style.display='flex';
+  updateRoundBar();
+}
+function hideRoundBar(){
+  document.getElementById('roundBar').style.display='none';
+}
+
 function syncBottomBars(){
   const active=document.querySelector('.screen.active');
   const onSetup = !!(active && active.id==='screen-setup');
   const bnav=document.getElementById('bnav');
-  const roundActive = !!(bnav && bnav.style.display==='flex');
+  const roundActive = !!(document.getElementById('roundBar') && document.getElementById('roundBar').style.display==='flex');
   const sb=document.getElementById('setupBar');
   const hb=document.querySelector('.help-bar');
   // If round is active, always show help bar and hide setup bar regardless of active screen
@@ -18991,7 +19117,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v18.48';
+const CACHE='pards-v18.49';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
