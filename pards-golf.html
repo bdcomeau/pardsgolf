@@ -616,7 +616,6 @@ input::placeholder{color:#bbb}
     <div id="roundOptBody" style="display:none">
       <div class="card" id="roundTypeCard" style="background:#1a3a2a;padding:12px;border:1.5px solid rgba(168,213,181,.4);border-top:none;border-radius:0 0 10px 10px;box-shadow:0 3px 8px rgba(0,0,0,.35)">
         <input type="hidden" id="scorecardOnly">
-        <input type="hidden" id="autoAdvanceEnabled">
         <div style="position:relative">
           <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
             <div style="display:flex;align-items:center;gap:5px">
@@ -645,24 +644,6 @@ input::placeholder{color:#bbb}
           <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
             <button id="segBJOn" onclick="setBirdieJuice(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">ON</button>
             <button id="segBJOff" onclick="setBirdieJuice(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ OFF</button>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)">
-          <div style="display:flex;align-items:center;gap:5px;position:relative">
-            <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">✅ Confirm Scores Every Hole</div>
-            <button onclick="toggleConfirmInfo(event)" style="width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(168,213,181,.6);background:transparent;color:rgba(168,213,181,.8);font-size:9px;font-weight:800;cursor:pointer;padding:0;line-height:1;flex:none;-webkit-tap-highlight-color:transparent">i</button>
-            <div id="confirmInfoPopup" style="display:none;position:absolute;top:24px;left:0;z-index:200;background:#0f2a1a;border:1.5px solid rgba(201,168,76,.5);border-radius:10px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.6);width:260px">
-              <div style="font-size:11px;font-weight:800;color:var(--gold);margin-bottom:6px">✅ Confirm Scores Every Hole</div>
-              <div style="font-size:10.5px;color:rgba(255,255,255,.85);line-height:1.5">When <b>ON</b>, after entering all scores for a hole you'll see a review screen — giving everyone a chance to check, fix any mistakes, and confirm before moving on.</div>
-              <div style="margin-top:8px;padding:7px 10px;background:rgba(201,168,76,.12);border-radius:7px;border-left:3px solid var(--gold)">
-                <div style="font-size:10px;font-weight:800;color:var(--gold);margin-bottom:3px">⚠️ We strongly recommend keeping this ON</div>
-                <div style="font-size:10px;color:rgba(255,255,255,.75);line-height:1.5">When <b>OFF</b>, the app jumps immediately to the next hole after the last score is entered. Any errors missed in the moment will need to be corrected later from the scorecard.</div>
-              </div>
-            </div>
-          </div>
-          <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
-            <button id="segConfirmOn" onclick="setAdvanceMode(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ ON</button>
-            <button id="segConfirmOff" onclick="setAdvanceMode(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">OFF</button>
           </div>
         </div>
       </div>
@@ -4169,7 +4150,7 @@ const G = {
   matchCards:{ enabled:false, opponents:[] }, // [{name,golfId,idx,hdcpBaseline,deck,bet}] — up to 2, scorekeeper plays 1v1 Nassau vs each
   sideBets:{ enabled:false, defaultAmount:100, teamSize:2, bets:[] }, // [{teamIdx, amount, result:null/'win'/'loss'}]
   sideBetsLive: false, // true = this round is the official Side Bets round
-  autoAdvance: true,
+  autoAdvance: false,
 };
 
 // Translate a "play order" index (0-17, i.e. 1st-18th hole played) to the
@@ -4252,7 +4233,7 @@ function loadG(){
     if(!G.snake.settlements) G.snake.settlements=[];
     if(!G.snake.participants) G.snake.participants=[];
     G.players.forEach(p=>{ if(p.typicalScore===undefined) p.typicalScore=0; });
-    if(G.autoAdvance===undefined) G.autoAdvance=true;
+    if(G.autoAdvance===undefined) G.autoAdvance=false;
     if(Array.isArray(G.players)) G.players.forEach(p=>{ if(p.golfId===undefined) p.golfId=''; });
     if(Array.isArray(G.players)) G.players.forEach(p=>{ if(!p.deck) p.deck=defaultTeeName(); });
     if(!Array.isArray(G.par)||G.par.length!==18) G.par=[...activeCourse().par];
@@ -6382,67 +6363,21 @@ function confirmResetSetup(){
 }
 
 // Show/hide the betting setup sections based on the Scorecard-only checkbox.
-function setAdvanceMode(autoAdv){
-  // autoAdv=true means Auto-Advance is ON, which means "Confirm Scores Every Hole" is OFF.
-  const confirmOn = !autoAdv;
-  const onBtn=document.getElementById('segConfirmOn');
-  const offBtn=document.getElementById('segConfirmOff');
-  const hidden=document.getElementById('autoAdvanceEnabled');
-  if(onBtn && offBtn){
-    if(confirmOn){
-      onBtn.style.background='var(--gp)'; onBtn.style.color='var(--gd)'; onBtn.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
-      offBtn.style.background='transparent'; offBtn.style.color='rgba(255,255,255,.4)'; offBtn.style.boxShadow='none';
-    } else {
-      offBtn.style.background='#c9a84c'; offBtn.style.color='#1a3a2a'; offBtn.style.boxShadow='0 2px 4px rgba(0,0,0,.3)';
-      onBtn.style.background='transparent'; onBtn.style.color='rgba(255,255,255,.4)'; onBtn.style.boxShadow='none';
-    }
-  }
-  if(hidden) hidden.value=autoAdv?'1':'0';
-  try{ localStorage.setItem('pards_pref_autoAdvance', autoAdv?'1':'0'); }catch(_){}
-  refreshRoundOptSummary();
-}
+function setAdvanceMode(autoAdv){ /* auto-advance removed */ }
 
-function initAdvanceMode(){
-  try{
-    const pref=localStorage.getItem('pards_pref_autoAdvance');
-    // Default to false (Auto-Advance off / Confirm Scores on) for first-timers
-    setAdvanceMode(pref==='1');
-  }catch(_){ setAdvanceMode(false); }
-}
 
-function mmSetAdvanceMode(autoAdv){
-  G.autoAdvance = autoAdv;
-  saveG();
-  try{ localStorage.setItem('pards_pref_autoAdvance', autoAdv?'1':'0'); }catch(_){}
-  const mmAuto=document.getElementById('mmSegAuto');
-  const mmConf=document.getElementById('mmSegConfirm');
-  if(mmAuto && mmConf){
-    if(autoAdv){
-      mmAuto.style.cssText='flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)';
-      mmAuto.textContent='✓ AUTO-ADVANCE';
-      mmConf.style.cssText='flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;background:transparent;color:rgba(255,255,255,.4)';
-      mmConf.textContent='CONFIRM SCORES';
-    } else {
-      mmConf.style.cssText='flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;background:#c9a84c;color:#1a3a2a;box-shadow:0 2px 4px rgba(0,0,0,.3)';
-      mmConf.textContent='✓ CONFIRM SCORES';
-      mmAuto.style.cssText='flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;background:transparent;color:rgba(255,255,255,.4)';
-      mmAuto.textContent='AUTO-ADVANCE';
-    }
-  }
-  // Sync setup screen segmented control too
-  setAdvanceMode(autoAdv);
-  renderCard();
-  refreshRoundOptSummary();
-}
+function initAdvanceMode(){ /* auto-advance removed */ }
+
+
+function mmSetAdvanceMode(autoAdv){ /* auto-advance removed */ }
+
 
 function refreshRoundOptSummary(){
   var el = document.getElementById('roundOptSummary');
   if(!el) return;
   var soBox = document.getElementById('scorecardOnly');
-  var advBox = document.getElementById('autoAdvanceEnabled');
   var isScoreOnly = soBox && soBox.value==='1';
   var bjOn = G.birdieJuice && G.birdieJuice.enabled===true;
-  var confirmOn = !(advBox && advBox.value==='1');
   var parts = [
     isScoreOnly ? 'Scorecard Only' : 'Games ON',
     'Birdie Juice ' + (bjOn ? 'ON' : 'OFF'),
@@ -6650,10 +6585,8 @@ function startRound(){
   updateActiveLabels();
   const snakeBox=document.getElementById('snakeEnabled');
   G.snake={ enabled: !!(snakeBox && snakeBox.checked), holder:null, history:[], bet:G.snake&&G.snake.bet||5, settlements:[], participants:G.snake&&G.snake.participants||[], h18confirmed:false };
-  const aaBox=document.getElementById('autoAdvanceEnabled');
-  G.autoAdvance = aaBox ? aaBox.value==='1' : false;
+  G.autoAdvance = false;
   // Persist preference for next round
-  try{ localStorage.setItem('pards_pref_autoAdvance', G.autoAdvance ? '1' : '0'); }catch(_){}
   const snakeBetEl=document.getElementById('snakeBetAmt');
   if(G.snake) G.snake.bet=snakeBetEl?parseFloat(snakeBetEl.value)||5:5;
   if(G.snake) G.snake.settlements=[];
@@ -8064,7 +7997,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v18.46</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v18.47</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -8454,28 +8387,8 @@ function setScoreDirect(pi, h, val){
 
 // Auto-advance to the next hole once every player has a score on the current hole.
 // Never advances past the final hole of the round (holes 1–17 only; stays on 18).
-function maybeAutoAdvance(){
-  const curPlay = playOrderIdx(G.hole);
-  const allScored = !G.players.some((_,pi)=>G.scores[pi][G.hole]===null);
+function maybeAutoAdvance(){ /* auto-advance removed */ }
 
-  if(curPlay >= 17) return;
-  if(!allScored) return;
-  clearTimeout(maybeAutoAdvance._t);
-  if(G.autoAdvance){
-    maybeAutoAdvance._t = setTimeout(()=>{
-      const cp = playOrderIdx(G.hole);
-      if(cp >= 17) return;
-      if(G.players.some((_,pi)=>G.scores[pi][G.hole]===null)) return;
-      const err=document.getElementById('holeErr'); if(err) err.style.display='none';
-      _pending=null;
-      G.hole = actualHoleIdx(cp + 1);
-      saveG(); renderCard();
-      saveCheckpointToHistory();
-    }, 550);
-  } else {
-    renderCard();
-  }
-}
 
 function confirmNextHole(){
   const cp = playOrderIdx(G.hole);
@@ -8824,7 +8737,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.46</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.47</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -9516,12 +9429,12 @@ function renderCard(){
   }
 
   // ── Manual-advance confirm button ──
-  if(!G.autoAdvance && !isRoundComplete()){
+  if(!isRoundComplete()){
     const allIn=!G.players.some((_,pi)=>G.scores[pi][G.hole]===null);
     if(allIn && playOrderIdx(G.hole)<17){
       html+='<button onclick="confirmNextHole()" style="width:100%;padding:14px;'
         +'margin-bottom:8px;background:#c9a84c;color:#1a3a2a;font-size:16px;'
-        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+(G.autoAdvance?'Next Hole &#8594;':'&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
+        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+('&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
     }
   }
 
@@ -9696,7 +9609,7 @@ function renderCard(){
     </div>`;
   }
 
-  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.46</div>';
+  html += '<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.47</div>';
 
   document.getElementById('sbody').innerHTML=html;
 
@@ -10269,7 +10182,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.46</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.47</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -10937,12 +10850,12 @@ function renderVerticalScorecard(){
     fPar+=G.par[h];
     html+=`<tr><td class="pnm">${h+1}</td><td class="ns">${G.par[h]}</td><td class="ns">${G.si[h]}</td>`;
     // ── Manual-advance confirm button ──
-  if(!G.autoAdvance && !isRoundComplete()){
+  if(!isRoundComplete()){
     const allIn=!G.players.some((_,pi)=>G.scores[pi][G.hole]===null);
     if(allIn && playOrderIdx(G.hole)<17){
       html+='<button onclick="confirmNextHole()" style="width:100%;padding:14px;'
         +'margin-bottom:8px;background:#c9a84c;color:#1a3a2a;font-size:16px;'
-        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+(G.autoAdvance?'Next Hole &#8594;':'&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
+        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+('&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
     }
   }
 
@@ -10972,12 +10885,12 @@ function renderVerticalScorecard(){
     bPar+=G.par[h];
     html+=`<tr><td class="pnm">${h+1}</td><td class="ns">${G.par[h]}</td><td class="ns">${G.si[h]}</td>`;
     // ── Manual-advance confirm button ──
-  if(!G.autoAdvance && !isRoundComplete()){
+  if(!isRoundComplete()){
     const allIn=!G.players.some((_,pi)=>G.scores[pi][G.hole]===null);
     if(allIn && playOrderIdx(G.hole)<17){
       html+='<button onclick="confirmNextHole()" style="width:100%;padding:14px;'
         +'margin-bottom:8px;background:#c9a84c;color:#1a3a2a;font-size:16px;'
-        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+(G.autoAdvance?'Next Hole &#8594;':'&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
+        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+('&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
     }
   }
 
@@ -11002,12 +10915,12 @@ function renderVerticalScorecard(){
   // TOT row
   html+=`<tr style="background:var(--gp);font-weight:800"><td class="pnm">TOT</td><td class="ns">${fPar+bPar}</td><td class="ns"></td>`;
   // ── Manual-advance confirm button ──
-  if(!G.autoAdvance && !isRoundComplete()){
+  if(!isRoundComplete()){
     const allIn=!G.players.some((_,pi)=>G.scores[pi][G.hole]===null);
     if(allIn && playOrderIdx(G.hole)<17){
       html+='<button onclick="confirmNextHole()" style="width:100%;padding:14px;'
         +'margin-bottom:8px;background:#c9a84c;color:#1a3a2a;font-size:16px;'
-        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+(G.autoAdvance?'Next Hole &#8594;':'&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
+        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+('&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
     }
   }
 
@@ -11030,12 +10943,12 @@ function renderVerticalScorecard(){
   // NET row — gross total minus full handicap index (rounded)
   html+=`<tr style="background:#e8f5e9;font-weight:800;color:var(--gm)"><td class="pnm">NET</td><td class="ns"></td><td class="ns"></td>`;
   // ── Manual-advance confirm button ──
-  if(!G.autoAdvance && !isRoundComplete()){
+  if(!isRoundComplete()){
     const allIn=!G.players.some((_,pi)=>G.scores[pi][G.hole]===null);
     if(allIn && playOrderIdx(G.hole)<17){
       html+='<button onclick="confirmNextHole()" style="width:100%;padding:14px;'
         +'margin-bottom:8px;background:#c9a84c;color:#1a3a2a;font-size:16px;'
-        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+(G.autoAdvance?'Next Hole &#8594;':'&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
+        +'font-weight:800;border:none;border-radius:12px;cursor:pointer">'+('&#10003; Confirm &amp; Next Hole &#8594;')+'</button>';
     }
   }
 
@@ -11574,7 +11487,7 @@ function abandonRound(){
   G.snake={enabled:false,holder:null,history:[],bet:5,settlements:[],participants:[],h18confirmed:false};
   G.matchCards={enabled:false,opponents:[]};
   G._scoringMatchCards=false;
-  G.autoAdvance=true;
+  G.autoAdvance=false;
   G.firstScoreAt=null;
   // Go to clean setup screen
   document.getElementById('bnav').style.display='none';
@@ -11615,7 +11528,7 @@ function confirmNewRound(){
   G.snake={enabled:false,holder:null,history:[],bet:5,settlements:[],participants:[],h18confirmed:false};
   G.matchCards={enabled:false,opponents:[]};
   G._scoringMatchCards=false;
-  G.autoAdvance=true;
+  G.autoAdvance=false;
   // Set home course from Me contact
   const _meNR = loadContacts().find(function(c){ return c.me; });
   G.courseId = (_meNR && _meNR.homeCourse) ? _meNR.homeCourse : 'derrick-gwc';
@@ -12774,7 +12687,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.46</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.47</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -13127,7 +13040,7 @@ function startRematch(i){
   G.roundDate=null; G.roundEnd=null; G.firstScoreAt=null;
   G.weatherStart=null; G.weatherEnd=null;
   G.scorecardOnly=false; G.matchCards={enabled:false,opponents:[]};
-  G.internationals={}; G.autoAdvance=G.autoAdvance!==false;
+  G.internationals={}; G.autoAdvance=false;
   // Clear all transient scoring state
   G._intlReminderShown=false; G._intlBannerDismissed=false;
   G.presses={}; G.nassauResults={}; G.sideBets=null;
@@ -13548,7 +13461,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.46</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.47</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -13824,7 +13737,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.46</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.47</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -13964,7 +13877,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v18.46');
+  lines.push('— Pards Golf · v18.47');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -14693,7 +14606,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v18.46 · ${dateStr}</div>
+<div class="foot">Pards Golf · v18.47 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -15308,17 +15221,6 @@ function openMatchManager(){
       <div style="display:none;margin-bottom:8px">
         <div style="background:#1a2a1a;border:1.5px solid rgba(168,213,181,.3);border-radius:0 0 10px 10px;padding:12px 14px">
           <div style="font-size:10px;color:#a8d5b5;margin-bottom:10px;line-height:1.4">Auto-advance moves to next hole when all scores entered. Confirm lets you review first.</div>
-          <div style="display:flex;background:rgba(0,0,0,.35);border-radius:8px;padding:3px;gap:3px">
-            <button id="mmSegAuto" onclick="mmSetAdvanceMode(true)"
-              style="flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;transition:all .15s;background:${G.autoAdvance!==false?'var(--gp)':'transparent'};color:${G.autoAdvance!==false?'var(--gd)':'rgba(255,255,255,.4)'};box-shadow:${G.autoAdvance!==false?'0 2px 4px rgba(0,0,0,.3)':'none'}">
-              ${G.autoAdvance!==false?'✓ AUTO-ADVANCE':'AUTO-ADVANCE'}
-            </button>
-            <button id="mmSegConfirm" onclick="mmSetAdvanceMode(false)"
-              style="flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;transition:all .15s;background:${G.autoAdvance===false?'#c9a84c':'transparent'};color:${G.autoAdvance===false?'#1a3a2a':'rgba(255,255,255,.4)'};box-shadow:${G.autoAdvance===false?'0 2px 4px rgba(0,0,0,.3)':'none'}">
-              ${G.autoAdvance===false?'✓ CONFIRM SCORES':'CONFIRM SCORES'}
-            </button>
-          </div>
-        </div>
         <button onclick="this.parentElement.style.display='none';this.parentElement.previousElementSibling.querySelector('.mmc').textContent='▶'" style="width:100%;margin-top:6px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'\u25b6':'\u25bc'"
@@ -18149,7 +18051,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v18.46. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v18.47. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -18637,7 +18539,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v18.46';
+const CURRENT_VERSION = 'pards-v18.47';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -18861,47 +18763,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v18.462 — Games menu: ✕ close button added to sheet header',
-  'v18.461 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v18.460 — Snake tab: 3-putt log now sorted by hole number',
-  'v18.469 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v18.468 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v18.467 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v18.466 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v18.465 — Score entry: hole navigation arrows larger and more visible',
-  'v18.464 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v18.463 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v18.462 — Games tab icon changed to 💵',
-  'v18.461 — Birdie Juice tab restored to bottom nav',
-  'v18.460 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v18.469 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v18.468 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v18.467 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v18.466 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v18.465 — Setup: Snake participant names now sync live with player name changes',
-  'v18.464 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v18.463 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v18.462 — Fixed: player entry section now displays correctly',
-  'v18.469 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v18.468 — Setup: Round Setup header moved to the very top of the screen',
-  'v18.467 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v18.466 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v18.465 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v18.464 — Fixed: update notes modal now scrollable on iOS',
-  'v18.463 — Snake tab: current holder hidden after round is complete',
-  'v18.462 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v18.461 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v18.460 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v18.469 — Version number now shown beside Help button on every screen',
-  'v18.468 — Snake: resets every 3 holes; participant selection added to setup',
-  'v18.467 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v18.466 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v18.465 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v18.464 — New Round blocked if on hole 18 with missing scores',
-  'v18.463 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v18.462 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v18.461 — Fixed: ℹ️ update info button now appears correctly',
-  'v18.460 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v18.472 — Games menu: ✕ close button added to sheet header',
+  'v18.471 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v18.470 — Snake tab: 3-putt log now sorted by hole number',
+  'v18.479 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v18.478 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v18.477 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v18.476 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v18.475 — Score entry: hole navigation arrows larger and more visible',
+  'v18.474 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v18.473 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v18.472 — Games tab icon changed to 💵',
+  'v18.471 — Birdie Juice tab restored to bottom nav',
+  'v18.470 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v18.479 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v18.478 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v18.477 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v18.476 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v18.475 — Setup: Snake participant names now sync live with player name changes',
+  'v18.474 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v18.473 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v18.472 — Fixed: player entry section now displays correctly',
+  'v18.479 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v18.478 — Setup: Round Setup header moved to the very top of the screen',
+  'v18.477 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v18.476 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v18.475 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v18.474 — Fixed: update notes modal now scrollable on iOS',
+  'v18.473 — Snake tab: current holder hidden after round is complete',
+  'v18.472 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v18.471 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v18.470 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v18.479 — Version number now shown beside Help button on every screen',
+  'v18.478 — Snake: resets every 3 holes; participant selection added to setup',
+  'v18.477 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v18.476 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v18.475 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v18.474 — New Round blocked if on hole 18 with missing scores',
+  'v18.473 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v18.472 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v18.471 — Fixed: ℹ️ update info button now appears correctly',
+  'v18.470 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -19013,8 +18915,6 @@ setInterval(checkForUpdate,90000);
     applyScorecardOnlyNav();
     document.getElementById('badge').textContent='HOLE '+(G.hole+1);{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='none';if(_bd)_bd.style.display='inline-block';}
     document.getElementById('cntVal').textContent=G.n;
-    const aaBox=document.getElementById('autoAdvanceEnabled'); if(aaBox) aaBox.value=G.autoAdvance?'1':'0';
-    setAdvanceMode(!!G.autoAdvance);
     setScorecardMode(!!G.scorecardOnly);
     showS('score'); renderCard();
     updateBirdieJuiceBadge();
@@ -19091,7 +18991,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v18.46';
+const CACHE='pards-v18.47';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
