@@ -162,8 +162,8 @@ input::placeholder{color:#bbb}
 .hmeta{font-size:11px;color:var(--gl)}
 .nine-tabs{display:flex;gap:6px;padding:5px 10px;background:var(--gd)}
 .manage-matches-btn{background:var(--gold);color:var(--gd);border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;width:100%;margin-top:6px}
-.mm-overlay{position:fixed;inset:0;bottom:calc(52px + env(safe-area-inset-bottom));background:rgba(0,0,0,.6);z-index:1100;display:flex;align-items:flex-end;justify-content:center}
-.mm-sheet{background:var(--cream);border-radius:16px 16px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:14px 14px calc(24px + 52px + env(safe-area-inset-bottom))}
+.mm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;display:flex;align-items:flex-end;justify-content:center}
+.mm-sheet{background:var(--cream);border-radius:16px 16px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:14px 14px 24px}
 .mm-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .mm-title{font-size:16px;font-weight:700;color:var(--ink);font-family:Georgia,serif}
 .mm-close{background:var(--gd);color:var(--gold);border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent}
@@ -501,60 +501,25 @@ input::placeholder{color:#bbb}
   position:fixed;left:-9999px;top:0;width:1px;height:1px;border:none;visibility:hidden;
 }
 
+/* ── Round-in-progress slim bar ─────────────────────────────────── */
+#roundBar{position:fixed;bottom:0;left:0;right:0;height:calc(54px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:#1a3a2a;border-top:1.5px solid rgba(201,168,76,.5);display:none;align-items:center;justify-content:space-between;padding-left:16px;padding-right:12px;z-index:202;-webkit-tap-highlight-color:transparent}
+#roundBar .rb-left{flex:1;cursor:pointer}
+#roundBar .rb-hole{font-size:14px;font-weight:800;color:#c9a84c}
+#roundBar .rb-sub{font-size:10px;color:rgba(201,168,76,.6);margin-top:1px}
+#roundBar .rb-btn{background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);color:#c9a84c;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+/* ── Round menu overlay ──────────────────────────────────────────── */
+#roundMenuOverlay{display:none;position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.55)}
+#roundMenuSheet{position:absolute;bottom:0;left:0;right:0;background:#1a2a1a;border-radius:20px 20px 0 0;padding:0 0 max(32px,calc(16px + env(safe-area-inset-bottom))) 0;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,0,.67,0);max-height:90vh;overflow-y:auto}
+#roundMenuSheet.open{transform:translateY(0)}
+.rm-drag{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:14px auto 10px}
+.rm-item{display:flex;align-items:center;gap:14px;padding:13px 20px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.06);-webkit-tap-highlight-color:transparent}
+.rm-item:active{background:rgba(255,255,255,.05)}
+.rm-icon{font-size:22px;width:32px;text-align:center;flex-shrink:0}
+.rm-label{font-size:14px;font-weight:700;color:#e8e8e8}
+.rm-sub{font-size:11px;color:rgba(255,255,255,.4);margin-top:1px}
+.rm-return{background:rgba(201,168,76,.08);border-bottom:2px solid rgba(201,168,76,.3)}
+.rm-return .rm-label{color:#c9a84c;font-size:15px}
 
-/* ── Round-in-progress slim bar ───────────────────────────────────── */
-#roundBar{
-  position:fixed;bottom:0;left:0;right:0;
-  height:calc(52px + env(safe-area-inset-bottom));
-  padding-bottom:env(safe-area-inset-bottom);
-  background:#1a3a2a;
-  border-top:1.5px solid rgba(201,168,76,.5);
-  display:none;
-  align-items:center;
-  justify-content:space-between;
-  padding-left:16px;padding-right:12px;
-  z-index:200;
-  -webkit-tap-highlight-color:transparent;
-}
-#roundBar .rb-hole{
-  font-size:13px;font-weight:800;color:#c9a84c;letter-spacing:.3px;
-}
-#roundBar .rb-sub{
-  font-size:10px;color:rgba(201,168,76,.6);font-weight:600;margin-top:1px;
-}
-#roundBar .rb-more{
-  background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);
-  color:#c9a84c;border-radius:10px;padding:7px 14px;font-size:13px;font-weight:800;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  display:flex;align-items:center;gap:6px;
-}
-#roundMenuOverlay{
-  display:none;position:fixed;inset:0;z-index:300;
-  background:rgba(0,0,0,.5);
-}
-#roundMenuSheet{
-  position:absolute;bottom:0;left:0;right:0;
-  background:#1a2a1a;border-radius:20px 20px 0 0;
-  padding:16px 0 max(32px,calc(16px + env(safe-area-inset-bottom))) 0;
-  transform:translateY(100%);
-  transition:transform .28s cubic-bezier(.32,0,.67,0);
-}
-#roundMenuSheet.open{ transform:translateY(0); }
-.rm-item{
-  display:flex;align-items:center;gap:14px;
-  padding:14px 20px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-.rm-item:active{ background:rgba(255,255,255,.05); }
-.rm-icon{ font-size:22px;width:32px;text-align:center; }
-.rm-label{ font-size:14px;font-weight:700;color:#e8e8e8; }
-.rm-sub{ font-size:11px;color:rgba(255,255,255,.45);margin-top:1px; }
-.rm-return{
-  background:#1a3a2a;border-bottom:2px solid rgba(201,168,76,.4);
-  margin-bottom:4px;
-}
-.rm-return .rm-label{ color:#c9a84c;font-size:15px; }
 </style>
 </head>
 <body>
@@ -700,6 +665,7 @@ input::placeholder{color:#bbb}
             <button id="segBJOff" onclick="setBirdieJuice(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ OFF</button>
           </div>
         </div>
+        
       </div>
     </div>
   </div>
@@ -1022,36 +988,39 @@ input::placeholder{color:#bbb}
   <div style="display:none" id="ni-sixpoint"></div>
   <div style="display:none" id="ni-snake"></div>
 </div>
-<!-- ══ ROUND IN PROGRESS SLIM BAR ══ -->
+<!-- ══ ROUND BAR ══ -->
 <div id="roundBar">
-  <div onclick="showS('score')" style="flex:1;cursor:pointer">
+  <div class="rb-left" onclick="showS('score')">
     <div class="rb-hole" id="roundBarHole">⛳ Hole 1</div>
     <div class="rb-sub">Round in Progress — tap to return</div>
   </div>
-  <button class="rb-more" onclick="openRoundMenu()">☰ Menu</button>
+  <button class="rb-btn" onclick="openRoundMenu()">☰ Menu</button>
 </div>
-
-<!-- ══ ROUND MENU SHEET ══ -->
+<!-- ══ ROUND MENU ══ -->
 <div id="roundMenuOverlay" onclick="if(event.target===this)closeRoundMenu()">
   <div id="roundMenuSheet">
-    <div style="width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin:0 auto 16px"></div>
+    <div class="rm-drag"></div>
     <div class="rm-item rm-return" onclick="closeRoundMenu();showS('score')">
       <div class="rm-icon">⛳</div>
-      <div><div class="rm-label">Return to Scorecard</div><div class="rm-sub">Get back to scoring</div></div>
+      <div><div class="rm-label">Return to Scorecard</div><div class="rm-sub">Back to scoring</div></div>
     </div>
-    <div class="rm-item" id="rmGames" onclick="closeRoundMenu();showGamesMenu()">
+    <div class="rm-item" onclick="closeRoundMenu();showGamesMenu()">
       <div class="rm-icon">💵</div>
       <div><div class="rm-label">Games</div><div class="rm-sub">Nassau, 6-Point, Vegas &amp; more</div></div>
     </div>
-    <div class="rm-item" id="rmBJ" onclick="closeRoundMenu();showS('birdiejuice')">
+    <div class="rm-item" onclick="closeRoundMenu();showS('birdiejuice')">
       <div class="rm-icon">🐦🥃</div>
       <div><div class="rm-label">Birdie Juice</div><div class="rm-sub" id="rmBJSub">Track birdies &amp; earnings</div></div>
     </div>
-    <div class="rm-item" id="rmHistory" onclick="closeRoundMenu();showS('history')">
+    <div class="rm-item" onclick="closeRoundMenu();showS('history')">
       <div class="rm-icon">📜</div>
       <div><div class="rm-label">Round History</div><div class="rm-sub">View past rounds</div></div>
     </div>
-    <div class="rm-item" id="rmSavEnd" onclick="closeRoundMenu();newRound()">
+    <div class="rm-item" onclick="closeRoundMenu();openMatchManager()">
+      <div class="rm-icon">⚙️</div>
+      <div><div class="rm-label">Mid-Round Settings</div><div class="rm-sub">Players, handicaps &amp; matches</div></div>
+    </div>
+    <div class="rm-item" onclick="closeRoundMenu();newRound()">
       <div class="rm-icon">🏁</div>
       <div><div class="rm-label">Save &amp; End Round</div><div class="rm-sub">Complete and save this round</div></div>
     </div>
@@ -6681,7 +6650,7 @@ function startRound(){
     if(G.snake.participants.length<2) G.snake.participants=G.players.map((_,i)=>i); // need at least 2
   }
   saveG();
-  hideRoundBar(); showRoundBar();
+  showRoundBar();
   applyScorecardOnlyNav();
   document.getElementById('badge').textContent='HOLE '+G.startHole;{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='none';if(_bd)_bd.style.display='inline-block';}
   showS('score');renderCard();
@@ -8078,7 +8047,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v18.58</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v19.8</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -8396,47 +8365,6 @@ function arrowStep(pi, h, dir){
 }
 
 // Commit the pending preview score for this player as the actual score.
-function _maybeDougBoyerPar(pi, h, val){
-    const p = G.players[pi];
-    if(!p) return;
-    if((p.name||'').trim().toLowerCase().replace(/\s+/g,' ') !== 'doug boyer') return;
-    const grossPar = G.par[h];
-    if(val !== grossPar) return;
-    const wines = [
-      'A 9oz Astrolab at lunch pregame?',
-      'Two 6oz Astrolab pours at lunch?',
-      'A 9oz + 6oz Astrolab combo at lunch before the round?',
-      'Was it the 18oz or 15oz of Astrolab at lunch today?',
-      'Three 6oz Astrolab whites at lunch?',
-      'A 9oz Astrolab at every course lunch?',
-      'Two 9oz Astrolabs at the lunch table?',
-      'A 15oz Astrolab with a grilled cheese at lunch?',
-      'An 18oz Astrolab and a grilled cheese — that lunch though.',
-      'Did the 9oz + 6oz Astrolab combo come with a grilled cheese at lunch?',
-      'Grilled cheese and a 15oz Astrolab — the lunch of champions.',
-      'Was the grilled cheese paired with the 18oz Astrolab at lunch?',
-      'Full 18oz Astrolab lunch. Grilled cheese. Par. Unreal.',
-    ];
-    const wine = wines[Math.floor(Math.random()*wines.length)];
-    const msgs = [
-      `Doug made PAR on hole ${h+1}?? 🤨\n\n${wine}\n\nAre we sure about this score?`,
-      `Hold on... Doug Boyer. PAR. Hole ${h+1}. 🍷\n\n${wine}\n\nShould we verify with the other group?`,
-      `An ACTUAL par from Doug on hole ${h+1}? 😳\n\n${wine}\n\nThe scorecard is probably lying.`,
-      `Doug Boyer just made par on ${h+1}? 🍾\n\nBefore or after the ${wine.toLowerCase()}\n\nMark it in the books. Unprecedented.`,
-    ];
-    const msg = msgs[Math.floor(Math.random()*msgs.length)];
-    setTimeout(function(){
-      const ov=document.createElement('div');
-      ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px';
-      ov.innerHTML=`<div style="background:#fff;border-radius:18px;padding:24px 20px;max-width:320px;width:100%;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.4)">
-        <div style="margin-bottom:8px"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAoAFUDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2Wg9KKD0oA+fPGTFviHrZP/PdR+SLWx4V/wCPSY+sg/lT/EOg29/401aXfMHa4y20jH3QPStLStBFjAUWSVgzZ+ZR6VhKLcro0jUilZmZ4lOZrcf7B/nWN2rptZ0rz3SRpGTYuPu9e9YE1qsJxvJ/CsJU5XNo1oW3KrjiqM/etB8Hiq7W6P1Y04wktwdWDK/hVtnjzQ2H/P6g/M4r6Tr598O6fDH4s0iYbyy3seMt33DtX0FXXHY5m7u4UUUVQgoPSig9KAPKtT2jxhqu87f33HJHYelatuybBiQ/99//AFqxtc/5G/Uv+u3/ALKK1LJVMW587R2HUn0rO+pk9ytqkgIxuJx3JyK5e7dSThlJ+tdJqsu4HO1VHOAOBXFLdPLcyQzAEkbkJUA4qW9SoxurisaTNLvT7rjj+8Oo/wAaawKMQT+I70DLuguf+En0oZOPtkRx/wACFe914FoP/IyaWe/2yP8A9CFe+1cSlsFFFFWAUUUUAeTa7/yOGpf9dh/6CK0LZsxAUUVn1MmU9TTfFIT0GB+J/wAmuO1WPbdxTqMYO1v6UUVm+prDdEcnFLnMI9VOPwPP+NFFV0F1LWgtjxDpg/6fYv8A0IV7/RRWkQQUUUVQz//Z" style="height:60px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.2)"></div>
-        <div style="font-size:15px;font-weight:800;color:#1a3a2a;margin-bottom:12px;line-height:1.4;white-space:pre-line">${msg}</div>
-        <button onclick="this.closest('div[style*=fixed]').remove()" style="background:#1a3a2a;color:#c9a84c;border:none;border-radius:12px;padding:12px 32px;font-size:14px;font-weight:800;cursor:pointer;width:100%;margin-top:4px">Confirmed. Miracle Achieved. 🏆</button>
-      </div>`;
-      document.body.appendChild(ov);
-    }, 600);
-}
-
 function commitPending(pi, h){
   if(!(_pending && _pending.pi===pi && _pending.h===h)) return;
   const val=_pending.val;
@@ -8444,7 +8372,6 @@ function commitPending(pi, h){
   _pending=null;
   G.scores[pi][h]=val;
   if(!G.firstScoreAt) { G.firstScoreAt=new Date().toISOString(); }
-
   checkBirdieJuice(pi,h,prev);
   saveG();
   renderCard();
@@ -8471,64 +8398,45 @@ function setScoreDirect(pi, h, val){
 function maybeAutoAdvance(){ /* auto-advance removed */ }
 
 
-function completeRound(){
-  if(G.players.some((_,pi)=>G.scores[pi][G.hole]===null)) return;
-  _pending=null;
-
-  // 🥚 Doug Boyer Easter Egg on final hole
-  G.players.forEach(function(p, pi){
-    _maybeDougBoyerPar(pi, G.hole, G.scores[pi][G.hole]);
-  });
-
-  // ── Round is ALWAYS saved here first ──
-  saveG();
-  saveCheckpointToHistory();
-
-  // Re-render scorecard so player can still edit
-  renderCard();
-
-  // ── Toast: slides up briefly ──
-  const toast = document.createElement('div');
-  toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(40px);background:#1a3a2a;color:#c9a84c;border:1.5px solid rgba(201,168,76,.5);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:800;z-index:9998;opacity:0;transition:all .35s ease;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)';
-  toast.textContent = '✓ Round saved to History';
-  document.body.appendChild(toast);
-  requestAnimationFrame(function(){
-    toast.style.opacity='1';
-    toast.style.transform='translateX(-50%) translateY(0)';
-  });
-  setTimeout(function(){
-    toast.style.opacity='0';
-    toast.style.transform='translateX(-50%) translateY(20px)';
-    setTimeout(function(){ toast.remove(); }, 400);
-  }, 2800);
-
-  // ── Persistent banner: stays on scorecard until new round ──
-  const existing = document.getElementById('roundCompleteBanner');
-  if(existing) existing.remove();
-  const banner = document.createElement('div');
-  banner.id = 'roundCompleteBanner';
-  banner.style.cssText = 'background:#1a3a2a;border:1.5px solid rgba(201,168,76,.5);border-radius:12px;margin:8px 10px 0;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px';
-  banner.innerHTML = '<div><div style="font-size:13px;font-weight:800;color:#c9a84c">🏆 Round Complete — Saved ✓</div><div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">You can still edit any hole above</div></div>'
-    + '<button onclick="newRound()" style="background:#c9a84c;color:#1a3a2a;border:none;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0">New Round →</button>';
-  const sbody = document.getElementById('sbody');
-  if(sbody) sbody.insertBefore(banner, sbody.firstChild);
-}
-
 function confirmNextHole(){
   const cp = playOrderIdx(G.hole);
   if(cp >= 17) return;
   if(G.players.some((_,pi)=>G.scores[pi][G.hole]===null)) return;
   const err=document.getElementById('holeErr'); if(err) err.style.display='none';
   _pending=null;
-
-  // 🥚 Doug Boyer Easter Egg — fires on confirm, checks all players
-  G.players.forEach(function(p, pi){
-    _maybeDougBoyerPar(pi, G.hole, G.scores[pi][G.hole]);
-  });
-
   G.hole = actualHoleIdx(cp + 1);
   saveG(); renderCard();
   saveCheckpointToHistory();
+}
+
+function completeRound(){
+  if(G.players.some((_,pi)=>G.scores[pi][G.hole]===null)) return;
+  _pending=null;
+
+  // ── Round ALWAYS saved first ──
+  saveG();
+  saveCheckpointToHistory();
+
+  renderCard();
+
+  // ── Toast ──
+  const toast=document.createElement('div');
+  toast.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(40px);background:#1a3a2a;color:#c9a84c;border:1.5px solid rgba(201,168,76,.5);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:800;z-index:9998;opacity:0;transition:all .35s ease;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.4)';
+  toast.textContent='✓ Round saved to History';
+  document.body.appendChild(toast);
+  requestAnimationFrame(function(){ toast.style.opacity='1'; toast.style.transform='translateX(-50%) translateY(0)'; });
+  setTimeout(function(){ toast.style.opacity='0'; toast.style.transform='translateX(-50%) translateY(20px)'; setTimeout(function(){ toast.remove(); },400); },2800);
+
+  // ── Persistent banner ──
+  const existing=document.getElementById('roundCompleteBanner');
+  if(existing) existing.remove();
+  const banner=document.createElement('div');
+  banner.id='roundCompleteBanner';
+  banner.style.cssText='background:#1a3a2a;border:1.5px solid rgba(201,168,76,.5);border-radius:12px;margin:8px 10px 0;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px';
+  banner.innerHTML='<div><div style="font-size:13px;font-weight:800;color:#c9a84c">🏆 Round Complete — Saved ✓</div><div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">You can still edit any hole above</div></div>'
+    +'<button onclick="newRound()" style="background:#c9a84c;color:#1a3a2a;border:none;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0">New Round →</button>';
+  const sbody=document.getElementById('sbody');
+  if(sbody) sbody.insertBefore(banner,sbody.firstChild);
 }
 
 // Tap the centre when unset — sets score to par directly
@@ -8861,7 +8769,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v19.8</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -9723,11 +9631,7 @@ function renderCard(){
   html += '<div id="liveStandBar" style="display:'+(G.scorecardOnly?'none':'block')+';border-top:1px solid rgba(201,168,76,.15);padding:4px 12px"><div style="display:flex;align-items:center;justify-content:center;gap:16px"><button onclick="toggleLiveStandings()" style="background:none;border:none;padding:3px 0;display:flex;align-items:center;gap:5px;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.3px">📊 LIVE STANDINGS</span><span id="liveStandChev" style="font-size:9px;color:rgba(201,168,76,.6)">▼</span></button><span style="color:rgba(201,168,76,.3);font-size:12px">|</span><button onclick="toggleWhoStrokes()" style="background:none;border:none;padding:3px 0;display:flex;align-items:center;gap:5px;cursor:pointer;-webkit-tap-highlight-color:transparent"><span style="font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.3px">🏌️ WHO STROKES?</span><span id="whoStrokesChev" style="font-size:9px;color:rgba(201,168,76,.6)">▼</span></button></div></div>';
   html += '<div id="liveStandPanel" style="display:none;background:rgba(0,20,10,.95);border:1px solid rgba(201,168,76,.2);border-radius:0 0 8px 8px;margin:0 10px 6px;padding:8px 12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch"><div id="liveStandContent" style="font-size:11px;color:rgba(255,255,255,.9);line-height:1.7"></div></div>';
   html += '<div id="whoStrokesPanel" style="display:none;background:rgba(0,20,10,.95);border:1px solid rgba(201,168,76,.2);border-radius:0 0 8px 8px;margin:0 10px 6px;padding:8px 12px;max-height:220px;overflow-y:auto;-webkit-overflow-scrolling:touch"><div id="whoStrokesContent" style="font-size:11px;color:rgba(255,255,255,.9);line-height:1.8"></div></div>';
-  html += '<div style="display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 12px 2px">'
-    + '<button onclick="openMatchManager()" style="display:flex;align-items:center;gap:5px;background:none;border:1.5px solid rgba(201,168,76,.3);border-radius:20px;padding:4px 12px;color:rgba(201,168,76,.7);font-size:11px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">⚙️ Mid Round Settings</button>'
-    + '<button onclick="showMidRoundInfo()" style="width:22px;height:22px;border-radius:50%;background:none;border:1.5px solid rgba(201,168,76,.3);color:rgba(201,168,76,.7);font-size:11px;font-weight:900;font-style:italic;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">i</button>'
-    + '</div>';
-
+  
 
 
   // "What if you'd played Nassau?" banner — scorecard-only rounds, once all 18 are in
@@ -9741,7 +9645,6 @@ function renderCard(){
 
   document.getElementById('sbody').innerHTML=html;
   updateRoundBar();
-  if(isRoundComplete()){ const _rcb=document.getElementById('roundCompleteBanner'); if(!_rcb){ const _b=document.createElement('div');_b.id='roundCompleteBanner';_b.style.cssText='background:#1a3a2a;border:1.5px solid rgba(201,168,76,.5);border-radius:12px;margin:8px 10px 0;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px';_b.innerHTML='<div><div style="font-size:13px;font-weight:800;color:#c9a84c">🏆 Round Complete — Saved ✓</div><div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">You can still edit any hole above</div></div><button onclick="newRound()" style="background:#c9a84c;color:#1a3a2a;border:none;border-radius:10px;padding:9px 14px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0">New Round →</button>';const _sb=document.getElementById('sbody');if(_sb)_sb.insertBefore(_b,_sb.firstChild); } }
 
   // Attach mouse events for desktop swipe
   document.addEventListener('mousemove',swipeMove,{passive:false});
@@ -10312,7 +10215,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.58</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v19.8</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -11340,7 +11243,7 @@ function showS(name){
   if(name==='birdiejuice') renderBirdieJuice();
   if(name==='history'){
     renderHistory();
-    const bnavVisible = document.getElementById('roundBar')&&document.getElementById('roundBar').style.display==='flex';
+    const bnavVisible = !!(document.getElementById('roundBar') && document.getElementById('roundBar').style.display==='flex');
     document.getElementById('historyBackHdr').style.display = bnavVisible ? 'none' : 'flex';
   }
   if(name==='backup') renderBackup();
@@ -12817,7 +12720,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v19.8</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -13591,7 +13494,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v18.58</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v19.8</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -13867,7 +13770,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v18.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v19.8</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -14007,7 +13910,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v18.58');
+  lines.push('— Pards Golf · v19.8');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -14256,7 +14159,6 @@ function resumeRound(i){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-score').classList.add('active');
   showS('score');
-  setAdvanceMode(false);  // force confirm scores ON
   renderCard();
 }
 
@@ -14736,7 +14638,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v18.58 · ${dateStr}</div>
+<div class="foot">Pards Golf · v19.8 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -15345,16 +15247,11 @@ function openMatchManager(){
         <button class="mm-close" onclick="closeMatchManager()">Done</button>
       </div>
       
-      <div style="display:block;margin-bottom:8px">
-        <div style="background:#1a2a1a;border:1.5px solid rgba(168,213,181,.3);border-radius:0 0 10px 10px;padding:12px 14px">
-          <div style="font-size:10px;color:#a8d5b5;margin-bottom:10px;line-height:1.4">Auto-advance moves to next hole when all scores entered. Confirm lets you review first.</div>
-        <button onclick="this.parentElement.style.display='none';this.parentElement.previousElementSibling.querySelector('.mmc').textContent='▶'" style="width:100%;margin-top:6px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
-      </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'\u25b6':'\u25bc'"
         style="display:flex;align-items:center;justify-content:space-between;background:#1a2a1a;border:1.5px solid rgba(168,213,181,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#a8d5b5">🍺 Birdie Juice Tracking</span><span class="mmc" style="color:#a8d5b5;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#a8d5b5">🍺 Birdie Juice Tracking</span><span class="mmc" style="color:#a8d5b5;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div style="background:#1a2a1a;border:1.5px solid rgba(168,213,181,.3);border-radius:0 0 10px 10px;padding:12px 14px">
           <div style="font-size:10px;color:#a8d5b5;margin-bottom:10px;line-height:1.4">Track Birdie Juice credits during the round. Turn off for non-drinkers or rounds where you prefer not to track.</div>
           <div style="display:flex;background:rgba(0,0,0,.35);border-radius:8px;padding:3px;gap:3px">
@@ -15366,17 +15263,17 @@ function openMatchManager(){
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#1a1a2e;border:1.5px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">🚩 Change Starting Hole</span><span class="mmc" style="color:#c9a84c;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#c9a84c">🚩 Change Starting Hole</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         ${startHoleSection}
         <button onclick="this.parentElement.style.display='none';this.parentElement.previousElementSibling.querySelector('.mmc').textContent='▶'" style="width:100%;margin-top:6px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">🏌️ Players (${G.n})</span><span class="mmc" style="color:#c9a84c;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#c9a84c">🏌️ Players (${G.n})</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:12px;margin-bottom:8px">
           <div style="font-size:12px;font-weight:700;color:#c9a84c;margin-bottom:6px">🏌️ Changing Tee Deck Mid-Round</div>
           <div style="font-size:12px;color:#111;line-height:1.6">Select a different Tee Deck for any player and their handicap index recalculates automatically. All Nassau and 6-Point matches update instantly.</div>
@@ -15391,9 +15288,9 @@ function openMatchManager(){
       ${so ? '' : `
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">2v2 Nassau Games</span><span class="mmc" style="color:#c9a84c;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#c9a84c">2v2 Nassau Games</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div class="card" id="mmTeamGamesCard">
           <div style="font-size:12px;color:#666;margin:0 0 8px">Tap a pairing to add or remove it.</div>
           <div id="mmPairGrid"></div><div id="mmTeamGamesList"></div>
@@ -15401,9 +15298,9 @@ function openMatchManager(){
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">1v1 Nassau Games</span><span class="mmc" style="color:#c9a84c;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#c9a84c">1v1 Nassau Games</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div class="card" id="mmSinglesCard">
           <div style="font-size:12px;color:#666;margin:0 0 8px">Tap a matchup to add or remove it.</div>
           <div id="mmSinglesGrid"></div><div id="mmSingleGamesList"></div>
@@ -15411,9 +15308,9 @@ function openMatchManager(){
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">🎯 6-Point Game</span><span class="mmc" style="color:#c9a84c;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#c9a84c">🎯 6-Point Game</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div class="card" id="mmSixPointCard" style="padding:10px">
           <div style="font-size:12px;color:#666;margin-bottom:8px">Pick any 3 players — tap to add or remove.</div>
           <div id="mmSixPointGrid"></div><div id="mmSixPointList"></div>
@@ -15421,36 +15318,36 @@ function openMatchManager(){
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#9b59b6">🐍 Snake 3-Putt Game</span><span class="mmc" style="color:#9b59b6;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#9b59b6">🐍 Snake 3-Putt Game</span><span class="mmc" style="color:#9b59b6;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div class="card" id="mmSnakeCard" style="padding:10px;background:#1a0a2a;border:1px solid #6c3483">
           <div id="mmSnakeStatus"></div>
         </div>
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#0d2a22;border:1.5px solid #0d5c4e;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#52b788">🏆 Stableford Game</span><span class="mmc" style="color:#52b788;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#52b788">🏆 Stableford Game</span><span class="mmc" style="color:#52b788;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div class="card" id="mmStablefordCard" style="padding:10px;background:#fff;border:1.5px solid #0d5c4e">
           <div id="mmStablefordContent"></div>
         </div>
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#0d2a22;border:1.5px solid #0d5c4e;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#52b788">💰 Skins Game</span><span class="mmc" style="color:#52b788;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#52b788">💰 Skins Game</span><span class="mmc" style="color:#52b788;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div class="card" id="mmSkinsCard" style="padding:10px;background:#fff;border:1.5px solid #0d5c4e">
           <div id="mmSkinsContent"></div>
         </div>
       </div>
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#0d2a22;border:1.5px solid #0d5c4e;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#52b788">🎲 Vegas Game</span><span class="mmc" style="color:#52b788;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#52b788">🎲 Vegas Game</span><span class="mmc" style="color:#52b788;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div class="card" id="mmVegasCard" style="padding:10px;background:#fff;border:1.5px solid #0d5c4e">
           <div id="mmVegasContent"></div>
         </div>
@@ -15458,9 +15355,9 @@ function openMatchManager(){
 `}
       <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
         style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6a4c93;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#b389d4">⚔️ Match Cards</span><span class="mmc" style="color:#b389d4;font-size:12px">▼</span>
+        <span style="font-size:13px;font-weight:700;color:#b389d4">⚔️ Match Cards</span><span class="mmc" style="color:#b389d4;font-size:12px">▶</span>
       </div>
-      <div style="display:block;margin-bottom:8px">
+      <div style="display:none;margin-bottom:8px">
         <div class="card" id="mmMatchCardsCard" style="padding:10px;background:#fff;border:1.5px solid #6a4c93">
           <div id="mmMatchCardsContent"></div>
         </div>
@@ -18178,7 +18075,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v18.58. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v19.8. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -18666,7 +18563,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v18.58';
+const CURRENT_VERSION = 'pards-v19.8';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -18867,11 +18764,11 @@ const RELEASE_NOTES = [
   'v20.2 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
   'v20.1 — Setup: Load My Favorites button colour matches Manage Favorites green',
   'v20.0 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v19.4 — UI: tab references updated to reflect Games hub navigation',
-  'v19.3 — Score wheel: 2 cells each side, centred on typical score',
-  'v19.2 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v19.1 — Score wheel: left/right cells now relative to typical score, not par',
-  'v19.0 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v19.8 — UI: tab references updated to reflect Games hub navigation',
+  'v19.8 — Score wheel: 2 cells each side, centred on typical score',
+  'v19.8 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v19.8 — Score wheel: left/right cells now relative to typical score, not par',
+  'v19.8 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -18890,47 +18787,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v18.582 — Games menu: ✕ close button added to sheet header',
-  'v18.581 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v18.580 — Snake tab: 3-putt log now sorted by hole number',
-  'v18.589 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v18.588 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v18.587 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v18.586 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v18.585 — Score entry: hole navigation arrows larger and more visible',
-  'v18.584 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v18.583 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v18.582 — Games tab icon changed to 💵',
-  'v18.581 — Birdie Juice tab restored to bottom nav',
-  'v18.580 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v18.589 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v18.588 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v18.587 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v18.586 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v18.585 — Setup: Snake participant names now sync live with player name changes',
-  'v18.584 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v18.583 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v18.582 — Fixed: player entry section now displays correctly',
-  'v18.589 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v18.588 — Setup: Round Setup header moved to the very top of the screen',
-  'v18.587 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v18.586 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v18.585 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v18.584 — Fixed: update notes modal now scrollable on iOS',
-  'v18.583 — Snake tab: current holder hidden after round is complete',
-  'v18.582 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v18.581 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v18.580 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v18.589 — Version number now shown beside Help button on every screen',
-  'v18.588 — Snake: resets every 3 holes; participant selection added to setup',
-  'v18.587 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v18.586 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v18.585 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v18.584 — New Round blocked if on hole 18 with missing scores',
-  'v18.583 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v18.582 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v18.581 — Fixed: ℹ️ update info button now appears correctly',
-  'v18.580 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v19.82 — Games menu: ✕ close button added to sheet header',
+  'v19.81 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v19.80 — Snake tab: 3-putt log now sorted by hole number',
+  'v19.89 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v19.88 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v19.87 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v19.86 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v19.85 — Score entry: hole navigation arrows larger and more visible',
+  'v19.84 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v19.83 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v19.82 — Games tab icon changed to 💵',
+  'v19.81 — Birdie Juice tab restored to bottom nav',
+  'v19.80 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v19.89 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v19.88 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v19.87 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v19.86 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v19.85 — Setup: Snake participant names now sync live with player name changes',
+  'v19.84 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v19.83 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v19.82 — Fixed: player entry section now displays correctly',
+  'v19.89 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v19.88 — Setup: Round Setup header moved to the very top of the screen',
+  'v19.87 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v19.86 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v19.85 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v19.84 — Fixed: update notes modal now scrollable on iOS',
+  'v19.83 — Snake tab: current holder hidden after round is complete',
+  'v19.82 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v19.81 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v19.80 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v19.89 — Version number now shown beside Help button on every screen',
+  'v19.88 — Snake: resets every 3 holes; participant selection added to setup',
+  'v19.87 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v19.86 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v19.85 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v19.84 — New Round blocked if on hole 18 with missing scores',
+  'v19.83 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v19.82 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v19.81 — Fixed: ℹ️ update info button now appears correctly',
+  'v19.80 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -19042,6 +18939,7 @@ setInterval(checkForUpdate,90000);
     applyScorecardOnlyNav();
     document.getElementById('badge').textContent='HOLE '+(G.hole+1);{const _hw=document.getElementById('hdrWx'),_bd=document.getElementById('badge');if(_hw)_hw.style.display='none';if(_bd)_bd.style.display='inline-block';}
     document.getElementById('cntVal').textContent=G.n;
+    
     setScorecardMode(!!G.scorecardOnly);
     showS('score'); renderCard();
     updateBirdieJuiceBadge();
@@ -19071,10 +18969,7 @@ setInterval(checkForUpdate,90000);
       }];
     }
     renderPlayers();
-    renderAllPairOptions();
-    // Restore autoAdvance preference
-    initAdvanceMode();
-    // Fresh launch lands on setup — show its sticky action bar, hide the global help bar.
+    renderAllPairOptions();    // Fresh launch lands on setup — show its sticky action bar, hide the global help bar.
     const _sb=document.getElementById('setupBar'); if(_sb) _sb.classList.add('show');
     const _hb=document.querySelector('.help-bar'); if(_hb) _hb.style.display='none';
   }
@@ -19084,40 +18979,43 @@ setInterval(checkForUpdate,90000);
 // Re-apply the correct bottom-bar state for whichever screen is active.
 // Used on bfcache restore (e.g. returning from help.html via the back button),
 // which doesn't re-run boot or showS.
-
-function openRoundMenu(){
-  updateRoundBar();
-  const ov=document.getElementById('roundMenuOverlay');
-  const sh=document.getElementById('roundMenuSheet');
-  if(!ov||!sh) return;
-  ov.style.display='block';
-  requestAnimationFrame(function(){ sh.classList.add('open'); });
-}
-function closeRoundMenu(){
-  const ov=document.getElementById('roundMenuOverlay');
-  const sh=document.getElementById('roundMenuSheet');
-  if(!sh) return;
-  sh.classList.remove('open');
-  setTimeout(function(){ if(ov) ov.style.display='none'; }, 280);
-}
-function updateRoundBar(){
-  const bar=document.getElementById('roundBar');
-  if(!bar) return;
-  const hole=document.getElementById('roundBarHole');
-  if(hole) hole.textContent='⛳ Hole '+(G.hole+1);
-  // Update BJ badge in menu
-  const bjSub=document.getElementById('rmBJSub');
-  if(bjSub && G.birdieJuice && G.birdieJuice.earned && G.birdieJuice.earned.length){
-    bjSub.textContent=G.birdieJuice.earned.length+' birdie'+(G.birdieJuice.earned.length!==1?'s':'');
-  }
-}
 function showRoundBar(){
-  document.getElementById('roundBar').style.display='flex';
+  const rb = document.getElementById('roundBar');
+  if(rb) rb.style.display='flex';
+  const hb = document.querySelector('.help-bar');
+  if(hb) hb.style.display='none';
   updateRoundBar();
 }
 function hideRoundBar(){
-  document.getElementById('roundBar').style.display='none';
+  const rb = document.getElementById('roundBar');
+  if(rb) rb.style.display='none';
+  const hb = document.querySelector('.help-bar');
+  if(hb) hb.style.display='block';
 }
+function updateRoundBar(){
+  const hole = document.getElementById('roundBarHole');
+  if(hole) hole.textContent = '⛳ Hole ' + (G.hole + 1);
+  const bjSub = document.getElementById('rmBJSub');
+  if(bjSub && G.birdieJuice && G.birdieJuice.earned && G.birdieJuice.earned.length){
+    bjSub.textContent = G.birdieJuice.earned.length + ' birdie' + (G.birdieJuice.earned.length!==1?'s':'') + ' earned';
+  }
+}
+function openRoundMenu(){
+  updateRoundBar();
+  const ov = document.getElementById('roundMenuOverlay');
+  const sh = document.getElementById('roundMenuSheet');
+  if(!ov || !sh) return;
+  ov.style.display = 'block';
+  requestAnimationFrame(function(){ sh.classList.add('open'); });
+}
+function closeRoundMenu(){
+  const sh = document.getElementById('roundMenuSheet');
+  const ov = document.getElementById('roundMenuOverlay');
+  if(!sh) return;
+  sh.classList.remove('open');
+  setTimeout(function(){ if(ov) ov.style.display='none'; }, 300);
+}
+
 
 function syncBottomBars(){
   const active=document.querySelector('.screen.active');
@@ -19126,7 +19024,6 @@ function syncBottomBars(){
   const roundActive = !!(document.getElementById('roundBar') && document.getElementById('roundBar').style.display==='flex');
   const sb=document.getElementById('setupBar');
   const hb=document.querySelector('.help-bar');
-  // If round is active, always show help bar and hide setup bar regardless of active screen
   if(roundActive){
     if(sb) sb.classList.remove('show');
     if(hb) hb.style.display='block';
@@ -19153,7 +19050,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v18.58';
+const CACHE='pards-v19.8';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
