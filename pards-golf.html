@@ -531,6 +531,21 @@ input::placeholder{color:#bbb}
 .ptab.ptab-active .pt-num{color:#c9a84c}
 .ptab.ptab-active .pt-name{color:#f5e6b8}
 
+/* ── Player tab bar ─────────────────────────────────────────────── */
+#playerTabBar{display:flex;gap:3px;margin:8px 0 0 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#playerTabBar::-webkit-scrollbar{display:none}
+.ptab{flex:1;min-width:48px;padding:7px 4px 6px;background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.12);border-radius:8px 8px 0 0;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ptab .pt-num{font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.4px;line-height:1}
+.ptab .pt-name{font-size:11px;font-weight:800;color:rgba(255,255,255,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;line-height:1.2;max-width:60px;margin:2px auto 0}
+.ptab.ptab-active{background:#1a3a2a;border-color:rgba(201,168,76,.6);border-bottom-color:#1a3a2a}
+.ptab.ptab-active .pt-num{color:#c9a84c}
+.ptab.ptab-active .pt-name{color:#f5e6b8}
+/* ── Game tab bar ───────────────────────────────────────────────── */
+#gameTabBar{margin:10px 0 0 0}
+.gtab-row{display:flex;gap:3px;margin-bottom:3px}
+.gtab{flex:1;padding:8px 4px 7px;background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.12);border-radius:8px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;font-size:10px;font-weight:800;color:rgba(255,255,255,.45);letter-spacing:.3px;line-height:1.2}
+.gtab.gtab-active{background:#1a3a2a;border-color:rgba(201,168,76,.6);color:#c9a84c}
+
 </style>
 </head>
 <body>
@@ -740,13 +755,17 @@ input::placeholder{color:#bbb}
   <div id="playerTabBar" style="padding:0 0 0 0;margin:0"></div>
   <div class="card" id="playerInputs" style="background:linear-gradient(135deg,var(--gd) 0%,var(--gm) 100%);border:1.5px solid rgba(201,168,76,.3);padding:8px"></div>
 
-  <div style="display:flex;align-items:center;gap:8px;margin:5px 0 4px">
-    <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
-    <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.7);letter-spacing:1px;text-transform:uppercase">Betting Games</div>
-    <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
-  </div>
   <div class="errmsg" id="setupErr"></div>
   <button class="btn-go" onclick="startRound()" id="startRoundBtn">⛳ Start Round →</button>
+
+  <div style="display:flex;align-items:center;gap:8px;margin:18px 0 0 0">
+    <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
+    <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.5);letter-spacing:1.5px">BETTING GAMES</div>
+    <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
+  </div>
+
+  <div id="gameTabBar"></div>
+  <div id="bettingSections">
 
   <div id="snakeSection">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px 8px 0 0;padding:10px 14px;margin:0;cursor:pointer"><span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#9b59b6;margin:0;padding:0;background:none;font-size:13px">🐍 Snake 3-Putt Game</span><span id="activeLabelSnake" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#9b59b6;font-size:12px">▶</span></div>
@@ -775,8 +794,6 @@ input::placeholder{color:#bbb}
   </div>
   </div><!-- /snakeSection -->
 
-  <div id="bettingSections">
-
   <div id="teamSection">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
     <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">2v2 Nassau Games (High-Low)</span><span id="activeLabel2v2" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
@@ -791,7 +808,8 @@ input::placeholder{color:#bbb}
   </div>
   </div>
 
-  <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
+    <div id="nassau1v1Section">
+<div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
     <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">1v1 Nassau Games</span><span id="activeLabel1v1" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px">▶</span>
   </div>
   <div style="display:none;margin-bottom:8px">
@@ -802,6 +820,7 @@ input::placeholder{color:#bbb}
       <button onclick="this.closest('div[style*=display]').style.display='none';this.closest('div[style*=display]').previousElementSibling.querySelector('.sc').textContent='▶'" style="width:100%;margin-top:8px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
     </div>
   </div>
+  </div><!-- /nassau1v1Section -->
 
   <div id="sixPointSection">
   <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.sc').textContent=s.style.display==='none'?'▶':'▼'" style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px;cursor:pointer">
@@ -5224,8 +5243,8 @@ function initSetup(){
       renderPlayers();
     }
   }
+  renderGameTabs();
 }
-
 function refreshStartRoundBtn(){
   var btn=document.getElementById('startRoundBtn');
   if(!btn) return;
@@ -6295,7 +6314,177 @@ function updateActiveLabels(){
   mark('activeLabelVegas',G.vegasGames&&G.vegasGames.length>0);
   mark('activeLabelSnake',(G.snake&&G.snake.enabled)||(document.getElementById('snakeEnabled')&&document.getElementById('snakeEnabled').checked));
   mark('activeLabelMC',(G.matchCards&&G.matchCards.enabled)||(document.getElementById('mcEnable')&&document.getElementById('mcEnable').checked));
+  // Refresh game tab dots
+  renderGameTabs();
 }
+
+
+var _activePlayerTab = 0;
+
+function _ptabLabel(i){
+  var el = document.getElementById('pn' + i);
+  var nm = el ? el.value.trim() : ((G.players[i] && G.players[i].name) || '');
+  if(!nm) return 'P' + (i + 1);
+  var parts = nm.split(/\s+/);
+  if(parts.length === 1) return parts[0].substring(0, 9);
+  return parts[0] + ' ' + parts[parts.length - 1].charAt(0).toUpperCase() + '.';
+}
+
+function renderPlayerTabs(){
+  var bar = document.getElementById('playerTabBar');
+  if(!bar) return;
+  var html = '';
+  for(var i = 0; i < G.n; i++){
+    var lbl = _ptabLabel(i);
+    var num = 'Player ' + (i + 1);
+    var active = i === _activePlayerTab ? ' ptab-active' : '';
+    html += '<div class="ptab' + active + '" onclick="switchPlayerTab(' + i + ')">'
+          + '<div class="pt-num">' + num + '</div>'
+          + '<div class="pt-name">' + lbl + '</div>'
+          + '</div>';
+  }
+  bar.innerHTML = html;
+}
+
+function switchPlayerTab(i){
+  _activePlayerTab = i;
+  var tabs = document.querySelectorAll('.ptab');
+  tabs.forEach(function(t, j){ t.classList.toggle('ptab-active', j === i); });
+  for(var j = 0; j < 5; j++){
+    var row = document.getElementById('prow' + j);
+    if(row) row.style.display = (j === i && j < G.n) ? '' : 'none';
+  }
+}
+
+function refreshPlayerTabs(){
+  if(_activePlayerTab >= G.n) _activePlayerTab = 0;
+  renderPlayerTabs();
+}
+
+var _activeGameTab = 0;
+var _gameTabExpanded = true;
+
+var _GAME_TABS = [
+  { label: 'SNAKE',       id: 'snakeSection' },
+  { label: 'NASSAU 2v2',  id: 'teamSection' },
+  { label: 'NASSAU 1v1',  id: 'nassau1v1Section' },
+  { label: '6-POINT',     id: 'sixPointSection' },
+  { label: 'STABLEFORD',  id: 'stablefordSetupWrap' },
+  { label: 'SKINS',       id: 'skinsSetupWrap' },
+  { label: 'VEGAS',       id: 'vegasSetupWrap' },
+  { label: 'MATCH CARDS', id: 'matchCardsSetupWrap' },
+];
+
+var _GAME_INFO = [
+  { min: 2, name: 'Snake 3-Putt Game',
+    desc: 'A putting penalty game. Any player who 3-putts picks up the snake. Whoever holds the snake at holes 3, 6, 9, 12, 15, and 18 pays every other participant the agreed amount. The snake can change hands multiple times per round — keep your putting sharp.' },
+  { min: 4, name: '2v2 Nassau (High-Low)',
+    desc: 'Two teams of two compete across three separate bets — Front 9, Back 9, and Total 18. Each team contributes their low ball and high ball net scores. Auto-presses kick in when a team goes two down. Losing team can invoke The International on hole 18.' },
+  { min: 2, name: '1v1 Nassau',
+    desc: 'Head-to-head Nassau between two players. Front 9, Back 9, and Total 18 — three separate bets in one. Run multiple 1v1 matchups simultaneously. Auto-presses and The International available.' },
+  { min: 3, name: '6-Point Game',
+    desc: 'A three-player points game played on every hole. The low net score wins 4 points, second place wins 2 points, third place wins 0 points. Ties for low split 3 points each. Points accumulate over 18 holes — highest total wins.' },
+  { min: 2, name: 'Stableford',
+    desc: 'Points-based scoring against par. Double bogey or worse = 0 pts, Bogey = 1, Par = 2, Birdie = 3, Eagle = 4, Albatross = 5. Higher score wins. Great for keeping everyone engaged even after a rough hole.' },
+  { min: 2, name: 'Skins',
+    desc: 'Each hole is worth one skin. Win a hole outright and you claim the skin. Tie a hole and the skin carries over to the next. Choose Gross or Net scoring. After 18: void unclaimed skins or Last Hole Sweeps.' },
+  { min: 4, name: 'Vegas',
+    desc: 'A 2v2 game where each team combines their two scores into a two-digit number, lowest digit first (scores of 4 and 5 become 45). The team with the lower number wins the difference times the bet. The Flip: if a player birdies, the opponent\'s digits flip (45 becomes 54). High variance, high drama.' },
+  { min: 1, name: 'Match Cards',
+    desc: 'Play 1v1 Nassau against players in other groups — without being in the same group. Enter your scores live during the round. Enter your opponents\' scores later in the clubhouse. Full Nassau results calculated at the end.' },
+];
+
+function _isGameEnabled(i){
+  switch(i){
+    case 0: return !!(G.snake&&G.snake.enabled)||(document.getElementById('snakeEnabled')&&document.getElementById('snakeEnabled').checked)||false;
+    case 1: return !!(G.teamGames&&G.teamGames.length>0&&G.teamGames.some(function(g){return g.bet>0;}));
+    case 2: return !!(G.singleGames&&G.singleGames.length>0&&G.singleGames.some(function(g){return g.bet>0;}));
+    case 3: return !!(G.sixPointGames&&G.sixPointGames.length>0);
+    case 4: return !!(G.stablefordGames&&G.stablefordGames.length>0&&G.stablefordGames[0].players&&G.stablefordGames[0].players.length>0);
+    case 5: return !!(G.skinsGames&&G.skinsGames.length>0&&G.skinsGames[0].players&&G.skinsGames[0].players.length>0);
+    case 6: return !!(G.vegasGames&&G.vegasGames.length>0);
+    case 7: return !!(G.matchCards&&G.matchCards.enabled)||(document.getElementById('mcEnable')&&document.getElementById('mcEnable').checked)||false;
+    default: return false;
+  }
+}
+
+function renderGameTabs(){
+  var bar = document.getElementById('gameTabBar');
+  if(!bar) return;
+  // Hide all sections first
+  _GAME_TABS.forEach(function(g){
+    var s = document.getElementById(g.id);
+    if(s) s.style.display = 'none';
+  });
+  var html = '';
+  var row = '';
+  var perRow = 4;
+  for(var i = 0; i < _GAME_TABS.length; i++){
+    var isActive = i === _activeGameTab;
+    var enabled = _isGameEnabled(i);
+    var arrow = isActive ? (_gameTabExpanded ? ' ▼' : ' ▶') : '';
+    var dot = enabled ? '<span style="position:absolute;top:4px;right:5px;width:7px;height:7px;background:#52b788;border-radius:50%;border:1.5px solid rgba(0,0,0,.3)"></span>' : '';
+    var activeClass = isActive ? ' gtab-active' : '';
+    var enabledClass = enabled ? ' gtab-on' : '';
+    row += '<div class="gtab' + activeClass + enabledClass + '" onclick="switchGameTab(' + i + ')" style="position:relative">'
+          + dot
+          + _GAME_TABS[i].label + arrow
+          + '</div>';
+    if((i + 1) % perRow === 0 || i === _GAME_TABS.length - 1){
+      html += '<div class="gtab-row">' + row + '</div>';
+      row = '';
+    }
+  }
+  bar.innerHTML = html;
+  _applyGameTabVisibility();
+}
+
+function switchGameTab(i){
+  if(i === _activeGameTab){
+    _gameTabExpanded = !_gameTabExpanded;
+  } else {
+    _activeGameTab = i;
+    _gameTabExpanded = true;
+  }
+  renderGameTabs();
+}
+
+function _applyGameTabVisibility(){
+  document.querySelectorAll('.game-min-msg').forEach(function(el){ el.remove(); });
+  _GAME_TABS.forEach(function(g, i){
+    var section = document.getElementById(g.id);
+    if(!section) return;
+    var info = _GAME_INFO[i];
+    var meetsMin = G.n >= info.min;
+    if(i === _activeGameTab && _gameTabExpanded){
+      if(meetsMin){
+        section.style.display = '';
+        var header = section.querySelector('[onclick*="nextElementSibling"]');
+        if(header){
+          var body = header.nextElementSibling;
+          if(body){
+            body.style.display = 'block';
+            var chev = header.querySelector('.sc');
+            if(chev) chev.textContent = '▼';
+          }
+        }
+      } else {
+        section.style.display = 'none';
+        var msg = document.createElement('div');
+        msg.className = 'game-min-msg';
+        msg.style.cssText = 'background:rgba(0,0,0,.25);border:1.5px solid rgba(255,255,255,.12);border-radius:10px;padding:16px 14px;margin:8px 0;';
+        msg.innerHTML = '<div style="font-size:14px;font-weight:800;color:#c9a84c;margin-bottom:6px">⚠️ ' + info.name + '</div>'
+          + '<div style="font-size:12px;color:rgba(255,255,255,.7);font-weight:700;margin-bottom:10px">Requires ' + info.min + ' players minimum — add ' + (info.min - G.n) + ' more player' + (info.min - G.n !== 1 ? 's' : '') + ' to enable this game.</div>'
+          + '<div style="font-size:11px;color:rgba(255,255,255,.45);line-height:1.6;font-style:italic">' + info.desc + '</div>';
+        var bar = document.getElementById('bettingSections');
+        if(bar) bar.insertBefore(msg, bar.firstChild);
+      }
+    } else {
+      section.style.display = 'none';
+    }
+  });
+}
+
 
 function renderAllPairOptions(){
   renderTeamOptions();
@@ -6314,8 +6503,8 @@ function renderAllPairOptions(){
   renderMatchCardsConfig();
   renderGameSectionsVisibility();
   updateActiveLabels();
+  renderGameTabs();
 }
-
 function renderTeamOptions(){
   const n=G.n;
   if(n<4){document.getElementById('pairGrid').innerHTML='<div style="font-size:13px;color:var(--red);padding:4px 0">Need 4+ players for 2v2.</div>';return;}
@@ -6432,8 +6621,8 @@ function renderSixPointGamesList(){
   });
   if(!h) h='<div class="add-hint">No 6-Point game added — tap 3 players above</div>';
   document.getElementById('sixPointGamesList').innerHTML=h;
+  if(typeof renderGameTabs==="function") renderGameTabs();
 }
-
 function addSixPointGame(players){
   const already=G.sixPointGames.findIndex(g=>JSON.stringify(g.players)===JSON.stringify(players));
   if(already>=0){G.sixPointGames.splice(already,1);}
@@ -7422,8 +7611,8 @@ function toggleSkinsPlayer(pi){
   saveG();
   renderSkinsOptions();
   renderSkinsGamesList();
+  if(typeof renderGameTabs==="function") renderGameTabs();
 }
-
 function renderSkinsGamesList(){
   const el = document.getElementById('skinsGamesList');
   if(!el) return;
@@ -7451,8 +7640,8 @@ function renderSkinsGamesList(){
   }
   h += `</div>`;
   el.innerHTML = h;
+  if(typeof renderGameTabs==="function") renderGameTabs();
 }
-
 function setSkinsBet(v){ if(!G.skinsGames.length) return; G.skinsGames[0].perSkin=v; saveG(); renderSkinsGamesList(); }
 function setSkinsMode(m){ if(!G.skinsGames.length) return; G.skinsGames[0].mode=m; saveG(); renderSkinsGamesList(); }
 function setSkinsCarry(c){ if(!G.skinsGames.length) return; G.skinsGames[0].carry=c; saveG(); renderSkinsGamesList(); }
@@ -7547,8 +7736,8 @@ function renderVegasGamesList(){
     html += `</div>`;
   });
   el.innerHTML = html;
+  if(typeof renderGameTabs==="function") renderGameTabs();
 }
-
 function setVegasPoint(gi,v){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].perPoint=v; saveG(); renderVegasGamesList(); renderVegasOptions(); }
 function setVegasMode(gi,m){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].mode=m; saveG(); renderVegasGamesList(); }
 function setVegasFlip(gi,f){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].flip=f; saveG(); renderVegasGamesList(); }
@@ -7563,24 +7752,16 @@ function renderMatchCardsSetupVisibility(){
   // Always show Match Cards for solo rounds — they may meet someone on course
   // and want to settle up over a beer after. Also show normally for multi-player.
   if(wrap) wrap.style.display = (G.n===1 || !scoresOnly) ? 'block' : 'none';
+  if(typeof renderGameTabs==="function") renderGameTabs();
 }
-
-// When only 1 player, the only selectable game is Match Cards.
-// Hide Snake + the multiplayer betting sections (Nassau/6-Point). Stableford self-hides.
-// 2v2 Nassau needs 4 players; 6-Point needs 3.
 function renderGameSectionsVisibility(){
   const soBox = document.getElementById('scorecardOnly');
   const scoresOnly = !!(soBox && soBox.value==='1');
-  const multi = G.n >= 2 && !scoresOnly;
-  const snake = document.getElementById('snakeSection');
+  const gameBar = document.getElementById('gameTabBar');
   const betting = document.getElementById('bettingSections');
-  if(snake) snake.style.display = multi ? 'block' : 'none';
-  if(betting) betting.style.display = multi ? 'block' : 'none';
-  // Within the betting sections, gate by minimum player counts
-  const team = document.getElementById('teamSection');
-  if(team) team.style.display = (multi && G.n >= 4) ? 'block' : 'none';
-  const sixPt = document.getElementById('sixPointSection');
-  if(sixPt) sixPt.style.display = (multi && G.n >= 3) ? 'block' : 'none';
+  if(gameBar) gameBar.style.display = scoresOnly ? 'none' : '';
+  if(betting) betting.style.display = scoresOnly ? 'none' : '';
+  if(!scoresOnly) renderGameTabs();
 }
 
 function toggleMatchCards(){
@@ -7780,8 +7961,8 @@ function renderMatchCardsConfig(){
     h+=`<button onclick="mcAddOpponent()" style="width:100%;padding:9px;background:#6a4c93;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">+ Add Opponent${opps.length?' 2':''}</button>`;
   }
   el.innerHTML=h;
+  if(typeof renderGameTabs==="function") renderGameTabs();
 }
-
 function toggleStablefordPlayer(pi){
   if(!G.stablefordGames.length){
     G.stablefordGames.push({players:[], points:{...STABLEFORD_DEFAULTS}, betPerPoint:1});
@@ -7828,8 +8009,8 @@ function renderStablefordGamesList(){
   h += `<button onclick="resetStablefordPts()" style="width:100%;margin-top:10px;padding:6px;background:rgba(0,0,0,.04);border:1px solid #ddd;border-radius:6px;color:#888;font-size:11px;cursor:pointer">Reset to defaults</button>`;
   h += `</div>`;
   el.innerHTML = h;
+  if(typeof renderGameTabs==="function") renderGameTabs();
 }
-
 function adjustStablefordPts(key, delta){
   if(!G.stablefordGames.length) return;
   const pts = G.stablefordGames[0].points || (G.stablefordGames[0].points = {...STABLEFORD_DEFAULTS});
@@ -18379,8 +18560,8 @@ function renderSnakeSetupOptions(){
   }
   listEl.innerHTML=html;
   updateActiveLabels();
+  if(typeof renderGameTabs==="function") renderGameTabs();
 }
-
 const SNAKE_SETTLE_HOLES=[2,5,8,11,14,17];
 function computeSnakeSettlements(){
   if(!G.snake||!G.snake.enabled||!G.snake.bet) return [];
@@ -18955,8 +19136,8 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v20.8 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v20.7 — Manage Favorites: COPY label added above the copy icon',
+  'v20.13 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v20.13 — Manage Favorites: COPY label added above the copy icon',
   'v20.6 — Manage Favorites: copy button now dark background with white icon for better visibility',
   'v20.5 — Manage Favorites: Idx label changed to Index',
   'v20.4 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
