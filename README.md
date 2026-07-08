@@ -4,7 +4,7 @@ A mobile-first Progressive Web App for scoring golf rounds and tracking betting 
 
 **Live app:** https://bdcomeau.github.io/pardsgolf/pards-golf.html  
 **User manual:** https://bdcomeau.github.io/pardsgolf/pardsgolf-help.html  
-**Current version:** v20.33
+**Current version:** v30.10
 
 ---
 
@@ -20,7 +20,7 @@ Pards Golf is a single-file HTML PWA that runs entirely on your iPhone — no Ap
 - **140+ courses** — all tees, par, stroke index, slope, and rating pre-loaded
 - **Live weather** per course in the course picker
 - **Round History** with master scorecard, final totals, Share/Print, and Pards Leaderboard
-- **Match Cards** — play Nassau against golfers in other groups, score them later from History
+- **Match Cards** — play 1v1 Nassau against up to 4 golfers in other groups, score them later from History
 
 ---
 
@@ -46,7 +46,7 @@ Pards Golf is a single-file HTML PWA that runs entirely on your iPhone — no Ap
 | Skins | 2–5 | Per-hole winner takes all, ties carry. Net or gross. |
 | Vegas | 4–5 | Team scores combine low-digit-first. Birdie flips the number. |
 | Snake 3-Putt | 2–5 | Holder of the snake after holes 3/6/9/12/15/18 pays the table. |
-| Match Cards | 2–3 | Nassau vs players in other groups — scored later from History. |
+| Match Cards | 2–5 | 1v1 Nassau vs up to 4 players in other groups — scored later from History. |
 
 ---
 
@@ -75,7 +75,7 @@ Pards Golf is a single-file HTML PWA that runs entirely on your iPhone — no Ap
 - **Single file:** `pards-golf.html` — HTML, CSS, JS, and all course data in one file (~3MB)
 - **No build step** — deploy by uploading the file to GitHub Pages
 - **localStorage** — all round data, player contacts, history, and settings stored client-side
-- **Golf Canada API** — handicap fetches routed through a Cloudflare Worker proxy (`gc-proxy.bdapple.workers.dev`)
+- **Golf Canada API** — handicap fetches routed through a Cloudflare Worker proxy
 - **Weather** — Open-Meteo for non-Edmonton courses; WeatherLink for Edmonton-area courses
 - **PWA** — installable, works offline after first load
 
@@ -83,34 +83,25 @@ Pards Golf is a single-file HTML PWA that runs entirely on your iPhone — no Ap
 
 ## Version History
 
+### v30.0–v30.10 — Match Cards 4-Opponent Tabs & Course Updates
+- **Match Cards overhaul**: opponent limit raised from 2 to 4; new 4-tab purple interface mirrors player tab pattern; sequential tab locking; live tab label updates on keystroke; Clear button replaces ×; all 4 opponents included in history snapshot; counts as a valid game for round validation
+- **Palm Valley CC Championship**: all 6 tees updated with correct hole-by-hole yardages — Championship (Blue) · Players (Blue/White) · White · Masters (Silver/White) · Silver · Gold
+- **File deployment**: every version bump now produces three files — `pards-golf.html`, `index.html`, and a versioned `pards-golf-vXX.XX.html`
+
 ### v20.22–v20.33 — Game Tab Bar Polish & Round Flow
-- **Game tab bar** (v20.10–v20.21): 2-row × 4-tab interface replaces accordion layout for all 8 betting games. Green dot indicators, minimum player guards, auto-scroll on expand, ▲ Collapse buttons wired to tab system.
-- **Stableford/Skins** open with no players selected by default (v20.22)
-- **Green dot guards** respect minimum player count — reducing players clears stale dots (v20.23)
-- **Auto-scroll** when expanding a game tab (v20.24)
-- **Snake green dot** now checks DOM checkbox since `G.snake.enabled` isn't set until `startRound()` (v20.26)
-- **📜 View & Share Results** now navigates directly to History and auto-opens the completed round (v20.29)
-- **Match Cards active round fix** — `viewAndShareResults()` fully retires the live round before navigating, clearing `G.scores`, `G.roundDate`, `G.roundEnd`, and `pards_G` localStorage (v20.33)
+- Game tab bar: green dot guards, auto-scroll, collapse buttons, Snake dot fix
+- View & Share Results navigates directly to completed round in History, fully retiring the live round
+- Match Cards active round fix
 
-### v20.0–v20.9 — Player Tab Bar & UI Foundations
-- **Player tab bar** — 1–5 tabs between Manage Players button and player card; labels show "Player 1 / Bruce C." format
-- **Snake moved** inside the betting games section as the first game
-- **Master scorecard score symbols** — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey)
-- **"BETTING GAMES" gold divider** between Start Round button and game tabs
-- **Load My Favourites** button colour updated; Golf Canada ID copy button and labels added
+### v20.0–v20.21 — Game Tab Bar & Player Tabs
+- Player tab bar (1–5 tabs, live labels)
+- 2-row × 4-tab game tab bar replacing accordion layout
+- Green dot indicators, minimum player guards
 
-### v19.x — Round Bar, Confirm Scores, Easter Eggs
-- Slim gold round bar replaces full bottom nav during rounds
-- ☰ Menu sheet: Return to Scorecard, Games, BJ, History, Mid-Round Settings, Save & End Round
-- Complete Round button on hole 18 with toast + gold pulsing banner
-- Auto-advance permanently removed — Confirm Scores is always ON
-- Doug Boyer easter egg — fires on gross par, 21 rotating Astrolab Sauvignon Blanc messages, bogey streak detector
-- Bill Burch "Billy's Bunker" (Hole 18 Derrick); Stu Curley "Stu's Bunker" (Hole 4 Derrick)
-
-### v18.x — Course Picker Redesign
-- Canada/USA region accordions with provincial/state flag icons
-- Course Info overlay: live weather, full 18-hole scorecard, personal history
-- Significant course database expansion
+### v19.x — Round Bar & Confirm Scores
+- Slim gold round bar, ☰ Menu sheet
+- Auto-advance permanently removed — Confirm Scores always ON
+- Doug Boyer easter egg
 
 ---
 
