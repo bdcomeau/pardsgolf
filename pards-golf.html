@@ -638,150 +638,141 @@ input::placeholder{color:#bbb}
 
     <div id="resetConfirm" style="display:none"></div>
 
-  <div style="display:flex;align-items:center;gap:8px;margin:5px 0 4px">
-    <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
-    <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.7);letter-spacing:1px;text-transform:uppercase">Round Setup</div>
-    <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
-  </div>
-  <button onclick="showResetConfirm()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:10px;padding:9px;margin-bottom:10px;color:#e8d9a8;font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">
-    <span>🧹</span><span>Reset Round Setup</span><span>🧹</span>
-  </button>
-  <div style="display:flex;gap:10px;margin-bottom:0;align-items:stretch">
-    <div style="flex:2;display:flex">
-      <div class="card" style="padding:12px;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a3a2a;border:1.5px solid rgba(168,213,181,.4);box-shadow:0 3px 8px rgba(0,0,0,.35)">
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Number of Players</div>
-        <div class="cnt-row" style="justify-content:center">
-          <button class="cnt-btn" id="btnMinus">−</button>
-          <div class="cnt-val" id="cntVal" style="font-size:28px;font-weight:800;min-width:44px;text-align:center;color:#fff">4</div>
-          <button class="cnt-btn" id="btnPlus">+</button>
-        </div>
+  <!-- ── Compact strip row ── -->
+  <div style="display:flex;gap:6px;margin-bottom:8px">
+    <div onclick="setupOpenPlayers()" style="flex:1;background:rgba(0,0,0,.3);border:1.5px solid rgba(201,168,76,.25);border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+      <div style="font-size:16px;flex-shrink:0">👥</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px">Players</div>
+        <div id="pillPlayers" style="font-size:13px;font-weight:800;color:#f5e6b8;margin-top:1px">4</div>
       </div>
+      <div style="font-size:9px;color:rgba(201,168,76,.5)">▼</div>
     </div>
-    <div style="flex:1;display:flex">
-      <div class="card" style="padding:12px;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1a3a2a;border:1.5px solid rgba(168,213,181,.4);box-shadow:0 3px 8px rgba(0,0,0,.35)">
-        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Starting Hole</div>
-        <select id="startHoleSel" style="width:100%;border:none;background:transparent;color:#fff;font-size:22px;font-weight:800;text-align:center;text-align-last:center;-webkit-appearance:none;appearance:none;padding:0">
-      <option value="1">Hole 1</option><option value="2">Hole 2</option><option value="3">Hole 3</option>
-      <option value="4">Hole 4</option><option value="5">Hole 5</option><option value="6">Hole 6</option>
-      <option value="7">Hole 7</option><option value="8">Hole 8</option><option value="9">Hole 9</option>
-      <option value="10">Hole 10</option><option value="11">Hole 11</option><option value="12">Hole 12</option>
-      <option value="13">Hole 13</option><option value="14">Hole 14</option><option value="15">Hole 15</option>
-      <option value="16">Hole 16</option><option value="17">Hole 17</option><option value="18">Hole 18</option>
-        </select>
-        <div style="font-size:10px;color:rgba(255,255,255,.5);margin-top:4px">Change for shotgun starts</div>
+    <div onclick="setupOpenHole()" style="flex:1;background:rgba(0,0,0,.3);border:1.5px solid rgba(201,168,76,.25);border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+      <div style="font-size:16px;flex-shrink:0">🚩</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px">Starts</div>
+        <div id="pillHole" style="font-size:13px;font-weight:800;color:#f5e6b8;margin-top:1px">Hole 1</div>
       </div>
+      <div style="font-size:9px;color:rgba(201,168,76,.5)">▼</div>
+    </div>
+    <div onclick="setupOpenOptions()" style="flex:1;background:rgba(0,0,0,.3);border:1.5px solid rgba(201,168,76,.25);border-radius:10px;padding:8px 10px;display:flex;align-items:center;gap:6px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+      <div style="font-size:16px;flex-shrink:0">⚙️</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:9px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.5px">Options</div>
+        <div id="pillOptions" style="font-size:11px;font-weight:800;color:#f5e6b8;margin-top:1px">Games · BJ OFF</div>
+      </div>
+      <div style="font-size:9px;color:rgba(201,168,76,.5)">▶</div>
     </div>
   </div>
 
-  <div style="height:3px"></div>
-
-  <!-- ── Round Options accordion ── -->
-  <div style="margin-bottom:0">
-    <div onclick="var b=document.getElementById('roundOptBody');var c=document.getElementById('roundOptChev');var open=b.style.display!=='none';b.style.display=open?'none':'block';c.textContent=open?'▶':'▼';"
-      style="display:flex;align-items:center;justify-content:space-between;background:#1a3a2a;border:1.5px solid rgba(168,213,181,.4);border-radius:10px;padding:10px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:13px;font-weight:800;color:rgba(255,255,255,.85)">⚙️ Round Options</span>
-        <span id="roundOptSummary" style="font-size:10px;color:rgba(168,213,181,.5)">Games ON - Birdie Juice OFF - Confirm Scores ON</span>
-      </div>
-      <span id="roundOptChev" style="font-size:12px;color:rgba(201,168,76,.6)">▶</span>
-    </div>
-
-    <div id="roundOptBody" style="display:none">
-      <div class="card" id="roundTypeCard" style="background:#1a3a2a;padding:12px;border:1.5px solid rgba(168,213,181,.4);border-top:none;border-radius:0 0 10px 10px;box-shadow:0 3px 8px rgba(0,0,0,.35)">
-        <input type="hidden" id="scorecardOnly">
-        <div style="position:relative">
-          <div style="display:flex;align-items:center;justify-content:space-between;width:100%">
-            <div style="display:flex;align-items:center;gap:5px">
-              <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">📋 Scorekeeping Mode Only</div>
-              <button onclick="toggleScoreInfo(event)" style="width:15px;height:15px;border-radius:50%;border:1.5px solid rgba(168,213,181,.6);background:transparent;color:rgba(168,213,181,.8);font-size:9px;font-weight:800;cursor:pointer;padding:0;line-height:1;flex:none;-webkit-tap-highlight-color:transparent">i</button>
-            </div>
-            <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
-              <button id="segScoreOn" onclick="setScorecardMode(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">ON</button>
-              <button id="segScoreOff" onclick="setScorecardMode(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ OFF</button>
-            </div>
-          </div>
-          <div id="scoreInfoPopup" style="display:none;position:absolute;top:24px;left:0;z-index:200;background:#0f2a1a;border:1.5px solid rgba(201,168,76,.5);border-radius:10px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.6);width:260px">
-            <div style="font-size:11px;font-weight:800;color:var(--gp);margin-bottom:8px;letter-spacing:.3px">Scorekeeping Mode</div>
-            <div style="display:flex;gap:8px;margin-bottom:7px">
-              <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-              <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5"><span style="font-weight:800;color:#a8d5b5">OFF — DEFAULT</span> — Scores and tracks as many money games as you can select in Games Setup.</div>
-            </div>
-            <div style="display:flex;gap:8px">
-              <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-              <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5"><span style="font-weight:800;color:#a8d5b5">Scorekeeping Mode Only (ON)</span> — No betting games, just a scorecard and that's it.</div>
-            </div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)">
-          <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,.7)">🍺 Birdie Juice Tracking</div>
-          <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
-            <button id="segBJOn" onclick="setBirdieJuice(true)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:transparent;color:rgba(255,255,255,.4)">ON</button>
-            <button id="segBJOff" onclick="setBirdieJuice(false)" style="padding:4px 10px;border:none;border-radius:5px;font-size:10px;font-weight:800;cursor:pointer;transition:all .15s;background:var(--gp);color:var(--gd);box-shadow:0 2px 4px rgba(0,0,0,.3)">✓ OFF</button>
-          </div>
-        </div>
-        
-      </div>
+  <!-- Hidden elements kept for JS compatibility -->
+  <input type="hidden" id="scorecardOnly">
+  <div id="roundOptBody" style="display:none">
+    <div id="roundTypeCard">
+      <button id="segScoreOn" onclick="setScorecardMode(true)" style="display:none">ON</button>
+      <button id="segScoreOff" onclick="setScorecardMode(false)" style="display:none">OFF</button>
+      <button id="segBJOn" onclick="setBirdieJuice(true)" style="display:none">ON</button>
+      <button id="segBJOff" onclick="setBirdieJuice(false)" style="display:none">OFF</button>
     </div>
   </div>
+  <span id="roundOptSummary" style="display:none"></span>
+  <span id="roundOptChev" style="display:none"></span>
 
-  <div style="display:flex;align-items:center;gap:8px;margin:5px 0 4px">
+  <!-- Players divider -->
+  <div style="display:flex;align-items:center;gap:8px;margin:4px 0 6px">
     <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
     <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.7);letter-spacing:1px;text-transform:uppercase">Players</div>
     <div style="flex:1;height:1px;background:rgba(201,168,76,.25)"></div>
   </div>
-  <div style="display:flex;flex-direction:column;gap:6px;margin-top:0;margin-bottom:8px">
 
-  <div style="position:relative">
-    <div style="display:flex;align-items:center;gap:6px">
-      <button id="favPreview" onclick="loadFavoritesButton()" style="flex:1;background:rgba(168,213,181,.2);border:1.5px solid rgba(168,213,181,.5);color:#a8d5b5;border-radius:10px;padding:12px 8px;cursor:pointer;text-align:center;font-size:14px;font-weight:800;-webkit-tap-highlight-color:transparent">⭐ Load My Favourites<div id="favNames" style="display:none"></div></button>
-      <button onclick="toggleFavInfo(event)" style="width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(168,213,181,.6);background:transparent;color:rgba(168,213,181,.8);font-size:10px;font-weight:800;cursor:pointer;padding:0;line-height:1;flex:none;-webkit-tap-highlight-color:transparent">i</button>
-    </div>
-    <div id="favInfoPopup" style="display:none;position:absolute;top:52px;left:0;z-index:200;background:#0f2a1a;border:1.5px solid rgba(201,168,76,.5);border-radius:10px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.6);width:280px">
-      <div style="font-size:11px;font-weight:800;color:var(--gp);margin-bottom:8px;letter-spacing:.3px">⭐ Load My Favourites</div>
-      <div style="display:flex;gap:8px;margin-bottom:7px">
-        <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5">Instantly fills all player slots with your saved favourite group — perfect for your regular crew.</div>
+  <!-- Load Favourites + Manage Players — equal width -->
+  <div style="display:flex;gap:6px;margin-bottom:8px">
+    <button id="favPreview" onclick="loadFavoritesButton()" style="flex:1;background:rgba(168,213,181,.2);border:1.5px solid rgba(168,213,181,.5);color:#a8d5b5;border-radius:10px;padding:11px 8px;cursor:pointer;text-align:center;font-size:13px;font-weight:800;-webkit-tap-highlight-color:transparent">⭐ Load My Favourites<div id="favNames" style="display:none"></div></button>
+    <button onclick="openFavorites()" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(168,213,181,.25);color:rgba(168,213,181,.6);border-radius:10px;padding:11px 8px;font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">⚙️ Manage Players</button>
+  </div>
+
+  <div id="playerTabBar" style="display:none;margin:0"></div>
+  <div id="playerInputs" style="background:transparent;padding:0"></div>
+
+  <!-- Options modal -->
+  <div id="setupOptionsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9990;display:none;align-items:flex-end;justify-content:center" onclick="if(event.target===this)setupCloseOptions()">
+    <div style="background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding-bottom:32px">
+      <div style="padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1)">
+        <div style="font-size:15px;font-weight:800;color:#c9a84c">⚙️ Round Options</div>
+        <button onclick="setupCloseOptions()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:18px;cursor:pointer;line-height:1">&times;</button>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:7px">
-        <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5">Handicap Indexes are fetched automatically from Golf Canada for each player.</div>
+      <!-- Scorekeeping mode -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07)">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#f5e6b8">📋 Scorekeeping Mode Only</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">No betting games, just a scorecard</div>
+        </div>
+        <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
+          <button id="segScoreOn2" onclick="setScorecardMode(true);setupUpdatePill()" style="padding:5px 12px;border:none;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;background:transparent;color:rgba(255,255,255,.4)">ON</button>
+          <button id="segScoreOff2" onclick="setScorecardMode(false);setupUpdatePill()" style="padding:5px 12px;border:none;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;background:var(--gp);color:var(--gd)">✓ OFF</button>
+        </div>
       </div>
-      <div style="display:flex;gap:8px">
-        <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5">Set your favourites using <span style="color:#a8d5b5;font-weight:800">Manage My Players</span> below.</div>
+      <!-- Birdie Juice -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.07)">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#f5e6b8">🍺 Birdie Juice Tracking</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">Track birdie credits across the group</div>
+        </div>
+        <div style="display:flex;background:rgba(0,0,0,.35);border-radius:6px;padding:2px;gap:2px">
+          <button id="segBJOn2" onclick="setBirdieJuice(true);setupUpdatePill()" style="padding:5px 12px;border:none;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;background:transparent;color:rgba(255,255,255,.4)">ON</button>
+          <button id="segBJOff2" onclick="setBirdieJuice(false);setupUpdatePill()" style="padding:5px 12px;border:none;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;background:var(--gp);color:var(--gd)">✓ OFF</button>
+        </div>
+      </div>
+      <!-- Reset -->
+      <div style="padding:20px 16px 0">
+        <div style="height:1px;background:rgba(255,255,255,.08);margin-bottom:16px"></div>
+        <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.5px;text-align:center;margin-bottom:10px">Danger Zone</div>
+        <button id="setupResetBtn" onmousedown="setupResetStart()" onmouseup="setupResetCancel()" onmouseleave="setupResetCancel()" ontouchstart="setupResetStart(event)" ontouchend="setupResetCancel()" style="width:100%;padding:14px;background:rgba(231,76,60,.1);border:1.5px solid rgba(231,76,60,.3);border-radius:12px;color:#e74c3c;font-size:14px;font-weight:800;cursor:pointer;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none">
+          <div id="setupResetBar" style="position:absolute;left:0;top:0;bottom:0;width:0%;background:rgba(231,76,60,.2);pointer-events:none;border-radius:10px"></div>
+          <span id="setupResetLbl">🧹 Hold to Reset Round Setup</span>
+        </button>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);text-align:center;margin-top:8px">Clears all players and game settings</div>
       </div>
     </div>
   </div>
 
-  <div style="position:relative">
-    <div style="display:flex;align-items:center;gap:6px">
-      <button style="flex:1;border-radius:10px;padding:9px 8px;font-size:12px;font-weight:600;margin:0;background:rgba(255,255,255,.06);border:1px solid rgba(168,213,181,.25);color:rgba(168,213,181,.6);cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="openFavorites()">⚙️ Manage My Players</button>
-      <button onclick="toggleManageInfo(event)" style="width:20px;height:20px;border-radius:50%;border:1.5px solid rgba(168,213,181,.4);background:transparent;color:rgba(168,213,181,.6);font-size:10px;font-weight:800;cursor:pointer;padding:0;line-height:1;flex:none;-webkit-tap-highlight-color:transparent">i</button>
-    </div>
-    <div id="manageInfoPopup" style="display:none;position:absolute;top:44px;left:0;z-index:200;background:#0f2a1a;border:1.5px solid rgba(201,168,76,.5);border-radius:10px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.6);width:280px">
-      <div style="font-size:11px;font-weight:800;color:var(--gp);margin-bottom:8px;letter-spacing:.3px">⚙️ Manage My Players</div>
-      <div style="display:flex;gap:8px;margin-bottom:7px">
-        <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5"><span style="color:#a8d5b5;font-weight:800">Search & add</span> players from the pre-loaded contact list or create custom players.</div>
+  <!-- Players count modal -->
+  <div id="setupPlayersModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9990;align-items:flex-end;justify-content:center" onclick="if(event.target===this)setupClosePlayers()">
+    <div style="background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px 20px 40px">
+      <div style="padding:0 0 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:16px">
+        <div style="font-size:15px;font-weight:800;color:#c9a84c">👥 Number of Players</div>
+        <button onclick="setupClosePlayers()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:18px;cursor:pointer;line-height:1">&times;</button>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:7px">
-        <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5"><span style="color:#a8d5b5;font-weight:800">Star ⭐ players</span> to add them to your Favourites group for one-tap loading.</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin:10px 0 20px">
+        <button class="cnt-btn" id="btnMinus">−</button>
+        <div class="cnt-val" id="cntVal" style="font-size:52px;font-weight:900;min-width:60px;text-align:center;color:#fff">4</div>
+        <button class="cnt-btn" id="btnPlus">+</button>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:7px">
-        <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5">Set each player's <span style="color:#a8d5b5;font-weight:800">default tee deck</span> and <span style="color:#a8d5b5;font-weight:800">typical score</span> so they auto-configure on every round.</div>
-      </div>
-      <div style="display:flex;gap:8px">
-        <div style="color:var(--gp);font-size:11px;flex:none">•</div>
-        <div style="font-size:11px;color:rgba(255,255,255,.85);line-height:1.5">Link a <span style="color:#a8d5b5;font-weight:800">Golf Canada ID</span> to each player for live handicap fetching.</div>
-      </div>
+      <button onclick="setupClosePlayers()" style="width:100%;background:linear-gradient(135deg,#c9a84c,#a07830);border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:900;color:#1a1a1a;cursor:pointer">Done</button>
     </div>
   </div>
 
+  <!-- Starting hole modal -->
+  <div id="setupHoleModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9990;align-items:flex-end;justify-content:center" onclick="if(event.target===this)setupCloseHole()">
+    <div style="background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:500px;padding:20px 20px 40px">
+      <div style="padding:0 0 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:16px">
+        <div style="font-size:15px;font-weight:800;color:#c9a84c">🚩 Starting Hole</div>
+        <button onclick="setupCloseHole()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:18px;cursor:pointer;line-height:1">&times;</button>
+      </div>
+      <!-- Keep original select hidden for JS compat -->
+      <select id="startHoleSel" style="display:none">
+        <option value="1">Hole 1</option><option value="2">Hole 2</option><option value="3">Hole 3</option>
+        <option value="4">Hole 4</option><option value="5">Hole 5</option><option value="6">Hole 6</option>
+        <option value="7">Hole 7</option><option value="8">Hole 8</option><option value="9">Hole 9</option>
+        <option value="10">Hole 10</option><option value="11">Hole 11</option><option value="12">Hole 12</option>
+        <option value="13">Hole 13</option><option value="14">Hole 14</option><option value="15">Hole 15</option>
+        <option value="16">Hole 16</option><option value="17">Hole 17</option><option value="18">Hole 18</option>
+      </select>
+      <div id="holeGrid" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:16px"></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4);text-align:center">Change for shotgun starts</div>
+    </div>
   </div>
-  <div id="playerTabBar" style="padding:0 0 0 0;margin:0"></div>
-  <div class="card" id="playerInputs" style="background:linear-gradient(135deg,var(--gd) 0%,var(--gm) 100%);border:1.5px solid rgba(201,168,76,.3);padding:8px"></div>
 
   <div class="errmsg" id="setupErr"></div>
   <button class="btn-go" onclick="showRoundSummary()" id="startRoundBtn">⛳ Start Round →</button>
@@ -6517,8 +6508,8 @@ function promptGcSetup(){
   _gcToken=null; _gcTokenExp=0; // force fresh login
   return true;
 }
-document.getElementById('btnMinus').onclick=()=>{if(G.n>1){harvestPlayerInputs();G.n--;document.getElementById('cntVal').textContent=G.n;renderPlayers();renderAllPairOptions();toggleScorecardOnly();renderSnakeSetupOptions();for(let i=0;i<G.n;i++){applyDeckToRow(i);silentFetchHandicap(i);}refreshStartRoundBtn();}};
-document.getElementById('btnPlus').onclick=()=>{if(G.n<5){harvestPlayerInputs();G.n++;document.getElementById('cntVal').textContent=G.n;renderPlayers();renderAllPairOptions();toggleScorecardOnly();renderSnakeSetupOptions();for(let i=0;i<G.n;i++){applyDeckToRow(i);silentFetchHandicap(i);}refreshStartRoundBtn();}};
+document.getElementById('btnMinus').onclick=()=>{if(G.n>1){harvestPlayerInputs();G.n--;document.getElementById('cntVal').textContent=G.n;var pp=document.getElementById('pillPlayers');if(pp)pp.textContent=G.n;renderPlayers();renderAllPairOptions();toggleScorecardOnly();renderSnakeSetupOptions();for(let i=0;i<G.n;i++){applyDeckToRow(i);silentFetchHandicap(i);}refreshStartRoundBtn();}};
+document.getElementById('btnPlus').onclick=()=>{if(G.n<5){harvestPlayerInputs();G.n++;document.getElementById('cntVal').textContent=G.n;var pp=document.getElementById('pillPlayers');if(pp)pp.textContent=G.n;renderPlayers();renderAllPairOptions();toggleScorecardOnly();renderSnakeSetupOptions();for(let i=0;i<G.n;i++){applyDeckToRow(i);silentFetchHandicap(i);}refreshStartRoundBtn();}};
 
 // Generate all unique 2v2 pairings for current players
 function allPairCombos(){
@@ -6895,6 +6886,118 @@ function removeSixPointGame(i){G.sixPointGames.splice(i,1);renderSixPointOptions
 /* ═══════════════════════════════════════════════
    START ROUND
 ═══════════════════════════════════════════════ */
+// ── New compact setup strip functions ──────────────────────────────
+function setupUpdatePill(){
+  var scoreOnly = document.getElementById('scorecardOnly');
+  var isScoreOnly = scoreOnly && scoreOnly.value==='1';
+  var bjOn2 = document.getElementById('segBJOn2');
+  var bjActive = bjOn2 && bjOn2.style.background && bjOn2.style.background !== 'transparent' && bjOn2.style.background !== '';
+  // Read BJ state from original buttons
+  var segBJOn = document.getElementById('segBJOn');
+  var bjEnabled = segBJOn && (segBJOn.style.background !== 'transparent' && segBJOn.style.background !== '');
+
+  var parts = [];
+  if(isScoreOnly) parts.push('Scores Only'); else parts.push('Games ON');
+  if(G.birdieJuice && G.birdieJuice.enabled) parts.push('BJ ON'); else parts.push('BJ OFF');
+  var pill = document.getElementById('pillOptions');
+  if(pill) pill.textContent = parts.join(' · ');
+
+  // Sync the modal buttons to match current state
+  var so = document.getElementById('segScoreOn2'), sf = document.getElementById('segScoreOff2');
+  var bjon = document.getElementById('segBJOn2'), bjoff = document.getElementById('segBJOff2');
+  if(so&&sf){
+    so.style.background = isScoreOnly ? 'var(--gp)' : 'transparent';
+    so.style.color = isScoreOnly ? 'var(--gd)' : 'rgba(255,255,255,.4)';
+    sf.style.background = isScoreOnly ? 'transparent' : 'var(--gp)';
+    sf.style.color = isScoreOnly ? 'rgba(255,255,255,.4)' : 'var(--gd)';
+  }
+  if(bjon&&bjoff){
+    var bjActive2 = G.birdieJuice && G.birdieJuice.enabled;
+    bjon.style.background = bjActive2 ? 'var(--gp)' : 'transparent';
+    bjon.style.color = bjActive2 ? 'var(--gd)' : 'rgba(255,255,255,.4)';
+    bjoff.style.background = bjActive2 ? 'transparent' : 'var(--gp)';
+    bjoff.style.color = bjActive2 ? 'rgba(255,255,255,.4)' : 'var(--gd)';
+  }
+}
+
+function setupOpenOptions(){
+  setupUpdatePill();
+  var m = document.getElementById('setupOptionsModal');
+  if(m){ m.style.display='flex'; }
+}
+function setupCloseOptions(){
+  var m = document.getElementById('setupOptionsModal');
+  if(m) m.style.display='none';
+  setupUpdatePill();
+}
+
+var _setupResetTimer = null;
+function setupResetStart(e){
+  if(e) e.preventDefault();
+  var progress = 0;
+  var bar = document.getElementById('setupResetBar');
+  var lbl = document.getElementById('setupResetLbl');
+  _setupResetTimer = setInterval(function(){
+    progress += 50;
+    var pct = Math.min(100, Math.round(progress/2000*100));
+    if(bar) bar.style.width = pct+'%';
+    if(lbl) lbl.textContent = pct < 100 ? '🧹 Hold to Reset… '+pct+'%' : '✓ Resetting…';
+    if(progress >= 2000){
+      clearInterval(_setupResetTimer); _setupResetTimer=null;
+      if(bar) bar.style.width='0%';
+      if(lbl) lbl.textContent='🧹 Hold to Reset Round Setup';
+      setupCloseOptions();
+      confirmResetSetup();
+    }
+  }, 50);
+}
+function setupResetCancel(){
+  if(_setupResetTimer){ clearInterval(_setupResetTimer); _setupResetTimer=null; }
+  var bar = document.getElementById('setupResetBar');
+  var lbl = document.getElementById('setupResetLbl');
+  if(bar) bar.style.width='0%';
+  if(lbl) lbl.textContent='🧹 Hold to Reset Round Setup';
+}
+
+function setupOpenPlayers(){
+  var m = document.getElementById('setupPlayersModal');
+  if(m){ m.style.display='flex'; }
+}
+function setupClosePlayers(){
+  var m = document.getElementById('setupPlayersModal');
+  if(m) m.style.display='none';
+  var pill = document.getElementById('pillPlayers');
+  if(pill) pill.textContent = G.n;
+}
+
+function setupOpenHole(){
+  var grid = document.getElementById('holeGrid');
+  var sel  = document.getElementById('startHoleSel');
+  var cur  = sel ? parseInt(sel.value)||1 : 1;
+  if(grid){
+    var h='';
+    for(var i=1;i<=18;i++){
+      h+='<div onclick="setupPickHole('+i+')" style="padding:10px 4px;text-align:center;background:'+(i===cur?'rgba(201,168,76,.2)':'rgba(255,255,255,.07)')+';border:1.5px solid '+(i===cur?'#c9a84c':'rgba(255,255,255,.12)')+';border-radius:8px;color:'+(i===cur?'#c9a84c':'rgba(255,255,255,.7)')+';font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">'+i+'</div>';
+    }
+    grid.innerHTML=h;
+  }
+  var m = document.getElementById('setupHoleModal');
+  if(m){ m.style.display='flex'; }
+}
+function setupPickHole(n){
+  var sel = document.getElementById('startHoleSel');
+  if(sel) sel.value=n;
+  var pill = document.getElementById('pillHole');
+  if(pill) pill.textContent='Hole '+n;
+  setupCloseHole();
+  if(typeof G!=='undefined'){ G.startHole=n; saveG(); }
+}
+function setupCloseHole(){
+  var m = document.getElementById('setupHoleModal');
+  if(m) m.style.display='none';
+}
+// ── End compact setup strip functions ──────────────────────────────
+
 function showResetConfirm(){
   const pop=document.getElementById('resetConfirmPop');
   const bar=document.getElementById('setupBar');
@@ -6969,15 +7072,24 @@ function mmSetAdvanceMode(autoAdv){ /* auto-advance removed */ }
 
 function refreshRoundOptSummary(){
   var el = document.getElementById('roundOptSummary');
-  if(!el) return;
-  var soBox = document.getElementById('scorecardOnly');
-  var isScoreOnly = soBox && soBox.value==='1';
-  var bjOn = G.birdieJuice && G.birdieJuice.enabled===true;
-  var parts = [
-    isScoreOnly ? 'Scorecard Only' : 'Games ON',
-    'Birdie Juice ' + (bjOn ? 'ON' : 'OFF'),
-  ];
-  el.textContent = parts.join(' - ');
+  if(el){
+    var soBox = document.getElementById('scorecardOnly');
+    var isScoreOnly = soBox && soBox.value==='1';
+    var bjOn = G.birdieJuice && G.birdieJuice.enabled===true;
+    var parts = [
+      isScoreOnly ? 'Scorecard Only' : 'Games ON',
+      'Birdie Juice ' + (bjOn ? 'ON' : 'OFF'),
+    ];
+    el.textContent = parts.join(' - ');
+  }
+  // Keep pill in sync
+  var pill = document.getElementById('pillOptions');
+  if(pill){
+    var soBox2 = document.getElementById('scorecardOnly');
+    var isScoreOnly2 = soBox2 && soBox2.value==='1';
+    var bjOn2 = G.birdieJuice && G.birdieJuice.enabled===true;
+    pill.textContent = (isScoreOnly2?'Scores Only':'Games ON') + ' · BJ ' + (bjOn2?'ON':'OFF');
+  }
 }
 
 function setBirdieJuice(enabled){
@@ -9079,7 +9191,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v30.67</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v30.68</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -9921,7 +10033,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.67</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.68</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -11367,7 +11479,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.67</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.68</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -13892,7 +14004,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.67</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.68</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -14689,7 +14801,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.67</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.68</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -14965,7 +15077,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v30.67</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v30.68</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -15110,7 +15222,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v30.67');
+  lines.push('— Pards Golf · v30.68');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -15838,7 +15950,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v30.67 · ${dateStr}</div>
+<div class="foot">Pards Golf · v30.68 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -20035,7 +20147,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v30.67. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v30.68. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -20521,7 +20633,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v30.67';
+const CURRENT_VERSION = 'pards-v30.68';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -20611,16 +20723,16 @@ const RELEASE_NOTES = [
   'v31.2 — Fixed: renderSingles undefined error on setup screen',
   'v31.1 — Weather: 7-day rain total added alongside 24hr in setup rain widget (one API call)',
   'v31.0 — Weather: rolling 24-hour rain total from WeatherLink historic API shown in setup rain widget',
-  'v30.67 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
-  'v30.67 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
-  'v30.67 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
-  'v30.67 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
-  'v30.67 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
-  'v30.67 — Score entry: deck fixed min-width so GC logo right edge always aligns',
-  'v30.67 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
-  'v30.67 — PDF: all auto-print removed; user taps Print button in new tab',
-  'v30.67 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
-  'v30.67 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
+  'v30.68 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
+  'v30.68 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
+  'v30.68 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
+  'v30.68 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
+  'v30.68 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
+  'v30.68 — Score entry: deck fixed min-width so GC logo right edge always aligns',
+  'v30.68 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
+  'v30.68 — PDF: all auto-print removed; user taps Print button in new tab',
+  'v30.68 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
+  'v30.68 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
   'v29.9 — PDF: Nassau match card scorecard also uses traditional score markings',
   'v29.8 — PDF scorecard: score markings now show birdie circles, bogey squares, eagle double circles (not stroke circles)',
   'v29.7 — PDF: pace of play added; snake settlements show play order for shotgun rounds',
@@ -20713,20 +20825,20 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v30.67 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v30.67 — Manage Favorites: COPY label added above the copy icon',
-  'v30.67 — Manage Favorites: copy button now dark background with white icon for better visibility',
-  'v30.67 — Manage Favorites: Idx label changed to Index',
-  'v30.67 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
-  'v30.67 — Setup: Snake game description updated with correct wording',
-  'v30.67 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
-  'v30.67 — Setup: Load My Favorites button colour matches Manage Favorites green',
-  'v30.67 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v30.67 — UI: tab references updated to reflect Games hub navigation',
-  'v30.67 — Score wheel: 2 cells each side, centred on typical score',
-  'v30.67 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v30.67 — Score wheel: left/right cells now relative to typical score, not par',
-  'v30.67 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v30.68 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v30.68 — Manage Favorites: COPY label added above the copy icon',
+  'v30.68 — Manage Favorites: copy button now dark background with white icon for better visibility',
+  'v30.68 — Manage Favorites: Idx label changed to Index',
+  'v30.68 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
+  'v30.68 — Setup: Snake game description updated with correct wording',
+  'v30.68 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
+  'v30.68 — Setup: Load My Favorites button colour matches Manage Favorites green',
+  'v30.68 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
+  'v30.68 — UI: tab references updated to reflect Games hub navigation',
+  'v30.68 — Score wheel: 2 cells each side, centred on typical score',
+  'v30.68 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v30.68 — Score wheel: left/right cells now relative to typical score, not par',
+  'v30.68 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -20745,47 +20857,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v30.67 — Games menu: ✕ close button added to sheet header',
-  'v30.67 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v30.67 — Snake tab: 3-putt log now sorted by hole number',
-  'v30.67 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v30.67 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v30.67 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v30.67 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v30.67 — Score entry: hole navigation arrows larger and more visible',
-  'v30.67 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v30.67 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v30.67 — Games tab icon changed to 💵',
-  'v30.67 — Birdie Juice tab restored to bottom nav',
-  'v30.67 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v30.67 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v30.67 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v30.67 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v30.67 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v30.67 — Setup: Snake participant names now sync live with player name changes',
-  'v30.67 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v30.67 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v30.67 — Fixed: player entry section now displays correctly',
-  'v30.67 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v30.67 — Setup: Round Setup header moved to the very top of the screen',
-  'v30.67 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v30.67 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v30.67 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v30.67 — Fixed: update notes modal now scrollable on iOS',
-  'v30.67 — Snake tab: current holder hidden after round is complete',
-  'v30.67 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v30.67 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v30.67 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v30.67 — Version number now shown beside Help button on every screen',
-  'v30.67 — Snake: resets every 3 holes; participant selection added to setup',
-  'v30.67 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v30.67 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v30.67 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v30.67 — New Round blocked if on hole 18 with missing scores',
-  'v30.67 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v30.67 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v30.67 — Fixed: ℹ️ update info button now appears correctly',
-  'v30.67 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v30.68 — Games menu: ✕ close button added to sheet header',
+  'v30.68 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v30.68 — Snake tab: 3-putt log now sorted by hole number',
+  'v30.68 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v30.68 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v30.68 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v30.68 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v30.68 — Score entry: hole navigation arrows larger and more visible',
+  'v30.68 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v30.68 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v30.68 — Games tab icon changed to 💵',
+  'v30.68 — Birdie Juice tab restored to bottom nav',
+  'v30.68 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v30.68 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v30.68 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v30.68 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v30.68 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v30.68 — Setup: Snake participant names now sync live with player name changes',
+  'v30.68 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v30.68 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v30.68 — Fixed: player entry section now displays correctly',
+  'v30.68 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v30.68 — Setup: Round Setup header moved to the very top of the screen',
+  'v30.68 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v30.68 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v30.68 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v30.68 — Fixed: update notes modal now scrollable on iOS',
+  'v30.68 — Snake tab: current holder hidden after round is complete',
+  'v30.68 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v30.68 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v30.68 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v30.68 — Version number now shown beside Help button on every screen',
+  'v30.68 — Snake: resets every 3 holes; participant selection added to setup',
+  'v30.68 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v30.68 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v30.68 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v30.68 — New Round blocked if on hole 18 with missing scores',
+  'v30.68 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v30.68 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v30.68 — Fixed: ℹ️ update info button now appears correctly',
+  'v30.68 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -21008,7 +21120,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v30.67';
+const CACHE='pards-v30.68';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
