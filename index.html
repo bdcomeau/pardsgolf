@@ -5047,6 +5047,157 @@ function buildCourseHistoryStats(){
 // Cache weather results while picker is open
 window._courseWeatherCache = window._courseWeatherCache || {};
 
+const COURSE_COORDS = {
+  // ── Verified GPS from scorecards spreadsheet (Google Maps precise) ────────
+  // ── Alberta ──────────────────────────────────────────────────────────────
+  'jasper-park-lodge':          [52.885493232705514,  -118.0530008486626],
+  'banff-springs-rundle-sulphur': [51.1744, -115.5368],  // Banff, AB
+  'banff-springs-rundle-tunnel':  [51.1744, -115.5368],  // Banff, AB
+  'banff-springs-sulphur-tunnel': [51.1744, -115.5368],  // Banff, AB
+  'banff-springs-tunnel':         [51.1744, -115.5368],  // Banff, AB
+  'blackhawk-gc':               [53.385575323101264,  -113.66123796657735],
+    'cougar-creek-gc':             [53.566614916630634, -114.29026732597036],  // 2519 Hwy 16, Carvel AB
+    'trestle-creek-gc':           [53.56678018570373, -114.89467515445239],  // Entwistle AB
+  'tower-ranch-gc':             [49.912100, -119.340200],  // Kelowna, BC
+  'okanagan-bear':              [49.955800, -119.396500],  // Kelowna, BC
+  'gallaghers-canyon':          [49.841800, -119.378600],  // Kelowna, BC
+  'gallaghers-pinnacle':        [49.841800, -119.378600],  // Kelowna, BC
+  'okanagan-quail':             [49.955800, -119.396500],  // Kelowna, BC
+  'harvest-gc':                 [49.856000, -119.424600],  // Kelowna, BC
+    'rise-gc':                     [50.2740226, -119.2708983],  // Vernon BC
+    'predator-ridge-predator':     [50.18855684919754, -119.38817692917809],  // Vernon BC
+  'predator-ridge-ridge':         [50.18855684919754, -119.38817692917809],  // Vernon BC
+  'bear-mountain-mountain':       [48.47755643766485, -123.53092726788607],  // Victoria BC
+  'bear-mountain-valley':         [48.47755643766485, -123.53092726788607],  // Victoria BC
+  'willow-park-gcc':            [50.958361645617146,  -114.04848249962093],
+  'mickelson-national-gc':      [51.120900, -114.383500],  // Calgary, AB
+          'glencoe-bridges-bridges': [51.025300, -114.295500],  // Calgary, AB
+  'glencoe-bridges-slopes':  [51.025300, -114.295500],  // Calgary, AB
+  'glencoe-forest':          [51.025300, -114.295500],  // Calgary, AB
+  'stewart-creek':              [51.04610027140541,   -115.31377058358594],
+      tees: [
+      { name:"Tournament",   rating:74.6, slope:150, par:72, yards:7173, frontRating:37.1, backRating:37.5, frontSlope:155, backSlope:145,
+        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[345,514,211,433,437,205,351,555,444,559,432,372,454,598,206,373,220,464], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] },
+      { name:"Professional", rating:71.7, slope:147, par:72, yards:6534, frontRating:35.8, backRating:35.9, frontSlope:152, backSlope:141,
+        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[325,496,173,395,401,188,319,533,388,536,397,349,399,537,145,341,178,434], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] },
+      { name:"Championship", rating:70.2, slope:142, par:72, yards:6183, frontRating:34.8, backRating:35.4, frontSlope:142, backSlope:142,
+        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[295,480,173,395,375,175,290,510,316,510,360,325,399,530,145,325,165,415], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] },
+      { name:"SilverTip",    rating:68.3, slope:140, par:72, yards:5850, frontRating:34.2, backRating:34.1, frontSlope:140, backSlope:140,
+        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[284,471,156,354,356,172,290,498,294,488,334,303,379,506,114,302,155,394], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] },
+      { name:"Forward",      rating:63.4, slope:135, par:72, yards:4822, frontRating:32.4, backRating:31.0, frontSlope:136, backSlope:133,
+        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[262,423,123,302,315,125,214,439,280,356,286,280,311,358,90,241,120,297], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] }
+    ],
+  'kananaskis-kidd':            [50.90311732268653,   -115.14367951291216],
+  'kananaskis-lorette':         [50.90311732268653,   -115.14367951291216],
+  // ── BC ───────────────────────────────────────────────────────────────────
+  'copper-point-the-point':     [50.50586039343338,   -115.99681748059147],
+  'copper-point-ridge':          [50.50586039343338,   -115.99681748059147],
+  'eagle-ranch-gc':             [50.52928291855269, -116.02685768396398],  // Invermere, BC
+  'greywolf-gc':                [50.44748726826781,   -116.24843097088834],
+  'silvertip-gc':               [51.105629673199076, -115.34180607628285],  // Canmore, AB
+  'springs-course':             [50.598200, -116.045200],  // Radium Hot Springs, BC
+  'radium-course':              [50.598200, -116.045200],  // Radium Hot Springs, BC
+  'fairmont-mountainside':     [50.332700, -115.853400],  // Fairmont Hot Springs, BC
+  'fairmont-riverside':         [50.332700, -115.853400],  // Fairmont Hot Springs, BC
+  'royal-montreal-blue':   [45.493500, -73.903200],  // Île-Bizard, QC
+  'royal-montreal-dixie':  [45.493500, -73.903200],  // Île-Bizard, QC
+  'royal-montreal-red':    [45.493500, -73.903200],  // Île-Bizard, QC
+  'pinehurst-no1':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no2':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no3':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no4':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no5':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no6':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no7':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no8':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no9':  [35.196200, -79.468900],  // Pinehurst, NC
+  'pinehurst-no10': [35.196200, -79.468900],  // Pinehurst, NC
+  'reynolds-great-waters': [33.549200, -83.179800],  // Greensboro, GA
+  'reynolds-national-cove-ridge': [33.549200, -83.179800],  // Greensboro, GA
+  'reynolds-preserve': [33.549200, -83.179800],  // Greensboro, GA
+  'reynolds-national-bluff-cove': [33.549200, -83.179800],  // Greensboro, GA
+  'reynolds-national-ridge-bluff': [33.549200, -83.179800],  // Greensboro, GA
+  'reynolds-richland': [33.549200, -83.179800],  // Greensboro, GA
+  'reynolds-creek-club': [33.549200, -83.179800],  // Greensboro, GA
+  'reynolds-landing': [33.549200, -83.179800],  // Greensboro, GA
+  'reynolds-oconee-club': [33.549200, -83.179800],  // Greensboro, GA
+  'royal-colwood-gc':           [48.443541548591995,  -123.4874711136266],
+  'capilano-gcc':               [49.353200, -123.123900],  // West Vancouver, BC
+  'chateau-whistler-gc':        [50.130300, -122.973900],  // Whistler, BC
+  'nicklaus-north-gc':          [50.143000, -122.949900],  // Whistler, BC
+  'trickle-creek-gc':           [49.682500, -115.996700],  // Kimberley, BC
+  // ── Arizona ──────────────────────────────────────────────────────────────
+  'troon-north-monument':       [33.74646708636651,   -111.8613668614706],
+  'troon-north-pinnacle':       [33.74692919525346,   -111.85908163547643],
+  'kierland-ironwood-acacia':   [33.627541263237646,  -111.93470569225543],
+  'kierland-acacia-ironwood':   [33.627541263237646,  -111.93470569225543],
+  'kierland-ironwood-mesquite': [33.627541263237646,  -111.93470569225543],
+  'kierland-mesquite-ironwood': [33.627541263237646,  -111.93470569225543],
+  'kierland-acacia-mesquite':   [33.627541263237646,  -111.93470569225543],
+  'kierland-mesquite-acacia':   [33.627541263237646,  -111.93470569225543],
+  'pinnacle-peak-cc':           [33.695872389734376,  -111.89510759335279],
+  'mesa-cc':                    [33.43887004727629,   -111.8454587374348],
+  'las-sendas-gc':              [33.489163997767825,  -111.6703498257231],
+  'boulders-north':  [33.802293, -111.917675],  // Carefree, AZ
+  'boulders-south':  [33.802293, -111.917675],  // Carefree, AZ
+  'boulders-fn-bs':  [33.802293, -111.917675],  // Carefree, AZ
+  'boulders-fs-fn':  [33.802293, -111.917675],  // Carefree, AZ
+  'boulders-fs-bn':  [33.802293, -111.917675],  // Carefree, AZ
+  'boulders-bs-bn':  [33.802293, -111.917675],  // Carefree, AZ
+  'boulders-south':             [33.80229315488439,   -111.9176753409379],
+  'eagle-mountain-gc':          [33.57672961480157,   -111.75892708245557],
+  'phoenician-gc':              [33.50637902957491,   -111.94929824059777],
+  'longbow-gc':                 [33.472356602579744,  -111.71008773612051],
+  'lookout-mountain-gc':        [33.60411463524035,   -112.04723363987935],
+  // ── California (Palm Springs/Desert) ─────────────────────────────────────
+  'palm-valley-challenge':      [33.76458744238946,   -116.33194921848741],
+  'palm-valley-championship':   [33.76458744238946,   -116.33194921848741],
+  'indian-ridge-arroyo':        [33.75178312186651,   -116.33266054650498],
+  'indian-ridge-grove':         [33.75178312186651,   -116.33266054650498],
+  'desert-willow-firecliff':    [33.765706556614546,  -116.36668908439256],
+  'desert-willow-mountain-view':[33.765706556614546,  -116.36668908439256],
+  'shadow-ridge-gc':            [33.782796185749056,  -116.38460911570756],
+  'pgawest-tpc-stadium':        [33.6413699224212,    -116.2584997538379],   // La Quinta, CA
+  'pgawest-citrus':              [33.671300, -116.287300],  // La Quinta, CA
+  'pgawest-mountain':           [33.68306412090913,   -116.31304324658943],
+  'pgawest-dunes':              [33.6831792155738,    -116.31304032387764],
+  'pgawest-nicklaus-tournament':[33.64531365441358,   -116.25761889674968],
+  'pgawest-greg-norman':        [33.646464050460544,  -116.24382397664287],
+  'pgawest-nicklaus-private':   [33.6430171991442,    -116.26867995489125],
+  'pgawest-arnold-palmer':      [33.64335753486309,   -116.2671325145854],
+  'pgawest-weiskopf':           [33.64284242709997,   -116.26723773834563],
+  'lakes-palm-mountain':        [33.753622016294855,  -116.3465447454147],
+  'lakes-mountain-lake':        [33.753622016294855,  -116.3465447454147],
+  'lakes-lake-palm':            [33.753622016294855,  -116.3465447454147],
+  'desert-springs-palm':        [33.752456523432635,  -116.36461332909992],
+  'desert-springs-valley':      [33.752456523432635,  -116.36461332909992],
+  // ── Edmonton & Area ───────────────────────────────────────────────────────
+  'derrick-gwc':                [53.468425571228316,  -113.54114922623062],
+  'windermere-gcc':             [53.42762325867436,   -113.65142253649653],
+  'edmonton-cc':                [53.490389374872066,  -113.59886351526706],
+  'glendale-gcc':               [53.582824510695524,  -113.66510021068558],
+  'royal-mayfair':              [53.533143137287446,  -113.54160396076978],
+  'edmonton-petroleum':         [53.41750543126563,   -113.69155546444568],
+  'mill-woods-gc':              [53.48195957288466,   -113.42926401299303],
+  'highlands-gc':               [53.561325129931795,  -113.43773556898256],
+  'redtail-landing':            [53.32249868934502,   -113.55721721038967],
+  'jagare-ridge-gc':            [53.42231096943338,   -113.58142942808863],
+  'wailea-blue':                [20.765100, -156.425100],  // Wailea, HI
+  'wailea-emerald':             [20.765100, -156.425100],  // Wailea, HI
+  'wailea-gold':                [20.765100, -156.425100],  // Wailea, HI
+  'makena-gc':                  [20.640700, -156.441900],  // Makena, HI
+  'cabot-cliffs':               [46.236600,  -61.304200],  // Inverness, NS
+  'highlands-links':            [46.763100,  -60.454800],  // Ingonish, NS
+  'cabot-links':                [46.236600,  -61.304200],  // Inverness, NS
+  'crowbush-cove':              [46.432300,  -62.795700],  // West St. Peters, PEI
+  'bandon-bandon-dunes':        [43.037400, -124.366200],  // Bandon, OR
+  'bandon-pacific-dunes':       [43.037400, -124.366200],  // Bandon, OR
+  'bandon-old-macdonald':       [43.037400, -124.366200],  // Bandon, OR
+  'bandon-trails':              [43.037400, -124.366200],  // Bandon, OR
+  'bandon-sheep-ranch':         [43.037400, -124.366200],  // Bandon, OR
+  'northern-bear-gc':            [53.376100, -113.144200],  // Northern Bear Golf Club
+};
+
 const EDMONTON_COURSE_IDS = new Set([
   'derrick-gwc',
   'river-ridge-gc',
@@ -5264,26 +5415,21 @@ async function showCoursePreview(courseId, event){
   overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
   document.body.appendChild(overlay);
 
-  // Fetch live weather if not cached
-  if(!cachedWx){
-    try{
-      const wx = await fetchWeather(courseId);
-      if(wx){
-        window._courseWeatherCache = window._courseWeatherCache || {};
-        window._courseWeatherCache[courseId] = wx;
-        const el = document.getElementById('coursePreviewWeather');
-        if(el){
-          const dir = wx.windDir!==null ? ' '+dirToCompass(wx.windDir) : '';
-          el.textContent = '\uD83C\uDF21\uFE0F '+wx.tempC+'\u00B0C'
-            +(wx.windKmh!==null ? '  \uD83D\uDCA8 '+wx.windKmh+'km/h'+dir : '');
-        }
-        _updateCourseWeatherSpan(courseId, wx);
-      }
-    } catch(e){
+  // Always fetch fresh weather for the info overlay
+  try{
+    const wx = await fetchWeather(courseId);
+    if(wx){
+      window._courseWeatherCache = window._courseWeatherCache || {};
+      window._courseWeatherCache[courseId] = wx;
       const el = document.getElementById('coursePreviewWeather');
-      if(el) el.textContent = 'Weather unavailable';
+      if(el){
+        const dir = wx.windDir!==null ? ' '+dirToCompass(wx.windDir) : '';
+        el.textContent = '\uD83C\uDF21\uFE0F '+wx.tempC+'\u00B0C'
+          +(wx.windKmh!==null ? '  \uD83D\uDCA8 '+wx.windKmh+'km/h'+dir : '');
+      }
+      _updateCourseWeatherSpan(courseId, wx);
     }
-  }
+  } catch(e){}
 }
 
 
@@ -5802,157 +5948,6 @@ function promptWlSetup(){ return true; }
 // ── Google Maps API key — get yours free at https://console.cloud.google.com ──
 // Enable "Maps Static API", then paste your key below.
 // Google Maps key stored securely in Cloudflare Worker — not in client code
-
-const COURSE_COORDS = {
-  // ── Verified GPS from scorecards spreadsheet (Google Maps precise) ────────
-  // ── Alberta ──────────────────────────────────────────────────────────────
-  'jasper-park-lodge':          [52.885493232705514,  -118.0530008486626],
-  'banff-springs-rundle-sulphur': [51.1744, -115.5368],  // Banff, AB
-  'banff-springs-rundle-tunnel':  [51.1744, -115.5368],  // Banff, AB
-  'banff-springs-sulphur-tunnel': [51.1744, -115.5368],  // Banff, AB
-  'banff-springs-tunnel':         [51.1744, -115.5368],  // Banff, AB
-  'blackhawk-gc':               [53.385575323101264,  -113.66123796657735],
-    'cougar-creek-gc':             [53.566614916630634, -114.29026732597036],  // 2519 Hwy 16, Carvel AB
-    'trestle-creek-gc':           [53.56678018570373, -114.89467515445239],  // Entwistle AB
-  'tower-ranch-gc':             [49.912100, -119.340200],  // Kelowna, BC
-  'okanagan-bear':              [49.955800, -119.396500],  // Kelowna, BC
-  'gallaghers-canyon':          [49.841800, -119.378600],  // Kelowna, BC
-  'gallaghers-pinnacle':        [49.841800, -119.378600],  // Kelowna, BC
-  'okanagan-quail':             [49.955800, -119.396500],  // Kelowna, BC
-  'harvest-gc':                 [49.856000, -119.424600],  // Kelowna, BC
-    'rise-gc':                     [50.2740226, -119.2708983],  // Vernon BC
-    'predator-ridge-predator':     [50.18855684919754, -119.38817692917809],  // Vernon BC
-  'predator-ridge-ridge':         [50.18855684919754, -119.38817692917809],  // Vernon BC
-  'bear-mountain-mountain':       [48.47755643766485, -123.53092726788607],  // Victoria BC
-  'bear-mountain-valley':         [48.47755643766485, -123.53092726788607],  // Victoria BC
-  'willow-park-gcc':            [50.958361645617146,  -114.04848249962093],
-  'mickelson-national-gc':      [51.120900, -114.383500],  // Calgary, AB
-          'glencoe-bridges-bridges': [51.025300, -114.295500],  // Calgary, AB
-  'glencoe-bridges-slopes':  [51.025300, -114.295500],  // Calgary, AB
-  'glencoe-forest':          [51.025300, -114.295500],  // Calgary, AB
-  'stewart-creek':              [51.04610027140541,   -115.31377058358594],
-      tees: [
-      { name:"Tournament",   rating:74.6, slope:150, par:72, yards:7173, frontRating:37.1, backRating:37.5, frontSlope:155, backSlope:145,
-        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[345,514,211,433,437,205,351,555,444,559,432,372,454,598,206,373,220,464], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] },
-      { name:"Professional", rating:71.7, slope:147, par:72, yards:6534, frontRating:35.8, backRating:35.9, frontSlope:152, backSlope:141,
-        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[325,496,173,395,401,188,319,533,388,536,397,349,399,537,145,341,178,434], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] },
-      { name:"Championship", rating:70.2, slope:142, par:72, yards:6183, frontRating:34.8, backRating:35.4, frontSlope:142, backSlope:142,
-        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[295,480,173,395,375,175,290,510,316,510,360,325,399,530,145,325,165,415], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] },
-      { name:"SilverTip",    rating:68.3, slope:140, par:72, yards:5850, frontRating:34.2, backRating:34.1, frontSlope:140, backSlope:140,
-        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[284,471,156,354,356,172,290,498,294,488,334,303,379,506,114,302,155,394], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] },
-      { name:"Forward",      rating:63.4, slope:135, par:72, yards:4822, frontRating:32.4, backRating:31.0, frontSlope:136, backSlope:133,
-        pars:[4,5,3,4,4,3,4,5,4,5,4,4,4,5,3,4,3,4], yards:[262,423,123,302,315,125,214,439,280,356,286,280,311,358,90,241,120,297], handicaps:[14,8,18,6,10,16,12,4,2,3,11,15,5,1,13,9,17,7] }
-    ],
-  'kananaskis-kidd':            [50.90311732268653,   -115.14367951291216],
-  'kananaskis-lorette':         [50.90311732268653,   -115.14367951291216],
-  // ── BC ───────────────────────────────────────────────────────────────────
-  'copper-point-the-point':     [50.50586039343338,   -115.99681748059147],
-  'copper-point-ridge':          [50.50586039343338,   -115.99681748059147],
-  'eagle-ranch-gc':             [50.52928291855269, -116.02685768396398],  // Invermere, BC
-  'greywolf-gc':                [50.44748726826781,   -116.24843097088834],
-  'silvertip-gc':               [51.105629673199076, -115.34180607628285],  // Canmore, AB
-  'springs-course':             [50.598200, -116.045200],  // Radium Hot Springs, BC
-  'radium-course':              [50.598200, -116.045200],  // Radium Hot Springs, BC
-  'fairmont-mountainside':     [50.332700, -115.853400],  // Fairmont Hot Springs, BC
-  'fairmont-riverside':         [50.332700, -115.853400],  // Fairmont Hot Springs, BC
-  'royal-montreal-blue':   [45.493500, -73.903200],  // Île-Bizard, QC
-  'royal-montreal-dixie':  [45.493500, -73.903200],  // Île-Bizard, QC
-  'royal-montreal-red':    [45.493500, -73.903200],  // Île-Bizard, QC
-  'pinehurst-no1':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no2':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no3':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no4':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no5':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no6':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no7':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no8':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no9':  [35.196200, -79.468900],  // Pinehurst, NC
-  'pinehurst-no10': [35.196200, -79.468900],  // Pinehurst, NC
-  'reynolds-great-waters': [33.549200, -83.179800],  // Greensboro, GA
-  'reynolds-national-cove-ridge': [33.549200, -83.179800],  // Greensboro, GA
-  'reynolds-preserve': [33.549200, -83.179800],  // Greensboro, GA
-  'reynolds-national-bluff-cove': [33.549200, -83.179800],  // Greensboro, GA
-  'reynolds-national-ridge-bluff': [33.549200, -83.179800],  // Greensboro, GA
-  'reynolds-richland': [33.549200, -83.179800],  // Greensboro, GA
-  'reynolds-creek-club': [33.549200, -83.179800],  // Greensboro, GA
-  'reynolds-landing': [33.549200, -83.179800],  // Greensboro, GA
-  'reynolds-oconee-club': [33.549200, -83.179800],  // Greensboro, GA
-  'royal-colwood-gc':           [48.443541548591995,  -123.4874711136266],
-  'capilano-gcc':               [49.353200, -123.123900],  // West Vancouver, BC
-  'chateau-whistler-gc':        [50.130300, -122.973900],  // Whistler, BC
-  'nicklaus-north-gc':          [50.143000, -122.949900],  // Whistler, BC
-  'trickle-creek-gc':           [49.682500, -115.996700],  // Kimberley, BC
-  // ── Arizona ──────────────────────────────────────────────────────────────
-  'troon-north-monument':       [33.74646708636651,   -111.8613668614706],
-  'troon-north-pinnacle':       [33.74692919525346,   -111.85908163547643],
-  'kierland-ironwood-acacia':   [33.627541263237646,  -111.93470569225543],
-  'kierland-acacia-ironwood':   [33.627541263237646,  -111.93470569225543],
-  'kierland-ironwood-mesquite': [33.627541263237646,  -111.93470569225543],
-  'kierland-mesquite-ironwood': [33.627541263237646,  -111.93470569225543],
-  'kierland-acacia-mesquite':   [33.627541263237646,  -111.93470569225543],
-  'kierland-mesquite-acacia':   [33.627541263237646,  -111.93470569225543],
-  'pinnacle-peak-cc':           [33.695872389734376,  -111.89510759335279],
-  'mesa-cc':                    [33.43887004727629,   -111.8454587374348],
-  'las-sendas-gc':              [33.489163997767825,  -111.6703498257231],
-  'boulders-north':  [33.802293, -111.917675],  // Carefree, AZ
-  'boulders-south':  [33.802293, -111.917675],  // Carefree, AZ
-  'boulders-fn-bs':  [33.802293, -111.917675],  // Carefree, AZ
-  'boulders-fs-fn':  [33.802293, -111.917675],  // Carefree, AZ
-  'boulders-fs-bn':  [33.802293, -111.917675],  // Carefree, AZ
-  'boulders-bs-bn':  [33.802293, -111.917675],  // Carefree, AZ
-  'boulders-south':             [33.80229315488439,   -111.9176753409379],
-  'eagle-mountain-gc':          [33.57672961480157,   -111.75892708245557],
-  'phoenician-gc':              [33.50637902957491,   -111.94929824059777],
-  'longbow-gc':                 [33.472356602579744,  -111.71008773612051],
-  'lookout-mountain-gc':        [33.60411463524035,   -112.04723363987935],
-  // ── California (Palm Springs/Desert) ─────────────────────────────────────
-  'palm-valley-challenge':      [33.76458744238946,   -116.33194921848741],
-  'palm-valley-championship':   [33.76458744238946,   -116.33194921848741],
-  'indian-ridge-arroyo':        [33.75178312186651,   -116.33266054650498],
-  'indian-ridge-grove':         [33.75178312186651,   -116.33266054650498],
-  'desert-willow-firecliff':    [33.765706556614546,  -116.36668908439256],
-  'desert-willow-mountain-view':[33.765706556614546,  -116.36668908439256],
-  'shadow-ridge-gc':            [33.782796185749056,  -116.38460911570756],
-  'pgawest-tpc-stadium':        [33.6413699224212,    -116.2584997538379],   // La Quinta, CA
-  'pgawest-citrus':              [33.671300, -116.287300],  // La Quinta, CA
-  'pgawest-mountain':           [33.68306412090913,   -116.31304324658943],
-  'pgawest-dunes':              [33.6831792155738,    -116.31304032387764],
-  'pgawest-nicklaus-tournament':[33.64531365441358,   -116.25761889674968],
-  'pgawest-greg-norman':        [33.646464050460544,  -116.24382397664287],
-  'pgawest-nicklaus-private':   [33.6430171991442,    -116.26867995489125],
-  'pgawest-arnold-palmer':      [33.64335753486309,   -116.2671325145854],
-  'pgawest-weiskopf':           [33.64284242709997,   -116.26723773834563],
-  'lakes-palm-mountain':        [33.753622016294855,  -116.3465447454147],
-  'lakes-mountain-lake':        [33.753622016294855,  -116.3465447454147],
-  'lakes-lake-palm':            [33.753622016294855,  -116.3465447454147],
-  'desert-springs-palm':        [33.752456523432635,  -116.36461332909992],
-  'desert-springs-valley':      [33.752456523432635,  -116.36461332909992],
-  // ── Edmonton & Area ───────────────────────────────────────────────────────
-  'derrick-gwc':                [53.468425571228316,  -113.54114922623062],
-  'windermere-gcc':             [53.42762325867436,   -113.65142253649653],
-  'edmonton-cc':                [53.490389374872066,  -113.59886351526706],
-  'glendale-gcc':               [53.582824510695524,  -113.66510021068558],
-  'royal-mayfair':              [53.533143137287446,  -113.54160396076978],
-  'edmonton-petroleum':         [53.41750543126563,   -113.69155546444568],
-  'mill-woods-gc':              [53.48195957288466,   -113.42926401299303],
-  'highlands-gc':               [53.561325129931795,  -113.43773556898256],
-  'redtail-landing':            [53.32249868934502,   -113.55721721038967],
-  'jagare-ridge-gc':            [53.42231096943338,   -113.58142942808863],
-  'wailea-blue':                [20.765100, -156.425100],  // Wailea, HI
-  'wailea-emerald':             [20.765100, -156.425100],  // Wailea, HI
-  'wailea-gold':                [20.765100, -156.425100],  // Wailea, HI
-  'makena-gc':                  [20.640700, -156.441900],  // Makena, HI
-  'cabot-cliffs':               [46.236600,  -61.304200],  // Inverness, NS
-  'highlands-links':            [46.763100,  -60.454800],  // Ingonish, NS
-  'cabot-links':                [46.236600,  -61.304200],  // Inverness, NS
-  'crowbush-cove':              [46.432300,  -62.795700],  // West St. Peters, PEI
-  'bandon-bandon-dunes':        [43.037400, -124.366200],  // Bandon, OR
-  'bandon-pacific-dunes':       [43.037400, -124.366200],  // Bandon, OR
-  'bandon-old-macdonald':       [43.037400, -124.366200],  // Bandon, OR
-  'bandon-trails':              [43.037400, -124.366200],  // Bandon, OR
-  'bandon-sheep-ranch':         [43.037400, -124.366200],  // Bandon, OR
-  'northern-bear-gc':            [53.376100, -113.144200],  // Northern Bear Golf Club
-};
 
 // Edmonton courses — always use WeatherLink personal station
 // Fetch current conditions. Returns a normalized object in METRIC, or throws.
@@ -9231,7 +9226,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v40.12</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v40.13</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -10073,7 +10068,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.12</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.13</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -11519,7 +11514,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.12</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.13</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -14061,7 +14056,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.12</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.13</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -14858,7 +14853,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.12</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.13</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -15134,7 +15129,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v40.12</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v40.13</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -15279,7 +15274,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v40.12');
+  lines.push('— Pards Golf · v40.13');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -16007,7 +16002,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v40.12 · ${dateStr}</div>
+<div class="foot">Pards Golf · v40.13 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -20205,7 +20200,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v40.12. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v40.13. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -20691,7 +20686,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v40.12';
+const CURRENT_VERSION = 'pards-v40.13';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -20781,16 +20776,16 @@ const RELEASE_NOTES = [
   'v31.2 — Fixed: renderSingles undefined error on setup screen',
   'v31.1 — Weather: 7-day rain total added alongside 24hr in setup rain widget (one API call)',
   'v31.0 — Weather: rolling 24-hour rain total from WeatherLink historic API shown in setup rain widget',
-  'v40.12 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
-  'v40.12 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
-  'v40.12 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
-  'v40.12 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
-  'v40.12 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
-  'v40.12 — Score entry: deck fixed min-width so GC logo right edge always aligns',
-  'v40.12 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
-  'v40.12 — PDF: all auto-print removed; user taps Print button in new tab',
-  'v40.12 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
-  'v40.12 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
+  'v40.13 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
+  'v40.13 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
+  'v40.13 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
+  'v40.13 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
+  'v40.13 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
+  'v40.13 — Score entry: deck fixed min-width so GC logo right edge always aligns',
+  'v40.13 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
+  'v40.13 — PDF: all auto-print removed; user taps Print button in new tab',
+  'v40.13 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
+  'v40.13 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
   'v29.9 — PDF: Nassau match card scorecard also uses traditional score markings',
   'v29.8 — PDF scorecard: score markings now show birdie circles, bogey squares, eagle double circles (not stroke circles)',
   'v29.7 — PDF: pace of play added; snake settlements show play order for shotgun rounds',
@@ -20883,20 +20878,20 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v40.12 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v40.12 — Manage Favorites: COPY label added above the copy icon',
-  'v40.12 — Manage Favorites: copy button now dark background with white icon for better visibility',
-  'v40.12 — Manage Favorites: Idx label changed to Index',
-  'v40.12 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
-  'v40.12 — Setup: Snake game description updated with correct wording',
-  'v40.12 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
-  'v40.12 — Setup: Load My Favorites button colour matches Manage Favorites green',
-  'v40.12 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v40.12 — UI: tab references updated to reflect Games hub navigation',
-  'v40.12 — Score wheel: 2 cells each side, centred on typical score',
-  'v40.12 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v40.12 — Score wheel: left/right cells now relative to typical score, not par',
-  'v40.12 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v40.13 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v40.13 — Manage Favorites: COPY label added above the copy icon',
+  'v40.13 — Manage Favorites: copy button now dark background with white icon for better visibility',
+  'v40.13 — Manage Favorites: Idx label changed to Index',
+  'v40.13 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
+  'v40.13 — Setup: Snake game description updated with correct wording',
+  'v40.13 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
+  'v40.13 — Setup: Load My Favorites button colour matches Manage Favorites green',
+  'v40.13 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
+  'v40.13 — UI: tab references updated to reflect Games hub navigation',
+  'v40.13 — Score wheel: 2 cells each side, centred on typical score',
+  'v40.13 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v40.13 — Score wheel: left/right cells now relative to typical score, not par',
+  'v40.13 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -20915,47 +20910,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v40.12 — Games menu: ✕ close button added to sheet header',
-  'v40.12 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v40.12 — Snake tab: 3-putt log now sorted by hole number',
-  'v40.12 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v40.12 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v40.12 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v40.12 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v40.12 — Score entry: hole navigation arrows larger and more visible',
-  'v40.12 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v40.12 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v40.12 — Games tab icon changed to 💵',
-  'v40.12 — Birdie Juice tab restored to bottom nav',
-  'v40.12 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v40.12 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v40.12 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v40.12 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v40.12 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v40.12 — Setup: Snake participant names now sync live with player name changes',
-  'v40.12 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v40.12 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v40.12 — Fixed: player entry section now displays correctly',
-  'v40.12 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v40.12 — Setup: Round Setup header moved to the very top of the screen',
-  'v40.12 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v40.12 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v40.12 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v40.12 — Fixed: update notes modal now scrollable on iOS',
-  'v40.12 — Snake tab: current holder hidden after round is complete',
-  'v40.12 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v40.12 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v40.12 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v40.12 — Version number now shown beside Help button on every screen',
-  'v40.12 — Snake: resets every 3 holes; participant selection added to setup',
-  'v40.12 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v40.12 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v40.12 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v40.12 — New Round blocked if on hole 18 with missing scores',
-  'v40.12 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v40.12 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v40.12 — Fixed: ℹ️ update info button now appears correctly',
-  'v40.12 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v40.13 — Games menu: ✕ close button added to sheet header',
+  'v40.13 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v40.13 — Snake tab: 3-putt log now sorted by hole number',
+  'v40.13 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v40.13 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v40.13 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v40.13 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v40.13 — Score entry: hole navigation arrows larger and more visible',
+  'v40.13 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v40.13 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v40.13 — Games tab icon changed to 💵',
+  'v40.13 — Birdie Juice tab restored to bottom nav',
+  'v40.13 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v40.13 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v40.13 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v40.13 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v40.13 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v40.13 — Setup: Snake participant names now sync live with player name changes',
+  'v40.13 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v40.13 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v40.13 — Fixed: player entry section now displays correctly',
+  'v40.13 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v40.13 — Setup: Round Setup header moved to the very top of the screen',
+  'v40.13 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v40.13 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v40.13 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v40.13 — Fixed: update notes modal now scrollable on iOS',
+  'v40.13 — Snake tab: current holder hidden after round is complete',
+  'v40.13 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v40.13 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v40.13 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v40.13 — Version number now shown beside Help button on every screen',
+  'v40.13 — Snake: resets every 3 holes; participant selection added to setup',
+  'v40.13 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v40.13 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v40.13 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v40.13 — New Round blocked if on hole 18 with missing scores',
+  'v40.13 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v40.13 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v40.13 — Fixed: ℹ️ update info button now appears correctly',
+  'v40.13 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -21178,7 +21173,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v40.12';
+const CACHE='pards-v40.13';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
