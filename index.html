@@ -8940,7 +8940,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v30.37</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v30.44</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -9782,7 +9782,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.37</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.44</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -11228,7 +11228,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.37</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.44</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -13753,7 +13753,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.37</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.44</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -14550,7 +14550,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.37</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.44</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -14826,7 +14826,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v30.37</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v30.44</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -14971,7 +14971,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v30.37');
+  lines.push('— Pards Golf · v30.44');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -15699,7 +15699,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v30.37 · ${dateStr}</div>
+<div class="foot">Pards Golf · v30.44 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -18102,53 +18102,19 @@ function clearFavSearch(){
   renderFavoritesList();
 }
 
-function openFavorites(){
-  const ex=document.getElementById('favOverlay'); if(ex) ex.remove();
-  const overlay=document.createElement('div');
-  overlay.className='mm-overlay'; overlay.id='favOverlay';
-  overlay.style.alignItems='flex-start';
-  overlay.style.paddingTop='env(safe-area-inset-top,0px)';
-  overlay.innerHTML=`
-    <div class="mm-sheet" id="favSheet" style="border-radius:0 0 16px 16px;height:calc(100vh - env(safe-area-inset-top,0px));max-height:calc(100vh - env(safe-area-inset-top,0px));padding-bottom:70px;display:flex;flex-direction:column">
-      <div class="mm-hdr">
-        <div class="mm-title">⭐ Manage Favorites &amp; Players</div>
-        <button class="mm-close" onclick="document.getElementById('favOverlay').remove()">Done</button>
-      <button onclick="document.getElementById('favOverlay').remove()" style="position:fixed;top:env(safe-area-inset-top,12px);right:12px;z-index:10001;background:#c9a84c;color:#1a3a2a;border:none;border-radius:20px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4);-webkit-tap-highlight-color:transparent">Done ✓</button>
-      </div>
-      <div style="font-size:12px;color:#666;margin:0 0 8px">Star up to ${MAX_FAVORITES} players as favorites — they’ll auto-fill each new round. Mark one as <b>“Me”</b> (scorekeeper). Tap ✕ to remove a player entirely.</div>
-      <button id="favRefreshAllBtn" onclick="refreshAllHandicaps()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:10px;padding:10px;margin-bottom:10px;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">
-        <img src="${GC_LOGO}" alt="Golf Canada" style="height:14px;width:auto"> <span id="favRefreshAllLbl">Refresh All Handicaps</span>
-      </button>
-      <div class="card" id="favList" style="flex:1;overflow-y:auto;min-height:0;display:flex;flex-direction:column"></div>
-    </div>
-    <div style="position:fixed;left:0;right:0;bottom:0;z-index:10002;background:linear-gradient(160deg,#1a3a2a,#0d1f15);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(201,168,76,.3);box-shadow:0 -4px 16px rgba(0,0,0,.3)">
-      <div id="favSearchCount" style="font-size:12px;font-weight:800;color:#c9a84c;margin:0 0 6px;display:none"></div>
-      <div style="position:relative">
-        <input id="favSearchInput" type="text" placeholder="🔍 Search players…" autocomplete="off"
-          oninput="renderFavoritesList();toggleFavSearchClear()"
-          style="width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:10px;padding:11px 38px 11px 14px;font-size:14px;color:#f5e6b8;outline:none;box-sizing:border-box;-webkit-appearance:none">
-        <button id="favSearchClearBtn" onclick="clearFavSearch()" style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;border-radius:50%;width:24px;height:24px;color:#f5e6b8;font-size:14px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;line-height:1">✕</button>
-      </div>
-    </div>`;
-  document.body.appendChild(overlay);
-  overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
-  renderFavoritesList();
-}
-
 function computePlayerStats(){
   const hist=loadHistory();
   const stats={};
-  hist.forEach(snap=>{
+  hist.forEach(function(snap){
     if(!snap.players||!snap.scores) return;
-    snap.players.forEach((p,pi)=>{
+    snap.players.forEach(function(p,pi){
       const nm=p.name; if(!nm) return;
       if(!stats[nm]) stats[nm]={rounds:0,lastDate:null,lastGross:null,cumMoney:0};
       const s=stats[nm]; s.rounds++;
       if(!s.lastDate){
         s.lastDate=snap.roundDate;
-        s.lastGross=snap.scores[pi]?snap.scores[pi].reduce((a,b)=>a+(b||0),0):null;
+        s.lastGross=snap.scores[pi]?snap.scores[pi].reduce(function(a,b){return a+(b||0);},0):null;
       }
-      // snap.money is now combined (Nassau + 6-Point) from buildRoundSnapshot
       if(!snap.scorecardOnly&&snap.money&&snap.money[pi]!==undefined){
         s.cumMoney+=snap.money[pi];
       }
@@ -18157,141 +18123,622 @@ function computePlayerStats(){
   return stats;
 }
 
+function openFavorites(){
+  const ex=document.getElementById('favOverlay'); if(ex) ex.remove();
+  const overlay=document.createElement('div');
+  overlay.className='mm-overlay'; overlay.id='favOverlay';
+  overlay.style.cssText='align-items:flex-start;padding-top:env(safe-area-inset-top,0px)';
+  overlay.innerHTML=`
+    <div class="mm-sheet" id="favSheet" style="border-radius:0 0 16px 16px;height:calc(100vh - env(safe-area-inset-top,0px));max-height:calc(100vh - env(safe-area-inset-top,0px));display:flex;flex-direction:column;padding:0;overflow:hidden">
+      <!-- LIST SCREEN -->
+      <div id="favListScreen" style="display:flex;flex-direction:column;height:100%">
+        <div style="background:#1a3a2a;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <div style="font-size:17px;font-weight:800;color:#c9a84c;font-family:Georgia,serif;flex:1">&#9881;&#65039; Manage Players</div>
+          <button onclick="document.getElementById('favOverlay').remove()" style="background:#c9a84c;color:#1a3a2a;border:none;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">Done &#10003;</button>
+        </div>
+        <div style="background:#1a3a2a;padding:10px 16px;display:flex;flex-direction:column;gap:8px;flex-shrink:0;border-bottom:2px solid rgba(201,168,76,.3)">
+          <button onclick="favOpenEdit(null)" style="width:100%;background:linear-gradient(135deg,#2d6a4f,#1a3a2a);color:#c9a84c;border:1.5px solid #c9a84c;border-radius:10px;padding:11px;font-size:14px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">&#xFF0B; Add New Player</button>
+          <button id="favRefreshAllBtn" onclick="refreshAllHandicaps()" style="width:100%;background:rgba(255,255,255,.08);color:#a8d5b5;border:1px solid rgba(168,213,181,.3);border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent"><img src="${GC_LOGO}" style="height:13px;width:auto;vertical-align:middle;margin-right:5px"><span id="favRefreshAllLbl">Refresh All Handicaps</span></button>
+        </div>
+        <div style="background:#1a3a2a;padding:10px 16px 12px;flex-shrink:0">
+          <div style="position:relative">
+            <input id="favSearchInput" type="text" placeholder="&#x1F50D; Search players&#x2026;" autocomplete="off"
+              oninput="renderFavoritesList();toggleFavSearchClear()"
+              style="width:100%;background:rgba(255,255,255,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:10px;padding:10px 38px 10px 14px;font-size:14px;color:#f5e6b8;outline:none;box-sizing:border-box;-webkit-appearance:none">
+            <button id="favSearchClearBtn" onclick="clearFavSearch()" style="display:none;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;border-radius:50%;width:24px;height:24px;color:#f5e6b8;font-size:14px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;line-height:1">&#x2715;</button>
+          </div>
+        </div>
+        <div class="card" id="favList" style="flex:1;overflow-y:auto;min-height:0;background:#f5f5f0;border-radius:0;padding:8px 0 40px"></div>
+      </div>
+      <!-- EDIT SCREEN (hidden initially) -->
+      <div id="favEditScreen" style="display:none;flex-direction:column;height:100%;background:#f5f5f0">
+        <div style="background:#1a3a2a;padding:14px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0">
+          <button onclick="favCloseEdit()" style="background:none;border:none;color:#c9a84c;font-size:26px;font-weight:300;cursor:pointer;padding:0 4px;line-height:1;-webkit-tap-highlight-color:transparent">&#8249;</button>
+          <div id="favEditTitle" style="font-size:17px;font-weight:800;color:#c9a84c;font-family:Georgia,serif;flex:1">Edit Player</div>
+        </div>
+        <div id="favEditBody" style="flex:1;overflow-y:auto;padding:16px 16px 140px"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(to top,#f5f5f0 80%,transparent);padding:14px 16px calc(14px + env(safe-area-inset-bottom))">
+          <div style="display:flex;gap:10px;margin-bottom:8px">
+            <button onclick="favSaveEdit()" style="flex:2;height:44px;background:#1a3a2a;color:#c9a84c;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">&#x1F4BE; Save Changes</button>
+            <button onclick="favCloseEdit()" style="flex:1;height:44px;background:#fff;color:#888;border:1.5px solid #ddd;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent">Discard</button>
+          </div>
+          <button id="favDelBtn" onclick="favDeletePlayer()" style="width:100%;text-align:center;color:#e74c3c;font-size:13px;font-weight:600;background:none;border:none;cursor:pointer;padding:4px 0;-webkit-tap-highlight-color:transparent">&#x1F5D1; Delete this player</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) overlay.remove(); });
+  renderFavoritesList();
+}
+
+var _favEditingName = null; // null = new player
+
+function favOpenEdit(name){ try {
+  _favEditingName = name;
+  const listScreen = document.getElementById('favListScreen');
+  const editScreen = document.getElementById('favEditScreen');
+  const editTitle  = document.getElementById('favEditTitle');
+  const delBtn     = document.getElementById('favDelBtn');
+  if(!listScreen||!editScreen) return;
+
+  listScreen.style.display = 'none';
+  editScreen.style.display = 'flex';
+  editTitle.textContent = name ? 'Edit Player' : 'Add New Player';
+  delBtn.style.display = name ? 'block' : 'none';
+
+  const contacts = loadContacts();
+  const c = name ? contacts.find(x=>x.name===name) : null;
+
+  // Stats from history
+  const stats = computePlayerStats();
+  const st = (name && stats[name]) ? stats[name] : {rounds:0, lastDate:null};
+  const lifeById = computeLifetimeMoneyByGolfId();
+  const gid = c ? (c.golfId||'').trim() : '';
+  const lifeEntry = gid ? lifeById.get(gid) : null;
+  const lifeAmt = (lifeEntry && lifeEntry.total) ? lifeEntry.total : 0;
+
+  // Birdie juice — count gross birdies from history
+  let bjCount = 0;
+  if(name){
+    const hist = loadHistory();
+    hist.forEach(function(r){
+      if(!r.players||!r.scores||!r.par) return;
+      const pi = r.players.findIndex(function(p){ return p.name===name; });
+      if(pi<0||!r.scores[pi]) return;
+      r.scores[pi].forEach(function(s,h){ if(s!==null && r.par[h] && s <= r.par[h]-1) bjCount++; });
+    });
+  }
+
+  // Match record — W/L/T across all game types
+  let mW=0, mL=0, mT=0, vsMeW=0, vsMeL=0, vsMeT=0;
+  if(name){
+    const meC = contacts.find(function(x){ return x.me; });
+    const meName = meC ? meC.name : '';
+    const hist = loadHistory();
+    hist.forEach(function(r){
+      if(!r.players) return;
+      const pi = r.players.findIndex(function(p){ return p.name===name; });
+      if(pi<0) return;
+      // Nassau 2v2
+      (r.teamGames||[]).forEach(function(g){
+        if(!g||!g.a||!g.b) return;
+        const inA = g.a.includes(pi), inB = g.b.includes(pi);
+        if(!inA&&!inB) return;
+        const myTeam = inA ? g.a : g.b;
+        const vsTeam = inA ? g.b : g.a;
+        ['front','back','total'].forEach(function(side){
+          const mySide = g[side]||({}), vsSide = g[side+'Vs']||({});
+        });
+        if(g.result!==undefined){
+          const myIdx = inA ? 0 : 1;
+          if(g.result===myIdx){mW++;} else if(g.result===(1-myIdx)){mL++;} else {mT++;}
+          const meInGame = myTeam.some(function(idx){ return r.players[idx]&&r.players[idx].name===meName; });
+          if(meInGame&&meName&&meName!==name){
+            if(g.result===myIdx){vsMeW++;} else if(g.result===(1-myIdx)){vsMeL++;} else {vsMeT++;}
+          }
+        }
+      });
+    });
+  }
+
+  // Me check
+  const isMe = c ? !!(c.me) : false;
+  const meC2 = contacts.find(function(x){ return x.me; });
+  const meName2 = meC2 ? meC2.name : 'Me';
+
+  // Tee for current course
+  const courseId = G.courseId || 'derrick-gwc';
+  const course = activeCourse();
+  const courseName = course ? course.name : 'Current Course';
+  const tees = getTeeNames();
+  const curDeck = c ? (contactDeckForCourse(c, courseId) || defaultTeeName()) : defaultTeeName();
+  const teeOpts = tees.map(function(t){ return '<option value="'+t+'"'+(t===curDeck?' selected':'')+'>'+t+'</option>'; }).join('');
+
+  // Wheel options
+  const wheels = ['Par','Bogey','Double'];
+  const curWheel = wheels[c ? (c.typicalScore||0) : 1];
+  const wheelOpts = wheels.map(function(w,i){ return '<option value="'+i+'"'+(w===curWheel?' selected':'')+'>'+w+'</option>'; }).join('');
+
+  // Previous index note
+  var prevNote = '';
+  if(c && c.hdcpPrevious!=null && c.hdcpPrevious!==c.idx){
+    var diff = Math.round((c.idx - c.hdcpPrevious)*10)/10;
+    if(diff!==0){
+      var col = diff>0?'#e74c3c':'#27ae60';
+      var sym = diff>0?'+':'';
+      var fetchedStr = c.hdcpFetchedAt ? ' \u00b7 '+new Date(c.hdcpFetchedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+      prevNote = '<div style="font-size:11px;color:#666;margin-top:5px;font-weight:600">Previously <b style="color:#444">'+c.hdcpPrevious+'</b> <span style="color:'+col+';font-weight:700">('+sym+diff.toFixed(1)+')</span>'+fetchedStr+'</div>';
+    }
+  } else if(c && c.hdcpFetchedAt){
+    prevNote = '<div style="font-size:11px;color:#666;margin-top:5px;font-weight:600">'+new Date(c.hdcpFetchedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</div>';
+  }
+
+  // Career earnings
+  var lifeHtml = '';
+  if(lifeAmt>0){ lifeHtml='<span style="font-size:20px">&#128200;</span> <span style="color:#27ae60;font-size:18px;font-weight:800">+$'+Math.abs(lifeAmt).toFixed(2)+'</span>'; }
+  else if(lifeAmt<0){ lifeHtml='<span style="font-size:20px">&#128201;</span> <span style="color:#e74c3c;font-size:18px;font-weight:800">-$'+Math.abs(lifeAmt).toFixed(2)+'</span>'; }
+  else { lifeHtml='<span style="font-size:14px;font-weight:600;color:#bbb">$0.00 - no rounds recorded</span>'; }
+
+  // Last round date
+  var lastRoundStr = st.lastDate ? new Date(st.lastDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : 'None yet';
+
+  // Match html
+  var totalMatches = mW+mL+mT;
+  var matchHtml = totalMatches>0
+    ? '<span style="color:#27ae60;font-weight:800;font-size:15px">'+mW+'W</span> <span style="color:#aaa;font-size:13px">/</span> <span style="color:#e74c3c;font-weight:800;font-size:15px">'+mL+'L</span> <span style="color:#aaa;font-size:13px">/</span> <span style="color:#888;font-weight:800;font-size:15px">'+mT+'T</span>'
+    : '<span style="color:#bbb;font-size:13px">No matches yet</span>';
+
+  var vsMeTot = vsMeW+vsMeL+vsMeT;
+  var vsMeHtml = vsMeTot>0
+    ? '<span style="color:#27ae60;font-weight:800;font-size:15px">'+vsMeW+'W</span> <span style="color:#aaa;font-size:13px">/</span> <span style="color:#e74c3c;font-weight:800;font-size:15px">'+vsMeL+'L</span> <span style="color:#aaa;font-size:13px">/</span> <span style="color:#888;font-weight:800;font-size:15px">'+vsMeT+'T</span>'
+    : '<span style="color:#bbb;font-size:13px">No matches yet</span>';
+
+  // Adj HCP display
+  var adjHcp = c ? deckAdjust(c.idx||0, curDeck) : '';
+
+  // Has GC ID
+  var hasGcId = !!(gid);
+  var gcLabelExtra = !hasGcId ? ' <span style="color:#e67e22;font-weight:400;text-transform:none;font-size:9px">(not set)</span>' : '';
+  var gcNote = !hasGcId ? '<div style="font-size:11px;color:#e67e22;margin-top:4px">Add a Golf Canada ID to enable automatic handicap fetch</div>' : '';
+  var fetchCls = !hasGcId ? 'opacity:.4;cursor:not-allowed' : 'cursor:pointer';
+
+  // Rename warning check function name
+  var warnAttr = 'oninput="favCheckRename(this,'+JSON.stringify(!hasGcId)+','+JSON.stringify(c?c.name:'')+','+JSON.stringify(lifeAmt!==0)+')"';
+
+  var h = '';
+
+  // Favourite + Me toggles
+  h += '<div style="display:flex;gap:8px;margin-bottom:14px">';
+  h += '<div id="favToggleStar" onclick="favToggleChip(\'star\')" class="fav-chip'+(c&&c.fav?' fav-chip-star':'')+'" style="flex:1;height:40px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid #ddd;background:'+(c&&c.fav?'#fffbe6':'#fff')+';color:'+(c&&c.fav?'#b8860b':'#aaa')+';display:flex;align-items:center;justify-content:center;gap:5px;-webkit-tap-highlight-color:transparent">&#9733; Favourite</div>';
+  h += '<div id="favToggleMe" onclick="favMeChipTapped()"" style="flex:1;height:40px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:1.5px solid #ddd;background:'+(isMe?'#e8f5ee':'#fff')+';color:'+(isMe?'#1a3a2a':'#aaa')+';display:flex;align-items:center;justify-content:center;gap:5px;-webkit-tap-highlight-color:transparent">&#10003; This is Me</div>';
+  h += '</div>';
+
+  // Name
+  h += '<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Player Name</div>';
+  h += '<input id="favEditName" class="inp" type="text" value="'+((c?c.name:'')).replace(/"/g,'&quot;')+'" placeholder="Full name" '+warnAttr+' style="width:100%;height:42px;border:1.5px solid #ddd;border-radius:10px;padding:0 13px;font-size:15px;font-weight:600;color:#1a1a1a;background:#fff;outline:none;-webkit-appearance:none;box-sizing:border-box">';
+  h += '<div id="favRenameWarn" style="display:none;margin-top:6px;padding:8px 10px;background:#fff8e6;border:1px solid #f0c040;border-radius:8px;font-size:11px;color:#7a5a00;line-height:1.6"></div></div>';
+
+  // GC ID + Fetch
+  h += '<div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:14px">';
+  h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Golf Canada ID'+gcLabelExtra+'</div>';
+  h += '<input id="favEditGcId" class="inp" type="text" inputmode="numeric" maxlength="10" value="'+((c?c.golfId:'')||'')+'" placeholder="10-digit member ID" style="width:100%;height:42px;border:1.5px solid #ddd;border-radius:10px;padding:0 13px;font-size:15px;font-weight:600;color:#1a1a1a;background:#fff;outline:none;-webkit-appearance:none;box-sizing:border-box">';
+  h += gcNote+'</div>';
+  h += '<div style="display:flex;flex-direction:column;flex-shrink:0"><div style="font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;visibility:hidden">Fetch</div>';
+  h += '<button id="favFetchBtn" onclick="favFetchHandicap()" style="height:42px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:10px;padding:0 14px;font-size:12px;font-weight:800;white-space:nowrap;'+fetchCls+';-webkit-tap-highlight-color:transparent"><img src="'+GC_LOGO+'" style="height:14px;width:auto;vertical-align:middle;margin-right:5px"> Fetch HCP</button></div>';
+  h += '</div>';
+
+  // Index + Adj HCP
+  h += '<div style="display:flex;gap:10px;margin-bottom:14px">';
+  h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">'+(hasGcId?'Golf Canada Index':'Manual Index')+'</div>';
+  h += '<input id="favEditIdx" class="inp" type="number" step="0.1" value="'+(c&&c.idx!=null?c.idx:'')+'" placeholder="0.0" oninput="favUpdateAdjHcp()" style="width:100%;height:42px;border:1.5px solid #ddd;border-radius:10px;padding:0 13px;font-size:15px;font-weight:600;color:#1a1a1a;background:#fff;outline:none;-webkit-appearance:none;box-sizing:border-box">';
+  h += prevNote+'</div>';
+  h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Adjusted HCP ('+curDeck+')</div>';
+  h += '<input id="favEditAdjHcp" type="text" readonly value="'+(adjHcp||'')+'" style="width:100%;height:42px;border:1.5px solid #ddd;border-radius:10px;padding:0 13px;font-size:15px;font-weight:600;color:#666;background:#f0f0ec;outline:none;-webkit-appearance:none;box-sizing:border-box"></div>';
+  h += '</div>';
+
+  // Preferred Tee + Score Wheel
+  h += '<div style="display:flex;gap:10px;margin-bottom:14px">';
+  h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Preferred Tee</div>';
+  h += '<div style="font-size:10px;color:#2d6a4f;font-weight:700;margin-bottom:4px">'+courseName+'</div>';
+  h += '<select id="favEditDeck" onchange="favUpdateAdjHcp()" style="width:100%;height:42px;border:1.5px solid #ddd;border-radius:10px;padding:0 12px;font-size:14px;font-weight:600;color:#1a1a1a;background:#fff;outline:none;-webkit-appearance:none;box-sizing:border-box;background-image:url(\'data:image/svg+xml,%3Csvg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'10\\\' height=\\\'6\\\'%3E%3Cpath d=\\\'M0 0l5 6 5-6z\\\' fill=\\\'%23888\\\'/%3E%3C/svg%3E\');background-repeat:no-repeat;background-position:right 12px center;padding-right:30px">'+teeOpts+'</select>';
+  h += '<div id="favEditDeckYds" style="font-size:11px;color:#444;font-weight:600;margin-top:4px">'+favTeeYardage(curDeck)+'</div></div>';
+  h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Score Wheel Default</div>';
+  h += '<div style="font-size:10px;color:#2d6a4f;font-weight:700;margin-bottom:4px">Typical Player Score</div>';
+  h += '<select id="favEditWheel" style="width:100%;height:42px;border:1.5px solid #ddd;border-radius:10px;padding:0 12px;font-size:14px;font-weight:600;color:#1a1a1a;background:#fff;outline:none;-webkit-appearance:none;box-sizing:border-box;background-image:url(\'data:image/svg+xml,%3Csvg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'10\\\' height=\\\'6\\\'%3E%3Cpath d=\\\'M0 0l5 6 5-6z\\\' fill=\\\'%23888\\\'/%3E%3C/svg%3E\');background-repeat:no-repeat;background-position:right 12px center;padding-right:30px">'+wheelOpts+'</select></div>';
+  h += '</div>';
+
+  // Me-only settings
+  if(isMe){
+    h += '<div style="background:rgba(26,58,42,.05);border:1px solid rgba(26,58,42,.15);border-radius:12px;padding:12px 14px;margin-bottom:14px">';
+    h += '<div style="font-size:10px;font-weight:800;color:#2d6a4f;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">Me Settings</div>';
+    h += '<div style="margin-bottom:10px"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Home City</div>';
+    h += '<input id="favEditHomeCity" type="text" value="'+((c&&c.homeCity)||'').replace(/"/g,'&quot;')+'" placeholder="e.g. Edmonton, AB" style="width:100%;height:42px;border:1.5px solid #ddd;border-radius:10px;padding:0 13px;font-size:15px;font-weight:600;color:#1a1a1a;background:#fff;outline:none;-webkit-appearance:none;box-sizing:border-box"></div>';
+    h += '<div><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Home Course</div>';
+    const homeCourseId = c&&c.homeCourse ? c.homeCourse : 'derrick-gwc';
+    const homeCourseList = (typeof PARDS_COURSES!=='undefined') ? PARDS_COURSES : [];
+    const homeCourseOpts = homeCourseList.map(function(x){ return '<option value="'+x.id+'"'+(x.id===homeCourseId?' selected':'')+'>'+x.name+'</option>'; }).join('');
+    h += '<select id="favEditHomeCourse" style="width:100%;height:42px;border:1.5px solid #ddd;border-radius:10px;padding:0 12px;font-size:13px;font-weight:600;color:#1a1a1a;background:#fff;outline:none;-webkit-appearance:none;box-sizing:border-box;background-image:url(\'data:image/svg+xml,%3Csvg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'10\\\' height=\\\'6\\\'%3E%3Cpath d=\\\'M0 0l5 6 5-6z\\\' fill=\\\'%23888\\\'/%3E%3C/svg%3E\');background-repeat:no-repeat;background-position:right 12px center;padding-right:30px">'+homeCourseOpts+'</select></div>';
+    h += '</div>';
+  }
+
+  // Stats divider
+  h += '<div style="border:none;border-top:1px solid #e8e8e4;margin:8px 0 14px"></div>';
+
+  // Career Birdie Juice + Overall Match Record
+  h += '<div style="display:flex;gap:10px;margin-bottom:10px">';
+  h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Career Birdie Juice</div>';
+  h += '<div style="height:42px;border:1.5px solid #ddd;border-radius:10px;background:#fff;display:flex;align-items:center;padding:0 14px;gap:6px">';
+  h += bjCount>0 ? '<span style="color:#c9a84c;font-weight:800;font-size:16px">'+bjCount+'</span> <span style="color:#888;font-size:12px">birdies</span>' : '<span style="color:#bbb;font-size:13px">No birdies yet</span>';
+  h += '</div></div>';
+  h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Overall Match Record</div>';
+  h += '<div style="height:42px;border:1.5px solid #ddd;border-radius:10px;background:#fff;display:flex;align-items:center;padding:0 14px;gap:4px">'+matchHtml+'</div></div>';
+  h += '</div>';
+
+  // vs Me (non-Me players only)
+  if(!isMe && name){
+    h += '<div style="margin-bottom:10px"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">vs '+meName2+'</div>';
+    h += '<div style="height:42px;border:1.5px solid #ddd;border-radius:10px;background:#fff;display:flex;align-items:center;padding:0 14px;gap:4px">'+vsMeHtml+'</div></div>';
+  }
+
+  // Career Earnings
+  h += '<div style="border:none;border-top:1px solid #e8e8e4;margin:4px 0 14px"></div>';
+  h += '<div style="margin-bottom:10px"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Career Earnings</div>';
+  h += '<div style="height:42px;border:1.5px solid #ddd;border-radius:10px;background:#fff;display:flex;align-items:center;padding:0 14px;gap:8px">'+lifeHtml+'</div></div>';
+
+  // Total Rounds + Last Round (non-Me only)
+  if(!isMe && name){
+    h += '<div style="display:flex;gap:10px;margin-bottom:10px">';
+    h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Total Rounds Played</div>';
+    h += '<div style="height:42px;border:1.5px solid #ddd;border-radius:10px;background:#fff;display:flex;align-items:center;padding:0 14px"><span style="font-size:16px;font-weight:800;color:#444">'+(st.rounds||0)+'</span></div></div>';
+    h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Last Round Played</div>';
+    h += '<div style="height:42px;border:1.5px solid #ddd;border-radius:10px;background:#fff;display:flex;align-items:center;padding:0 14px"><span style="font-size:14px;font-weight:600;color:#444">'+lastRoundStr+'</span></div></div>';
+    h += '</div>';
+  }
+
+  document.getElementById('favEditBody').innerHTML = h;
+  } catch(e) { document.getElementById('favEditBody').innerHTML = '<div style="padding:20px;font-family:monospace;font-size:12px;color:red">ERROR in favOpenEdit: ' + e.message + '<br><br>' + (e.stack||'').replace(/\n/g,'<br>') + '</div>'; document.getElementById('favEditScreen').style.display='flex'; } }
+
+function favTeeYardage(tee){
+  const course = activeCourse();
+  if(!course||!course.tees) return '';
+  const t = course.tees.find(function(x){ return x.name===tee; });
+  if(!t) return '';
+  var total = t.yardage || (Array.isArray(t.yards) ? t.yards.reduce(function(a,b){return a+(b||0);},0) : t.yards);
+  return total ? total.toLocaleString()+' yds' : '';
+}
+
+function favUpdateAdjHcp(){
+  const idxEl = document.getElementById('favEditIdx');
+  const deckEl = document.getElementById('favEditDeck');
+  const adjEl = document.getElementById('favEditAdjHcp');
+  const ydsEl = document.getElementById('favEditDeckYds');
+  if(!idxEl||!deckEl||!adjEl) return;
+  const idx = parseFloat(idxEl.value);
+  const deck = deckEl.value;
+  if(!isNaN(idx)) adjEl.value = deckAdjust(idx, deck);
+  else adjEl.value = '';
+  if(ydsEl) ydsEl.textContent = favTeeYardage(deck);
+}
+
+function favCheckRename(inp, noGcId, origName, hasHistory){
+  const warn = document.getElementById('favRenameWarn');
+  if(!warn) return;
+  const changed = inp.value.trim() !== origName;
+  if(changed && noGcId && hasHistory){
+    warn.style.display = 'block';
+    warn.innerHTML = '\u26a0\ufe0f <b>This player has rounds recorded under \u201c'+origName+'\u201d. Renaming won\u2019t update past rounds and may break career earnings. Add a Golf Canada ID to link history reliably.</b>';
+  } else {
+    warn.style.display = 'none';
+  }
+}
+
+var _meLongPressTimer = null;
+
+function favMeChipTapped(){
+  var meEl = document.getElementById('favToggleMe');
+  var alreadyMe = meEl && (meEl.style.background === 'rgb(232, 245, 238)' || meEl.style.background === '#e8f5ee');
+  if(alreadyMe) return; // already Me — no action needed
+  var contacts = loadContacts();
+  var existingMe = contacts.find(function(c){ return c.me; });
+  // No existing Me or same player — activate immediately, no warning needed
+  if(!existingMe || existingMe.name === _favEditingName){ favConfirmMeChip(); return; }
+  // Different player is Me — show warning dialog with hold-to-confirm
+  var nameEl = document.getElementById('favEditName');
+  var newName = nameEl ? nameEl.value.trim() : (_favEditingName || 'this player');
+  var ov = document.createElement('div');
+  ov.id = 'favMeWarnOverlay';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px';
+  var sh = document.createElement('div');
+  sh.style.cssText = 'background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:16px;padding:24px;max-width:340px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.5)';
+  sh.innerHTML = '<div style="font-size:36px;text-align:center;margin-bottom:10px">&#9940;</div>'
+    + '<div style="font-size:16px;font-weight:900;color:#e74c3c;text-align:center;margin-bottom:10px">WARNING &#8212; Read This First</div>'
+    + '<div style="font-size:13px;color:rgba(255,255,255,.85);line-height:1.6;margin-bottom:14px">'
+    + 'Changing <b style="color:#f5e6b8">Me</b> from <b style="color:#f5e6b8">' + existingMe.name + '</b> to <b style="color:#f5e6b8">' + newName + '</b>:'
+    + '</div>'
+    + '<div style="background:rgba(231,76,60,.12);border:1.5px solid rgba(231,76,60,.4);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:rgba(255,255,255,.85);line-height:1.8">'
+    + '&#127942; Career earnings will transfer to the new Me<br>'
+    + '&#128220; All round history &amp; stats attributed to new Me<br>'
+    + '&#9888; <b>This cannot be undone</b>'
+    + '</div>'
+    + '<div style="font-size:11px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:12px">Hold the button below for 2 seconds to confirm.</div>'
+    + '<div style="display:flex;gap:10px">'
+    + '<button onclick="favMeWarnCancel()" style="flex:1;padding:12px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-size:14px;font-weight:700;cursor:pointer">Cancel</button>'
+    + '<button id="favMeHoldBtn" onmousedown="favMeHoldStart()" onmouseup="favMeHoldEnd()" onmouseleave="favMeHoldEnd()" ontouchstart="favMeHoldStart()" ontouchend="favMeHoldEnd()" style="flex:1;padding:12px;background:#e74c3c;border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none">Hold to Confirm</button>'
+    + '</div>';
+  ov.appendChild(sh);
+  document.body.appendChild(ov);
+}
+
+function favMeWarnCancel(){
+  var ov = document.getElementById('favMeWarnOverlay');
+  if(ov) ov.remove();
+}
+
+function favMeHoldStart(){
+  var progress = 0;
+  var btn = document.getElementById('favMeHoldBtn');
+  _meLongPressTimer = setInterval(function(){
+    progress += 50;
+    var pct = Math.min(100, Math.round(progress/2000*100));
+    if(btn) btn.textContent = 'Hold… ' + pct + '%';
+    if(progress >= 2000){
+      clearInterval(_meLongPressTimer); _meLongPressTimer = null;
+      var ov = document.getElementById('favMeWarnOverlay');
+      if(ov) ov.remove();
+      favConfirmMeChip();
+    }
+  }, 50);
+}
+
+function favMeHoldEnd(){
+  if(_meLongPressTimer){ clearInterval(_meLongPressTimer); _meLongPressTimer = null; }
+  var btn = document.getElementById('favMeHoldBtn');
+  if(btn) btn.textContent = 'Hold to Confirm';
+}
+
+
+
+function favConfirmMeChip(){
+  var meEl = document.getElementById('favToggleMe');
+  var starEl = document.getElementById('favToggleStar');
+  if(!meEl) return;
+  meEl.style.background = '#e8f5ee'; meEl.style.color = '#1a3a2a'; meEl.style.borderColor = '#2d6a4f';
+  meEl.textContent = '✓ This is Me';
+  if(starEl){ starEl.style.background = '#fffbe6'; starEl.style.color = '#b8860b'; starEl.style.borderColor = '#c9a84c'; }
+}
+
+function favToggleChip(type){
+  const starEl = document.getElementById('favToggleStar');
+  const meEl   = document.getElementById('favToggleMe');
+  if(type==='star'){
+    const on = starEl.style.background === 'rgb(255, 251, 230)' || starEl.style.background === '#fffbe6';
+    starEl.style.background = on ? '#fff' : '#fffbe6';
+    starEl.style.color = on ? '#aaa' : '#b8860b';
+    starEl.style.borderColor = on ? '#ddd' : '#c9a84c';
+  } else {
+    const on = meEl.style.background === 'rgb(232, 245, 238)' || meEl.style.background === '#e8f5ee';
+    meEl.style.background = on ? '#fff' : '#e8f5ee';
+    meEl.style.color = on ? '#aaa' : '#1a3a2a';
+    meEl.style.borderColor = on ? '#ddd' : '#2d6a4f';
+    // If turning Me on, also turn Favourite on
+    if(!on){
+      starEl.style.background = '#fffbe6';
+      starEl.style.color = '#b8860b';
+      starEl.style.borderColor = '#c9a84c';
+    }
+  }
+}
+
+async function favFetchHandicap(){
+  const gcIdEl = document.getElementById('favEditGcId');
+  const idxEl  = document.getElementById('favEditIdx');
+  const adjEl  = document.getElementById('favEditAdjHcp');
+  const btn    = document.getElementById('favFetchBtn');
+  if(!gcIdEl) return;
+  const gid = gcIdEl.value.trim();
+  if(!/^\d{10}$/.test(gid)){ alert('Enter a valid 10-digit Golf Canada ID first.'); return; }
+
+  let cfg = gcConfig();
+  if(!cfg.worker || !cfg.username || !cfg.password){
+    if(!promptGcSetup()) return;
+    cfg = gcConfig();
+  }
+
+  if(btn){ btn.disabled=true; btn.textContent='Fetching\u2026'; }
+  try{
+    const token = await gcGetToken(cfg);
+    const res = await fetch(cfg.worker.replace(/\/+$/,'')+'/handicap?cardId='+encodeURIComponent(gid),{
+      headers:{'Authorization':'Bearer '+token}
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data = await res.json();
+    const rec = Array.isArray(data.data) ? data.data[0] : data;
+    if(!rec||rec.handicapValue===undefined) throw new Error('No handicap found');
+    const hv = rec.handicapValue;
+    if(idxEl) idxEl.value = hv;
+    favUpdateAdjHcp();
+    if(btn){ btn.innerHTML='<img src="'+GC_LOGO+'" style="height:14px;width:auto;vertical-align:middle;margin-right:5px"> \u2713 Done'; }
+    setTimeout(function(){
+      if(btn){ btn.disabled=false; btn.innerHTML='<img src="'+GC_LOGO+'" style="height:14px;width:auto;vertical-align:middle;margin-right:5px"> Fetch HCP'; }
+    }, 2000);
+  } catch(e){
+    if(btn){ btn.disabled=false; btn.innerHTML='<img src="'+GC_LOGO+'" style="height:14px;width:auto;vertical-align:middle;margin-right:5px"> Fetch HCP'; }
+    alert('Fetch failed: '+e.message);
+  }
+}
+
+function favSaveEdit(){
+  const nameEl  = document.getElementById('favEditName');
+  const gcIdEl  = document.getElementById('favEditGcId');
+  const idxEl   = document.getElementById('favEditIdx');
+  const deckEl  = document.getElementById('favEditDeck');
+  const wheelEl = document.getElementById('favEditWheel');
+  const starEl  = document.getElementById('favToggleStar');
+  const meEl    = document.getElementById('favToggleMe');
+
+  if(!nameEl) return;
+  const newName = nameEl.value.trim();
+  if(!newName){ alert('Player name is required.'); return; }
+
+  const newGcId = gcIdEl ? gcIdEl.value.trim() : '';
+  if(newGcId && !/^\d{10}$/.test(newGcId)){ alert('Golf Canada ID must be 10 digits.'); return; }
+
+  const newIdx  = idxEl ? parseFloat(idxEl.value) : NaN;
+  const newDeck = deckEl ? deckEl.value : defaultTeeName();
+  const newWheel = wheelEl ? parseInt(wheelEl.value,10) : 1;
+
+  const isFav = starEl && (starEl.style.background === 'rgb(255, 251, 230)' || starEl.style.background === '#fffbe6');
+  const isMe  = meEl  && (meEl.style.background  === 'rgb(232, 245, 238)' || meEl.style.background  === '#e8f5ee');
+
+  const contacts = loadContacts();
+  const oldName  = _favEditingName;
+  let c;
+
+  if(oldName){
+    // Editing existing
+    c = contacts.find(function(x){ return x.name===oldName; });
+    if(!c){ alert('Player not found.'); return; }
+    // Handle rename
+    if(newName !== oldName){
+      if(contacts.find(function(x){ return x.name.toLowerCase()===newName.toLowerCase() && x.name!==oldName; })){
+        alert('A player named "'+newName+'" already exists.'); return;
+      }
+      // Update active round and history
+      if(G.players) G.players.forEach(function(p){ if(p.name===oldName) p.name=newName; });
+      try{
+        const hist=loadHistory(); let changed=false;
+        hist.forEach(function(r){ if(r.players) r.players.forEach(function(p){ if(p.name===oldName){p.name=newName;changed=true;} }); });
+        if(changed) saveHistoryList(hist);
+      }catch(_){}
+    }
+    c.name = newName;
+  } else {
+    // New player
+    if(contacts.find(function(x){ return x.name.toLowerCase()===newName.toLowerCase(); })){
+      alert('A player named "'+newName+'" already exists.'); return;
+    }
+    c = { name:newName };
+    contacts.push(c);
+  }
+
+  // Update fields
+  c.golfId = newGcId;
+  if(!isNaN(newIdx)) c.idx = newIdx;
+  c.typicalScore = newWheel;
+  c.fav  = !!(isFav||isMe);
+  // Handle Me toggle
+  if(isMe){
+    contacts.forEach(function(x){ x.me = (x.name===newName); });
+  } else if(c.me){
+    c.me = false;
+  }
+  // Save deck preference for current course
+  if(!c.deckPrefs) c.deckPrefs = {};
+  c.deckPrefs[G.courseId||'derrick-gwc'] = newDeck;
+
+  // Me-only fields
+  const homeCityEl   = document.getElementById('favEditHomeCity');
+  const homeCourseEl = document.getElementById('favEditHomeCourse');
+  if(homeCityEl)   c.homeCity   = homeCityEl.value.trim();
+  if(homeCourseEl) c.homeCourse = homeCourseEl.value;
+
+  saveContacts(contacts);
+  if(G.players) saveG();
+
+  showToast((oldName ? '\u2713 Saved ' : '\u2713 Added ') + newName);
+  favCloseEdit();
+  renderFavoritesList();
+  renderPlayers();
+}
+
+function favDeletePlayer(){
+  const name = _favEditingName;
+  if(!name) return;
+  deleteFavPlayer(name);
+}
+
+function favCloseEdit(){
+  const listScreen = document.getElementById('favListScreen');
+  const editScreen = document.getElementById('favEditScreen');
+  if(!listScreen||!editScreen) return;
+  editScreen.style.display = 'none';
+  listScreen.style.display = 'flex';
+  listScreen.style.flexDirection = 'column';
+  listScreen.style.height = '100%';
+  _favEditingName = null;
+}
+
 function renderFavoritesList(){
   const box=document.getElementById('favList');
   if(!box) return;
-  box.scrollTop = 0;
-  const sheet=document.querySelector('#favOverlay .mm-sheet');
-  if(sheet) sheet.scrollTop = 0;
+
   const favSearch = (document.getElementById('favSearchInput')||{}).value||'';
   const favQ = favSearch.toLowerCase().trim();
   const contacts = loadContacts().slice()
     .filter(function(c){ return !favQ || c.name.toLowerCase().includes(favQ); })
     .sort(function(a,b){
-      if(a.me && !b.me) return -1;
-      if(!a.me && b.me) return 1;
-      if(a.fav && !b.fav) return -1;
-      if(!a.fav && b.fav) return 1;
+      if(a.me && !b.me) return -1; if(!a.me && b.me) return 1;
+      if(a.fav && !b.fav) return -1; if(!a.fav && b.fav) return 1;
       return a.name.localeCompare(b.name);
     });
-  // Live result count, only shown while actively searching
+
   const countEl = document.getElementById('favSearchCount');
   if(countEl){
-    if(favQ){
-      countEl.style.display = 'block';
-      countEl.textContent = contacts.length + ' player' + (contacts.length===1?'':'s') + ' found';
-    } else {
-      countEl.style.display = 'none';
-    }
+    if(favQ){ countEl.style.display='block'; countEl.textContent=contacts.length+' player'+(contacts.length===1?'':'s')+' found'; }
+    else { countEl.style.display='none'; }
   }
-  const stats = computePlayerStats();
+
   if(!contacts.length){
-    box.innerHTML=favQ
-      ? `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:50px 20px;text-align:center;min-height:200px">
-          <div style="font-size:40px">🔍</div>
-          <div style="font-size:16px;font-weight:800;color:#1a3a2a">No players found</div>
-          <div style="font-size:13px;color:#888">Nobody matches “${favQ}”. Try a different spelling.</div>
-        </div>`
-      : `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:50px 20px;text-align:center;min-height:200px">
-          <div style="font-size:40px">👥</div>
-          <div style="font-size:16px;font-weight:800;color:#1a3a2a">No saved players yet</div>
-          <div style="font-size:13px;color:#888">Save a player on the setup screen (💾) first, then come back to star your regulars.</div>
-        </div>`;
+    box.innerHTML = favQ
+      ? '<div style="padding:40px 20px;text-align:center;color:#888;font-size:14px">No players found for "'+favQ+'"</div>'
+      : '<div style="padding:40px 20px;text-align:center;color:#888;font-size:14px">No saved players yet.<br><br>Tap <b>+ Add New Player</b> above to get started.</div>';
     return;
   }
-  const favCount = contacts.filter(c=>c.fav).length;
+
   const lifeById = computeLifetimeMoneyByGolfId();
-  // Build letter-anchor map for alphabet rail — non-favorites only
-  const _favLetters = new Set();
-  let _favLastLetter = '';
-  const _favLetterMap = {};
+  const favCount = contacts.filter(function(c){ return c.fav; }).length;
+
+  var html = '<div style="font-size:11px;color:#888;padding:8px 16px 4px">'+favCount+' of '+MAX_FAVORITES+' favourites selected</div>';
+
+  var lastSection = '';
   contacts.forEach(function(c){
-    if(c.me || c.fav) return; // skip Me and favorites
-    const fl = c.name ? c.name[0].toUpperCase() : '';
-    if(fl && fl !== _favLastLetter){ _favLastLetter = fl; _favLetters.add(fl); _favLetterMap[fl] = c.name; }
+    var section = '';
+    if(c.me) section = '\u2b50 Me';
+    else if(c.fav) section = '\u2b50 Favourites';
+    else { section = 'All Players \u2014 '+(c.name?c.name[0].toUpperCase():''); }
+
+    if(section !== lastSection){
+      html += '<div style="font-size:10px;font-weight:800;color:#888;letter-spacing:.08em;text-transform:uppercase;padding:12px 16px 4px">'+section+'</div>';
+      lastSection = section;
+    }
+
+    const gid = (c.golfId||'').trim();
+    const lifeEntry = gid ? lifeById.get(gid) : null;
+    const lifeAmt = (lifeEntry&&lifeEntry.total) ? lifeEntry.total : 0;
+    var lifeStr = '';
+    if(lifeAmt>0) lifeStr = '<span style="color:#27ae60;font-weight:700;font-size:12px">+$'+Math.abs(lifeAmt).toFixed(2)+'</span>';
+    else if(lifeAmt<0) lifeStr = '<span style="color:#e74c3c;font-weight:700;font-size:12px">-$'+Math.abs(lifeAmt).toFixed(2)+'</span>';
+
+    const safeName = c.name.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+
+    html += '<div onclick="favOpenEdit(\''+safeName+'\')" style="background:#fff;margin:0 12px 8px;border-radius:12px;border:1.5px solid #e0e0e0;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent">';
+    html += '<div style="font-size:20px;color:'+(c.fav?'#c9a84c':'#ccc')+';flex-shrink:0">'+(c.fav?'\u2605':'\u2606')+'</div>';
+    if(c.me) html += '<span style="background:#1a3a2a;color:#c9a84c;font-size:9px;font-weight:800;border-radius:10px;padding:2px 6px;letter-spacing:.3px;flex-shrink:0">ME</span>';
+    html += '<div style="flex:1;min-width:0">';
+    html += '<div style="font-size:15px;font-weight:700;color:#1a1a1a">'+c.name+'</div>';
+    html += '<div style="font-size:12px;color:#888;margin-top:1px">';
+    if(c.idx!=null) html += '<span style="margin-right:8px">Index '+c.idx+'</span>';
+    if(gid) html += '<span style="font-family:monospace;font-size:11px">GC '+gid.slice(-4).padStart(gid.length,'*').replace(/\*/g,'')+gid.slice(-4)+'</span>';
+    html += '</div></div>';
+    if(lifeStr) html += lifeStr;
+    html += '<div style="color:#ccc;font-size:16px;flex-shrink:0">\u203a</div>';
+    html += '</div>';
   });
 
-  box.innerHTML = `<div style="font-size:11px;color:#888;margin:0 0 8px">${favCount} of ${MAX_FAVORITES} favorites selected</div>` +
-    (function(){
-      let _fll = '';
-      return contacts.map(c=>{
-        const _fl = c.name ? c.name[0].toUpperCase() : '';
-        let _anchor = '';
-        if(!c.me && !c.fav && _fl && _fl !== _fll){ _fll = _fl; _anchor = `<div id="fav-jump-${_fl}" style="height:0;overflow:hidden"></div>`; }
-
-      const courseId = G.courseId || 'derrick-gwc';
-      const courseName = activeCourse().name;
-      const dd = contactDeckForCourse(c, courseId) || defaultTeeName();
-      const opts=getTeeNames().map(d=>`<option value="${d}"${d===dd?' selected':''}>${d}</option>`).join('');
-      const safe=c.name.replace(/'/g,"\\'");
-      const st=stats[c.name]||{rounds:0,lastDate:null,lastGross:null,cumMoney:0};
-      const lrd=st.lastDate?new Date(st.lastDate).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):null;
-      const grs=st.lastGross!=null?'Gross '+st.lastGross:null;
-      // Lifetime money keyed by Golf Canada ID (accurate cross-round identity).
-      // Only shown for players who have a Golf Canada ID saved.
-      const gid=(c.golfId||'').trim();
-      const lifeEntry=gid?lifeById.get(gid):null;
-      const hasLife=gid && lifeEntry!==undefined && lifeEntry!==null;
-      const cv=hasLife?lifeEntry.total:0;
-      const cc=cv>0?'fs-pos':cv<0?'fs-neg':'fs-zero';
-      const cs=cv>0?'+'+fmtMoney(cv):cv<0?'−'+fmtMoney(cv):fmtMoney(0);
-      return _anchor + `
-    <div class="fav-row" style="align-items:flex-start">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
-        <button class="fav-star ${c.fav?'on':''}" onclick="toggleFavorite('${safe}')" title="Toggle favorite">${c.fav?'★':'☆'}</button>
-        <button class="fav-me ${c.me?'on':''}" onclick="setMe('${safe}')" title="This is me (scorekeeper)" style="font-size:11px;padding:3px 8px">${c.me?'✓ Me':'Me'}</button>
-      </div>
-      <div class="fav-name" style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;gap:6px;width:100%">
-          <span id="favname_${safe}" style="font-size:15px;font-weight:600">${c.name}</span><button onclick="startRenameFav(\'${safe}\')" title="Edit name" style="background:none;border:none;cursor:pointer;padding:0 0 1px 4px;color:#888;font-size:12px;line-height:1;vertical-align:middle;-webkit-tap-highlight-color:transparent" aria-label="Edit name">✏️</button><span style="color:#999;font-weight:400;font-size:11px">Index ${c.idx}${(()=>{if(c.hdcpPrevious==null||isNaN(c.hdcpPrevious)||c.hdcpPrevious===c.idx)return '';const _d=Math.round((c.idx-c.hdcpPrevious)*10)/10;if(_d===0)return '';const _up=_d>0;return ' <span style=\"color:'+(_up?'#e74c3c':'#27ae60')+';font-weight:800;font-size:11px\">'+(_up?'&#9650;':'&#9660;')+' '+Math.abs(_d).toFixed(1)+'</span>';})()} </span>
-          ${c.golfId?`<img src="${GC_LOGO}" alt="Golf Canada" style="height:13px;width:auto;flex-shrink:0;margin-left:auto"><span style="font-family:monospace;font-size:10px;color:#888;letter-spacing:.5px">${c.golfId}</span><button onclick="navigator.clipboard.writeText('${c.golfId}')" style="background:#222;border:none;color:#fff;border-radius:5px;padding:2px 7px;font-size:9px;cursor:pointer;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:0" title="Copy Golf Canada ID"><span style="font-size:7px;font-weight:700;letter-spacing:.5px">COPY</span><span style="font-size:10px">&#x2398;</span></button>`:''}
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:6px;width:100%"><span class="fav-deck-lbl" style="min-width:0;flex:1;font-size:10px;color:#1a3a2a;font-weight:700;text-transform:uppercase;letter-spacing:.4px">Tee · ${courseName}</span><button onclick="openFavDeckModal('${safe}','${dd}')" id="favDeckBtn_${safe.replace(/ /g,'_')}" style="background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;display:flex;align-items:center;gap:6px"><span id="favDeckLbl_${safe.replace(/ /g,'_')}">${dd}</span><span style="font-size:9px;opacity:.6">▼</span></button><span style="font-size:12px;color:#1a5c1a;white-space:nowrap;font-weight:700" id="favDeckYds_${safe.replace(/ /g,'_')}">${teeYardageStr(dd)}</span></div>
-        ${c.me ? `<div style="display:flex;align-items:center;gap:8px;margin-top:4px;width:100%"><span class="fav-deck-lbl" style="min-width:120px">🌤️ Home City</span><input type="text" value="${c.homeCity||''}" placeholder="Edmonton, AB" onchange="setMeHomeCity('${safe}',this.value)" style="flex:1;padding:7px 10px;border:1.5px solid rgba(26,58,42,.25);border-radius:8px;font-size:12px;font-weight:600;color:#1a3a2a;background:#f5f5f0;text-align:center;outline:none"><span style="font-size:10px;color:#aaa">for weather</span></div>` : ''}
-        ${c.me ? `<div style="display:flex;align-items:center;gap:8px;margin-top:4px;width:100%"><span class="fav-deck-lbl" style="min-width:120px">⛳ Home Course</span><button onclick="openHomeCourseModal('${safe}')" id="homeCourseBtn_${safe.replace(/ /g,'_')}" style="flex:1;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:left;display:flex;align-items:center;justify-content:space-between"><span id="homeCourseLabel_${safe.replace(/ /g,'_')}">${c.homeCourse ? (PARDS_COURSES.find(x=>x.id===c.homeCourse)||{name:c.homeCourse}).name : 'Derrick Golf & Winter Club'}</span><span style="font-size:9px;opacity:.6">▼</span></button></div>` : ''}
-        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;width:100%"><span class="fav-deck-lbl" style="min-width:120px;font-size:10px;color:#1a3a2a;font-weight:700;text-transform:uppercase;letter-spacing:.4px">Score Wheel Default</span><button onclick="openFavTypicalModal('${safe}',${c.typicalScore||0})" id="favTypBtn_${safe.replace(/ /g,'_')}" style="background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;display:flex;align-items:center;gap:6px"><span id="favTypLbl_${safe.replace(/ /g,'_')}">${['Par','Bogey','Double'][(c.typicalScore||0)]}</span><span style="font-size:9px;opacity:.6">▼</span></button><button onclick="event.stopPropagation();showFavInfo()" style="background:none;border:1.5px solid rgba(168,213,181,.5);color:#a8d5b5;border-radius:50%;width:16px;height:16px;font-size:10px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;padding:0;line-height:1">ℹ</button><span style="flex:1"></span><button class="mm-player-del" onclick="deleteFavPlayer('${safe}')" style="background:radial-gradient(circle at 40% 35%,#e74c3c,#c0392b,#922b21);color:#fff;border:2px solid #7b241c;border-radius:50%;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 8px rgba(0,0,0,.35);flex-shrink:0" title="Delete player"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg></button></div>
-        <div class="fav-stats" style="margin-top:2px">
-          ${lrd?`<span class="fs-item">📅 ${lrd}${grs?' · '+grs:''}</span>`:`<span class="fs-item" style="color:#ccc">No rounds yet</span>`}
-          ${hasLife?`<span class="fs-item"><span class="${cc}">${cs}</span> lifetime${st.rounds>0?` (${st.rounds} rnd${st.rounds!==1?'s':''})`:''}</span>`:(gid?'':`<span class="fs-item" style="color:#999">— no Golf Canada ID</span>`)}
-        </div>
-      </div>
-  </div>
-
-    </div>`;
-      }).join('');
-    })()
-  ;
-
-  // Add/refresh alphabet rail on favSheet
-  (function(){
-    var sheet = document.getElementById('favSheet');
-    if(!sheet) return;
-    var existRail = document.getElementById('favAlphaRail');
-    if(existRail) existRail.remove();
-    if(!_favLetters.size) return;
-    var rail = document.createElement('div');
-    rail.id = 'favAlphaRail';
-    rail.style.cssText = 'position:absolute;right:0;top:80px;bottom:80px;width:28px;display:flex;flex-direction:column;justify-content:space-between;background:rgba(13,31,21,.9);border-radius:8px 0 0 8px;padding:4px 0;z-index:10;box-shadow:-2px 0 8px rgba(0,0,0,.3)';
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(function(l){
-      var lEl = document.createElement('div');
-      lEl.textContent = l;
-      lEl.style.cssText = 'font-size:10px;font-weight:900;color:'+(_favLetters.has(l)?'#c9a84c':'rgba(201,168,76,.2)')+';text-align:center;cursor:'+(_favLetters.has(l)?'pointer':'default')+';line-height:1;-webkit-tap-highlight-color:transparent;user-select:none;padding:2px 0';
-      if(_favLetters.has(l)){
-        lEl.onclick = function(){
-          var el = document.getElementById('fav-jump-'+l);
-          if(el){ var box2 = document.getElementById('favList'); if(box2) box2.scrollTop = el.offsetTop - 8; }
-        };
-      }
-      rail.appendChild(lEl);
-    });
-    sheet.style.position = 'relative';
-    sheet.appendChild(rail);
-  })();
+  box.innerHTML = html;
 }
 
-// Remove a player from the contacts list entirely, then re-render.
 
-// Rename a saved player — updates contacts, active round, and history
 function openHomeCourseModal(name){
   const ex = document.getElementById('homeCourseModal'); if(ex) ex.remove();
   const safe = name.replace(/ /g,'_');
@@ -19135,7 +19582,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v30.37. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v30.44. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -19621,7 +20068,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v30.37';
+const CURRENT_VERSION = 'pards-v30.44';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -19711,16 +20158,16 @@ const RELEASE_NOTES = [
   'v31.2 — Fixed: renderSingles undefined error on setup screen',
   'v31.1 — Weather: 7-day rain total added alongside 24hr in setup rain widget (one API call)',
   'v31.0 — Weather: rolling 24-hour rain total from WeatherLink historic API shown in setup rain widget',
-  'v30.37 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
-  'v30.37 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
-  'v30.37 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
-  'v30.37 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
-  'v30.37 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
-  'v30.37 — Score entry: deck fixed min-width so GC logo right edge always aligns',
-  'v30.37 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
-  'v30.37 — PDF: all auto-print removed; user taps Print button in new tab',
-  'v30.37 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
-  'v30.37 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
+  'v30.44 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
+  'v30.44 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
+  'v30.44 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
+  'v30.44 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
+  'v30.44 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
+  'v30.44 — Score entry: deck fixed min-width so GC logo right edge always aligns',
+  'v30.44 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
+  'v30.44 — PDF: all auto-print removed; user taps Print button in new tab',
+  'v30.44 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
+  'v30.44 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
   'v29.9 — PDF: Nassau match card scorecard also uses traditional score markings',
   'v29.8 — PDF scorecard: score markings now show birdie circles, bogey squares, eagle double circles (not stroke circles)',
   'v29.7 — PDF: pace of play added; snake settlements show play order for shotgun rounds',
@@ -19813,20 +20260,20 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v30.37 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v30.37 — Manage Favorites: COPY label added above the copy icon',
-  'v30.37 — Manage Favorites: copy button now dark background with white icon for better visibility',
-  'v30.37 — Manage Favorites: Idx label changed to Index',
-  'v30.37 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
-  'v30.37 — Setup: Snake game description updated with correct wording',
-  'v30.37 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
-  'v30.37 — Setup: Load My Favorites button colour matches Manage Favorites green',
-  'v30.37 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v30.37 — UI: tab references updated to reflect Games hub navigation',
-  'v30.37 — Score wheel: 2 cells each side, centred on typical score',
-  'v30.37 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v30.37 — Score wheel: left/right cells now relative to typical score, not par',
-  'v30.37 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v30.44 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v30.44 — Manage Favorites: COPY label added above the copy icon',
+  'v30.44 — Manage Favorites: copy button now dark background with white icon for better visibility',
+  'v30.44 — Manage Favorites: Idx label changed to Index',
+  'v30.44 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
+  'v30.44 — Setup: Snake game description updated with correct wording',
+  'v30.44 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
+  'v30.44 — Setup: Load My Favorites button colour matches Manage Favorites green',
+  'v30.44 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
+  'v30.44 — UI: tab references updated to reflect Games hub navigation',
+  'v30.44 — Score wheel: 2 cells each side, centred on typical score',
+  'v30.44 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v30.44 — Score wheel: left/right cells now relative to typical score, not par',
+  'v30.44 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -19845,47 +20292,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v30.37 — Games menu: ✕ close button added to sheet header',
-  'v30.37 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v30.37 — Snake tab: 3-putt log now sorted by hole number',
-  'v30.37 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v30.37 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v30.37 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v30.37 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v30.37 — Score entry: hole navigation arrows larger and more visible',
-  'v30.37 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v30.37 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v30.37 — Games tab icon changed to 💵',
-  'v30.37 — Birdie Juice tab restored to bottom nav',
-  'v30.37 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v30.37 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v30.37 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v30.37 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v30.37 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v30.37 — Setup: Snake participant names now sync live with player name changes',
-  'v30.37 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v30.37 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v30.37 — Fixed: player entry section now displays correctly',
-  'v30.37 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v30.37 — Setup: Round Setup header moved to the very top of the screen',
-  'v30.37 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v30.37 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v30.37 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v30.37 — Fixed: update notes modal now scrollable on iOS',
-  'v30.37 — Snake tab: current holder hidden after round is complete',
-  'v30.37 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v30.37 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v30.37 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v30.37 — Version number now shown beside Help button on every screen',
-  'v30.37 — Snake: resets every 3 holes; participant selection added to setup',
-  'v30.37 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v30.37 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v30.37 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v30.37 — New Round blocked if on hole 18 with missing scores',
-  'v30.37 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v30.37 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v30.37 — Fixed: ℹ️ update info button now appears correctly',
-  'v30.37 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v30.44 — Games menu: ✕ close button added to sheet header',
+  'v30.44 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v30.44 — Snake tab: 3-putt log now sorted by hole number',
+  'v30.44 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v30.44 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v30.44 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v30.44 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v30.44 — Score entry: hole navigation arrows larger and more visible',
+  'v30.44 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v30.44 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v30.44 — Games tab icon changed to 💵',
+  'v30.44 — Birdie Juice tab restored to bottom nav',
+  'v30.44 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v30.44 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v30.44 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v30.44 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v30.44 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v30.44 — Setup: Snake participant names now sync live with player name changes',
+  'v30.44 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v30.44 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v30.44 — Fixed: player entry section now displays correctly',
+  'v30.44 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v30.44 — Setup: Round Setup header moved to the very top of the screen',
+  'v30.44 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v30.44 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v30.44 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v30.44 — Fixed: update notes modal now scrollable on iOS',
+  'v30.44 — Snake tab: current holder hidden after round is complete',
+  'v30.44 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v30.44 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v30.44 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v30.44 — Version number now shown beside Help button on every screen',
+  'v30.44 — Snake: resets every 3 holes; participant selection added to setup',
+  'v30.44 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v30.44 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v30.44 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v30.44 — New Round blocked if on hole 18 with missing scores',
+  'v30.44 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v30.44 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v30.44 — Fixed: ℹ️ update info button now appears correctly',
+  'v30.44 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -20108,7 +20555,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v30.37';
+const CACHE='pards-v30.44';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
