@@ -3,8 +3,7 @@
 A mobile-first Progressive Web App for scoring golf rounds and tracking betting games with your regular group.
 
 **Live app:** https://bdcomeau.github.io/pardsgolf/pards-golf.html  
-**User manual:** https://bdcomeau.github.io/pardsgolf/pardsgolf-help.html  
-**Current version:** v30.10
+**Current version:** v40.0
 
 ---
 
@@ -21,6 +20,7 @@ Pards Golf is a single-file HTML PWA that runs entirely on your iPhone — no Ap
 - **Live weather** per course in the course picker
 - **Round History** with master scorecard, final totals, Share/Print, and Pards Leaderboard
 - **Match Cards** — play 1v1 Nassau against up to 4 golfers in other groups, score them later from History
+- **Full player profiles** — career earnings, birdie juice history, match records, preferred tee per course
 
 ---
 
@@ -56,13 +56,13 @@ Pards Golf is a single-file HTML PWA that runs entirely on your iPhone — no Ap
 
 | Region | Courses |
 |---|---|
-| Alberta | 28 — Derrick GWC, Edmonton CC, Royal Mayfair, Jasper, Banff Springs, Kananaskis, Glencoe, Mickelson National, and more |
+| Alberta | 28 — Derrick GWC, Edmonton CC, Royal Mayfair, Jasper, Banff Springs, Kananaskis, Glencoe, Mickelson National, Northern Bear, and more |
 | British Columbia | 24 — Whistler (2), Predator Ridge (2), Bear Mountain (2), Okanagan GC (2), Fairmont Hot Springs, Gallaghers Canyon, and more |
 | Nova Scotia | 3 — Cabot Links, Cabot Cliffs, Cape Breton Highlands Links |
 | PEI | 1 — Links at Crowbush Cove |
 | Quebec | 3 — Royal Montreal GC (Blue, Dixie, Red) |
 | Arizona | 18 — Troon North (2), Kierland (3), Boulders (6), Phoenician, and more |
-| California | 21 — PGA West (9), Palm Springs / Coachella Valley area |
+| California | 21 — PGA West (9 including Nicklaus Private, Greg Norman, Tom Weiskopf), Palm Valley CC, Palm Springs area |
 | Georgia | 9 — Reynolds Lake Oconee (7 courses) |
 | Hawaii | 4 — Wailea (3), Makena Golf & Beach Club |
 | North Carolina | 10 — Pinehurst No. 1–10 |
@@ -83,38 +83,72 @@ Pards Golf is a single-file HTML PWA that runs entirely on your iPhone — no Ap
 
 ## Version History
 
+### v40.0 — Manage Players Rebuild + Round Setup Redesign *(July 11, 2026)*
+
+This is the largest single release in Pards Golf history. Two complete screen rewrites.
+
+#### Manage Players — Complete Redesign
+- **Two-panel slide-over** — clean list screen slides to full player profile/edit screen
+- **List screen** — star (tap to instantly favourite/unfavourite), Me badge, name, GC Index, lifetime earnings, › chevron; hint line explains interactions
+- **Player profiles** — full career stats: Career Birdie Juice (scanned from all history), Overall Match Record, vs Me record, Career Earnings, Total Rounds Played, Last Round Played
+- **Golf Canada ID lock** — field is read-only once set; hold 🔒 for 2 seconds to unlock
+- **Fetch HCP button** — activates live as a valid 10-digit GC ID is typed
+- **Custom bottom sheet pickers** — Preferred Tee (coloured badges + yardage), Score Wheel Default (with descriptions), Home Course (alphabetical)
+- **Home Course ↔ Tee sync** — changing Home Course immediately updates the Preferred Tee picker to that course's tees
+- **Me chip protection** — tap shows immediate warning dialog; requires 2-second hold on "Hold to Confirm" to change the Me player
+- **Dirty state tracking** — Save Changes hidden until fields actually change; instant save for Favourite toggle
+- **Unsaved changes** — tapping ‹ Players with changes shows Save & Return / Discard & Return / Cancel action sheet
+- **Favourite rules** — Me always counts; maximum 4 additional favourites (5 total)
+
+#### Round Setup — Compact Redesign
+- **No more player tabs** — all player rows visible at once, stacked vertically
+- **Player rows** — name button · tee button · Adj HCP · ↻ refresh; one clean line per player
+- **Player picker** — styled bottom sheet (Me → Favourites → alphabetical); ＋ New Player opens Manage Players
+- **Tee auto-load** — selecting a player fetches their saved preferred tee for the active course and recalculates HCP immediately
+- **Compact 3-pill strip** replaces Reset button, player count card, starting hole card, and round options accordion:
+  - 👥 **Players** — bottom sheet +/− counter
+  - 🚩 **Starts** — 18-hole grid picker
+  - ⚙️ **Options** — Games toggle, Birdie Juice toggle, 🧹 Reset (hold 2s to confirm)
+- **Load My Favourites + Manage Players** — equal width side by side
+- **Start Round button** — streamlined; shows player count + course name only
+- **Default state** — 4 players, Me in slot 1, 3 empty slots ready; applies on fresh load, end round, abandon, and reset
+
+#### Course Additions (v30.19–v30.22)
+- PGA West Nicklaus Private (6 tees)
+- PGA West Greg Norman (5 tees)
+- PGA West Tom Weiskopf (6 tees)
+- Northern Bear Golf Club — Sherwood Park, AB (7 tees)
+
+#### Other Fixes
+- Round Launch Summary: improved handicap display, team/single game field name fixes
+- Match Cards: up to 4 opponents, all 4 in history snapshot
+- History edit auto-save on close
+- Backup screen redesigned (buttons at top, Nassau Golf legacy import in collapsed accordion)
+
+---
+
 ### v30.0–v30.10 — Match Cards 4-Opponent Tabs & Course Updates
-- **Match Cards overhaul**: opponent limit raised from 2 to 4; new 4-tab purple interface mirrors player tab pattern; sequential tab locking; live tab label updates on keystroke; Clear button replaces ×; all 4 opponents included in history snapshot; counts as a valid game for round validation
-- **Palm Valley CC Championship**: all 6 tees updated with correct hole-by-hole yardages — Championship (Blue) · Players (Blue/White) · White · Masters (Silver/White) · Silver · Gold
-- **File deployment**: every version bump now produces three files — `pards-golf.html`, `index.html`, and a versioned `pards-golf-vXX.XX.html`
+- Match Cards overhaul: opponent limit raised to 4; new 4-tab purple interface; sequential tab locking; Clear button replaces ×
+- Palm Valley CC Championship: all 6 tees updated
+- Every version bump now produces three files: `pards-golf.html`, `index.html`, `pards-golf-vXX.X.html`
 
 ### v20.22–v20.33 — Game Tab Bar Polish & Round Flow
-- Game tab bar: green dot guards, auto-scroll, collapse buttons, Snake dot fix
-- View & Share Results navigates directly to completed round in History, fully retiring the live round
-- Match Cards active round fix
+- Game tab bar: green dot guards, auto-scroll, collapse buttons
+- View & Share Results navigates directly to completed round in History
 
 ### v20.0–v20.21 — Game Tab Bar & Player Tabs
 - Player tab bar (1–5 tabs, live labels)
 - 2-row × 4-tab game tab bar replacing accordion layout
-- Green dot indicators, minimum player guards
 
 ### v19.x — Round Bar & Confirm Scores
 - Slim gold round bar, ☰ Menu sheet
 - Auto-advance permanently removed — Confirm Scores always ON
-- Doug Boyer easter egg
 
 ---
 
 ## Privacy
 
 All data is stored exclusively in the device's browser localStorage. No analytics, no ads, no user accounts, no server. Golf Canada credentials are used only to fetch handicap indexes and are never transmitted to anyone other than Golf Canada's own API.
-
----
-
-## User Manual
-
-A full illustrated user manual with screenshots is available at:  
-https://bdcomeau.github.io/pardsgolf/pardsgolf-help.html
 
 ---
 
