@@ -8958,7 +8958,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v30.58</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v30.61</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -9800,7 +9800,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.61</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
 }
@@ -11246,7 +11246,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.58</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.61</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -13771,7 +13771,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.61</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -14568,7 +14568,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.58</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v30.61</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -14844,7 +14844,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v30.58</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v30.61</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -14989,7 +14989,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v30.58');
+  lines.push('— Pards Golf · v30.61');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -15717,7 +15717,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v30.58 · ${dateStr}</div>
+<div class="foot">Pards Golf · v30.61 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -18368,11 +18368,13 @@ function favOpenEdit(name){ try {
   h += '<div style="display:flex;gap:10px;margin-bottom:14px">';
   h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Preferred Tee</div>';
   h += '<div style="font-size:10px;color:#2d6a4f;font-weight:700;margin-bottom:4px">'+courseName+'</div>';
-  h += '<select id="favEditDeck" onchange="favUpdateAdjHcp();favCheckDirty()" class="fav-sel">'+teeOpts+'</select>';
+  h += '<input type="hidden" id="favEditDeck" value="'+curDeck+'">';
+  h += '<button id="favDeckBtn" type="button" onclick="favOpenDeckPicker()" style="width:100%;height:46px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:10px;padding:0 14px;font-size:14px;font-weight:800;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:space-between">'+curDeck+' <span style="font-size:10px;opacity:.7">&#9660;</span></button>';
   h += '<div id="favEditDeckYds" style="font-size:11px;color:#444;font-weight:600;margin-top:4px">'+favTeeYardage(curDeck)+'</div></div>';
   h += '<div style="flex:1"><div style="font-size:10px;font-weight:800;color:#555;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px">Score Wheel Default</div>';
   h += '<div style="font-size:10px;color:#2d6a4f;font-weight:700;margin-bottom:4px">Typical Player Score</div>';
-  h += '<select id="favEditWheel" onchange="favCheckDirty()" class="fav-sel">'+wheelOpts+'</select></div>';
+    h += '<input type="hidden" id="favEditWheel" value="'+(c?(c.typicalScore||0):1)+'">';
+  h += '<button id="favWheelBtn" type="button" onclick="favOpenWheelPicker()" style="width:100%;height:46px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:10px;padding:0 14px;font-size:14px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:space-between">'+curWheel+' <span style="font-size:10px;opacity:.7">&#9660;</span></button></div></div>';
   h += '</div>';
 
   // Me-only settings
@@ -18385,7 +18387,9 @@ function favOpenEdit(name){ try {
     const homeCourseId = c&&c.homeCourse ? c.homeCourse : 'derrick-gwc';
     const homeCourseList = (typeof PARDS_COURSES!=='undefined') ? PARDS_COURSES : [];
     const homeCourseOpts = homeCourseList.map(function(x){ return '<option value="'+x.id+'"'+(x.id===homeCourseId?' selected':'')+'>'+x.name+'</option>'; }).join('');
-    h += '<select id="favEditHomeCourse" class="fav-sel">'+homeCourseOpts+'</select></div>';
+    h += '<input type="hidden" id="favEditHomeCourse" value="'+homeCourseId+'">';
+  var homeCourseDisplay = (homeCourseList.find(function(x){ return x.id===homeCourseId; })||{name:'Derrick Golf & Winter Club'}).name;
+  h += '<button id="favHomeBtn" type="button" onclick="favOpenHomePicker()" style="width:100%;height:46px;background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#f5e6b8;border:1.5px solid #c9a84c;border-radius:10px;padding:0 14px;font-size:13px;font-weight:800;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:space-between"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+homeCourseDisplay+'</span> <span style="font-size:10px;opacity:.7;flex-shrink:0">&#9660;</span></button></div>';
     h += '</div>';
   }
 
@@ -18798,6 +18802,122 @@ function favBackTapped(){
     + '</div></div>';
   document.body.appendChild(ov);
   ov.addEventListener('click', function(e){ if(e.target===ov){ ov.remove(); } });
+}
+
+// ── Manage Players custom pickers ───────────────────────────────────────
+
+function favClosePicker(){ var m=document.getElementById('favPickerModal'); if(m) m.remove(); }
+
+function favOpenDeckPicker(){
+  var deckEl = document.getElementById('favEditDeck');
+  var current = deckEl ? deckEl.value : '';
+  var course = activeCourse();
+  var teeData = course ? course.tees : [];
+  var ex = document.getElementById('favPickerModal'); if(ex) ex.remove();
+  var ov = document.createElement('div');
+  ov.id = 'favPickerModal';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10002;display:flex;align-items:flex-end;justify-content:center';
+  var rows = '';
+  teeData.forEach(function(td){
+    var t = td.name;
+    var c = deckColour(t, td.slope);
+    var total = td.yardage || (Array.isArray(td.yards) ? td.yards.reduce(function(a,b){return a+(b||0);},0) : (td.yards||0));
+    var yds = total ? total.toLocaleString() + ' yds' : '';
+    var sel = t===current ? 'border-left:3px solid #c9a84c;background:rgba(201,168,76,.08);' : 'border-left:3px solid transparent;';
+    rows += '<div onclick="favPickDeck(\'' + t.replace(/'/g,"\\'") + '\')" style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;'+sel+'cursor:pointer;-webkit-tap-highlight-color:transparent;border-bottom:1px solid rgba(255,255,255,.08)">'
+      + '<span style="display:inline-block;background:'+c.bg+';color:'+c.text+';font-size:12px;font-weight:800;padding:5px 14px;border-radius:7px;min-width:76px;text-align:center">'+t+'</span>'
+      + '<span style="font-size:12px;color:rgba(255,255,255,.5);font-weight:600">'+yds+'</span>'
+      + '</div>';
+  });
+  ov.innerHTML = '<div style="background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:70vh;overflow-y:auto;padding-bottom:20px">'
+    + '<div style="padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1)">'
+    + '<div style="font-size:14px;font-weight:800;color:#c9a84c;letter-spacing:.3px">Select Tee</div>'
+    + '<button onclick="favClosePicker()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:18px;cursor:pointer;line-height:1">&times;</button>'
+    + '</div>' + rows + '</div>';
+  ov.addEventListener('click', function(e){ if(e.target===ov) ov.remove(); });
+  document.body.appendChild(ov);
+}
+
+function favPickDeck(tee){
+  var deckEl = document.getElementById('favEditDeck');
+  var btn    = document.getElementById('favDeckBtn');
+  var ydsEl  = document.getElementById('favEditDeckYds');
+  if(deckEl) deckEl.value = tee;
+  if(btn) btn.textContent = tee + ' ▾';
+  if(ydsEl) ydsEl.textContent = favTeeYardage(tee);
+  document.getElementById('favPickerModal').remove();
+  favUpdateAdjHcp();
+  favCheckDirty();
+}
+
+function favOpenWheelPicker(){
+  var wheelEl = document.getElementById('favEditWheel');
+  var current = wheelEl ? parseInt(wheelEl.value,10) : 1;
+  var opts = [['Par','Typical score is par or better',0],['Bogey','Typical score is bogey',1],['Double','Typical score is double bogey',2]];
+  var ex = document.getElementById('favPickerModal'); if(ex) ex.remove();
+  var ov = document.createElement('div');
+  ov.id = 'favPickerModal';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10002;display:flex;align-items:flex-end;justify-content:center';
+  var rows = '';
+  opts.forEach(function(o){
+    var sel = o[2]===current ? 'border-left:3px solid #c9a84c;' : 'border-left:3px solid transparent;';
+    rows += '<div onclick="favPickWheel(' + o[2] + ',\'' + o[0] + '\')" style="display:flex;align-items:center;gap:14px;padding:13px 16px;'+sel+'cursor:pointer;-webkit-tap-highlight-color:transparent;border-bottom:1px solid rgba(255,255,255,.08)">'
+      + '<div><div style="font-size:15px;font-weight:800;color:#f5e6b8">'+o[0]+'</div>'
+      + '<div style="font-size:12px;color:rgba(255,255,255,.45);margin-top:1px">'+o[1]+'</div></div>'
+      + (o[2]===current ? '<span style="margin-left:auto;color:#c9a84c;font-size:18px">&#10003;</span>' : '')
+      + '</div>';
+  });
+  ov.innerHTML = '<div style="background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding-bottom:20px">'
+    + '<div style="padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1)">'
+    + '<div style="font-size:14px;font-weight:800;color:#c9a84c;letter-spacing:.3px">Score Wheel Default</div>'
+    + '<button onclick="favClosePicker()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:18px;cursor:pointer;line-height:1">&times;</button>'
+    + '</div>' + rows + '</div>';
+  ov.addEventListener('click', function(e){ if(e.target===ov) ov.remove(); });
+  document.body.appendChild(ov);
+}
+
+function favPickWheel(val, label){
+  var wheelEl = document.getElementById('favEditWheel');
+  var btn     = document.getElementById('favWheelBtn');
+  if(wheelEl) wheelEl.value = val;
+  if(btn) btn.textContent = label + ' ▾';
+  document.getElementById('favPickerModal').remove();
+  favCheckDirty();
+}
+
+function favOpenHomePicker(){
+  var homeEl  = document.getElementById('favEditHomeCourse');
+  var current = homeEl ? homeEl.value : 'derrick-gwc';
+  var courses = (typeof PARDS_COURSES !== 'undefined') ? PARDS_COURSES.slice().sort(function(a,b){ return a.name.localeCompare(b.name); }) : [];
+  var ex = document.getElementById('favPickerModal'); if(ex) ex.remove();
+  var ov = document.createElement('div');
+  ov.id = 'favPickerModal';
+  ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10002;display:flex;align-items:flex-end;justify-content:center';
+  var rows = '';
+  courses.forEach(function(c){
+    var sel = c.id===current ? 'border-left:3px solid #c9a84c;' : 'border-left:3px solid transparent;';
+    rows += '<div onclick="favPickHome(\'' + c.id.replace(/'/g,"\\'") + '\',\'' + c.name.replace(/'/g,"\\'") + '\')" style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;'+sel+'cursor:pointer;-webkit-tap-highlight-color:transparent;border-bottom:1px solid rgba(255,255,255,.08)">'
+      + '<div><div style="font-size:14px;font-weight:700;color:#f5e6b8">'+c.name+'</div>'
+      + '<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:1px">'+c.location+'</div></div>'
+      + (c.id===current ? '<span style="color:#c9a84c;font-size:18px;flex-shrink:0">&#10003;</span>' : '')
+      + '</div>';
+  });
+  ov.innerHTML = '<div style="background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:75vh;overflow-y:auto;padding-bottom:20px">'
+    + '<div style="padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;background:#1a3a2a;z-index:1">'
+    + '<div style="font-size:14px;font-weight:800;color:#c9a84c;letter-spacing:.3px">Home Course</div>'
+    + '<button onclick="favClosePicker()" style="background:rgba(255,255,255,.1);border:none;border-radius:50%;width:28px;height:28px;color:#fff;font-size:18px;cursor:pointer;line-height:1">&times;</button>'
+    + '</div>' + rows + '</div>';
+  ov.addEventListener('click', function(e){ if(e.target===ov) ov.remove(); });
+  document.body.appendChild(ov);
+}
+
+function favPickHome(id, name){
+  var homeEl = document.getElementById('favEditHomeCourse');
+  var btn    = document.getElementById('favHomeBtn');
+  if(homeEl) homeEl.value = id;
+  if(btn) btn.textContent = name + ' ▾';
+  document.getElementById('favPickerModal').remove();
+  favCheckDirty();
 }
 
 function favBackCancel(){ var sh=document.getElementById('favBackSheet'); if(sh) sh.remove(); }
@@ -19760,7 +19880,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v30.58. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v30.61. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -20246,7 +20366,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v30.58';
+const CURRENT_VERSION = 'pards-v30.61';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -20336,16 +20456,16 @@ const RELEASE_NOTES = [
   'v31.2 — Fixed: renderSingles undefined error on setup screen',
   'v31.1 — Weather: 7-day rain total added alongside 24hr in setup rain widget (one API call)',
   'v31.0 — Weather: rolling 24-hour rain total from WeatherLink historic API shown in setup rain widget',
-  'v30.58 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
-  'v30.58 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
-  'v30.58 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
-  'v30.58 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
-  'v30.58 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
-  'v30.58 — Score entry: deck fixed min-width so GC logo right edge always aligns',
-  'v30.58 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
-  'v30.58 — PDF: all auto-print removed; user taps Print button in new tab',
-  'v30.58 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
-  'v30.58 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
+  'v30.61 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
+  'v30.61 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
+  'v30.61 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
+  'v30.61 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
+  'v30.61 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
+  'v30.61 — Score entry: deck fixed min-width so GC logo right edge always aligns',
+  'v30.61 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
+  'v30.61 — PDF: all auto-print removed; user taps Print button in new tab',
+  'v30.61 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
+  'v30.61 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
   'v29.9 — PDF: Nassau match card scorecard also uses traditional score markings',
   'v29.8 — PDF scorecard: score markings now show birdie circles, bogey squares, eagle double circles (not stroke circles)',
   'v29.7 — PDF: pace of play added; snake settlements show play order for shotgun rounds',
@@ -20438,20 +20558,20 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v30.58 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v30.58 — Manage Favorites: COPY label added above the copy icon',
-  'v30.58 — Manage Favorites: copy button now dark background with white icon for better visibility',
-  'v30.58 — Manage Favorites: Idx label changed to Index',
-  'v30.58 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
-  'v30.58 — Setup: Snake game description updated with correct wording',
-  'v30.58 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
-  'v30.58 — Setup: Load My Favorites button colour matches Manage Favorites green',
-  'v30.58 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v30.58 — UI: tab references updated to reflect Games hub navigation',
-  'v30.58 — Score wheel: 2 cells each side, centred on typical score',
-  'v30.58 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v30.58 — Score wheel: left/right cells now relative to typical score, not par',
-  'v30.58 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v30.61 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v30.61 — Manage Favorites: COPY label added above the copy icon',
+  'v30.61 — Manage Favorites: copy button now dark background with white icon for better visibility',
+  'v30.61 — Manage Favorites: Idx label changed to Index',
+  'v30.61 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
+  'v30.61 — Setup: Snake game description updated with correct wording',
+  'v30.61 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
+  'v30.61 — Setup: Load My Favorites button colour matches Manage Favorites green',
+  'v30.61 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
+  'v30.61 — UI: tab references updated to reflect Games hub navigation',
+  'v30.61 — Score wheel: 2 cells each side, centred on typical score',
+  'v30.61 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v30.61 — Score wheel: left/right cells now relative to typical score, not par',
+  'v30.61 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -20470,47 +20590,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v30.58 — Games menu: ✕ close button added to sheet header',
-  'v30.58 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v30.58 — Snake tab: 3-putt log now sorted by hole number',
-  'v30.58 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v30.58 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v30.58 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v30.58 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v30.58 — Score entry: hole navigation arrows larger and more visible',
-  'v30.58 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v30.58 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v30.58 — Games tab icon changed to 💵',
-  'v30.58 — Birdie Juice tab restored to bottom nav',
-  'v30.58 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v30.58 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v30.58 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v30.58 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v30.58 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v30.58 — Setup: Snake participant names now sync live with player name changes',
-  'v30.58 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v30.58 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v30.58 — Fixed: player entry section now displays correctly',
-  'v30.58 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v30.58 — Setup: Round Setup header moved to the very top of the screen',
-  'v30.58 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v30.58 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v30.58 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v30.58 — Fixed: update notes modal now scrollable on iOS',
-  'v30.58 — Snake tab: current holder hidden after round is complete',
-  'v30.58 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v30.58 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v30.58 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v30.58 — Version number now shown beside Help button on every screen',
-  'v30.58 — Snake: resets every 3 holes; participant selection added to setup',
-  'v30.58 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v30.58 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v30.58 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v30.58 — New Round blocked if on hole 18 with missing scores',
-  'v30.58 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v30.58 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v30.58 — Fixed: ℹ️ update info button now appears correctly',
-  'v30.58 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v30.61 — Games menu: ✕ close button added to sheet header',
+  'v30.61 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v30.61 — Snake tab: 3-putt log now sorted by hole number',
+  'v30.61 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v30.61 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v30.61 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v30.61 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v30.61 — Score entry: hole navigation arrows larger and more visible',
+  'v30.61 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v30.61 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v30.61 — Games tab icon changed to 💵',
+  'v30.61 — Birdie Juice tab restored to bottom nav',
+  'v30.61 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v30.61 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v30.61 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v30.61 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v30.61 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v30.61 — Setup: Snake participant names now sync live with player name changes',
+  'v30.61 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v30.61 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v30.61 — Fixed: player entry section now displays correctly',
+  'v30.61 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v30.61 — Setup: Round Setup header moved to the very top of the screen',
+  'v30.61 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v30.61 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v30.61 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v30.61 — Fixed: update notes modal now scrollable on iOS',
+  'v30.61 — Snake tab: current holder hidden after round is complete',
+  'v30.61 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v30.61 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v30.61 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v30.61 — Version number now shown beside Help button on every screen',
+  'v30.61 — Snake: resets every 3 holes; participant selection added to setup',
+  'v30.61 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v30.61 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v30.61 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v30.61 — New Round blocked if on hole 18 with missing scores',
+  'v30.61 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v30.61 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v30.61 — Fixed: ℹ️ update info button now appears correctly',
+  'v30.61 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -20733,7 +20853,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v30.58';
+const CACHE='pards-v30.61';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
