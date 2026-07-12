@@ -166,11 +166,21 @@ input::placeholder{color:#bbb}
 .hmeta{font-size:11px;color:var(--gl)}
 .nine-tabs{display:flex;gap:6px;padding:5px 10px;background:var(--gd)}
 .manage-matches-btn{background:var(--gold);color:var(--gd);border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;width:100%;margin-top:6px}
-.mm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1100;display:flex;align-items:flex-end;justify-content:center}
-.mm-sheet{background:var(--cream);border-radius:16px 16px 0 0;width:100%;max-height:85vh;overflow-y:auto;padding:14px 14px 24px}
-.mm-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.mm-title{font-size:16px;font-weight:700;color:var(--ink);font-family:Georgia,serif}
-.mm-close{background:var(--gd);color:var(--gold);border:none;border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1100;display:flex;align-items:flex-end;justify-content:center}
+.mm-sheet{background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;padding:0 0 32px}
+.mm-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;background:linear-gradient(160deg,#1a3a2a,#0d1f15);z-index:2}
+.mm-title{font-size:16px;font-weight:800;color:#c9a84c}
+.mm-close{background:#c9a84c;color:#1a3a2a;border:none;border-radius:10px;padding:8px 18px;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mm-pill{display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.25);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 6px 10px;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;gap:4px}
+.mm-pill.active{border-color:rgba(201,168,76,.5);background:rgba(201,168,76,.1)}
+.mm-pill-icon{font-size:22px;line-height:1}
+.mm-pill-label{font-size:9px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;text-align:center}
+.mm-pill.active .mm-pill-label{color:#c9a84c}
+.mm-pill-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:#52b788}
+.mm-sub-panel{display:none;position:fixed;inset:0;z-index:1200;background:rgba(0,0,0,.7);align-items:flex-end;justify-content:center}
+.mm-sub-panel.open{display:flex}
+.mm-sub-sheet{background:linear-gradient(160deg,#1a3a2a,#0d1f15);border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:85vh;overflow-y:auto;padding:0 0 32px}
+.mm-sub-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.1);position:sticky;top:0;background:#1a3a2a;z-index:2}
 .mm-player-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f0ebe0}
 .mm-player-row:last-child{border-bottom:none}
 .mm-player-name{flex:1;font-weight:600;font-size:14px}
@@ -9982,7 +9992,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v50.18</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v50.19</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -10823,7 +10833,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.18</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.19</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
   var _bjrb = document.getElementById('bjReturnBar');
@@ -12274,7 +12284,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.18</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.19</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -14820,7 +14830,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.18</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.19</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -15642,7 +15652,7 @@ function renderHistory(){
       html+='</div>';
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.18</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.19</div></div>';
   document.getElementById('historyBody').innerHTML=html;
   _filterHistory();
 }
@@ -15942,7 +15952,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v50.18</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v50.19</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -16087,7 +16097,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v50.18');
+  lines.push('— Pards Golf · v50.19');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -16815,7 +16825,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v50.18 · ${dateStr}</div>
+<div class="foot">Pards Golf · v50.19 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -17420,133 +17430,125 @@ function openMatchManager(){
   overlay.innerHTML=`
     <div class="mm-sheet">
       <div class="mm-hdr">
-        <div class="mm-title">Mid-Round Match &amp; Player Settings</div>
+        <div class="mm-title">\u2699\uFE0F Mid-Round Settings</div>
         <button class="mm-close" onclick="closeMatchManager()">Done</button>
       </div>
-      
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'\u25b6':'\u25bc'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#1a2a1a;border:1.5px solid rgba(168,213,181,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#a8d5b5">🍺 Birdie Juice Tracking</span><span class="mmc" style="color:#a8d5b5;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div style="background:#1a2a1a;border:1.5px solid rgba(168,213,181,.3);border-radius:0 0 10px 10px;padding:12px 14px">
-          <div style="font-size:10px;color:#a8d5b5;margin-bottom:10px;line-height:1.4">Track Birdie Juice credits during the round. Turn off for non-drinkers or rounds where you prefer not to track.</div>
-          <div style="display:flex;background:rgba(0,0,0,.35);border-radius:8px;padding:3px;gap:3px">
-            <button onclick="setBirdieJuice(true)" style="flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;transition:all .15s" id="mmBJOn">✓ ON</button>
-            <button onclick="setBirdieJuice(false)" style="flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;transition:all .15s" id="mmBJOff">OFF</button>
+      <div style="padding:14px 16px 0">
+
+        <!-- Players & Handicaps -->
+        <div style="background:rgba(0,0,0,.2);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:14px;margin-bottom:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="font-size:14px;font-weight:800;color:#f5e6b8">\uD83D\uDC65 Players & Handicaps</div>
+            <span style="font-size:11px;color:rgba(255,255,255,.4)">${G.n} player${G.n===1?'':'s'}</span>
+          </div>
+          <div id="mmPlayersList"></div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            ${G.n<5 ? '<button onclick="mmAddPlayer()" style="flex:1;padding:9px;background:rgba(82,183,136,.12);border:1.5px solid rgba(82,183,136,.3);border-radius:10px;color:#52b788;font-size:13px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">+ Add Player</button>' : '<div style="flex:1;font-size:11px;color:rgba(255,255,255,.3);text-align:center;padding:8px">Max 5 players</div>'}
           </div>
         </div>
-        <button onclick="this.parentElement.style.display='none';this.parentElement.previousElementSibling.querySelector('.mmc').textContent='▶'" style="width:100%;margin-top:6px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
-      </div>
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#1a1a2e;border:1.5px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">🚩 Change Starting Hole</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        ${startHoleSection}
-        <button onclick="this.parentElement.style.display='none';this.parentElement.previousElementSibling.querySelector('.mmc').textContent='▶'" style="width:100%;margin-top:6px;padding:6px;background:rgba(255,255,255,.06);border:none;border-radius:6px;color:#888;font-size:11px;cursor:pointer">▲ Collapse</button>
-      </div>
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">🏌️ Players (${G.n})</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:12px;margin-bottom:8px">
-          <div style="font-size:12px;font-weight:700;color:#c9a84c;margin-bottom:6px">🏌️ Changing Tee Deck Mid-Round</div>
-          <div style="font-size:12px;color:#111;line-height:1.6">Select a different Tee Deck for any player and their handicap index recalculates automatically. All Nassau and 6-Point matches update instantly.</div>
-          <div style="font-size:11px;color:#333;margin-top:6px">💡 Handicap shown is display-only — change it by selecting a new Tee Deck.</div>
+
+        <!-- Starting Hole + Birdie Juice row -->
+        <div style="display:flex;gap:8px;margin-bottom:10px">
+          <div style="flex:1;background:rgba(0,0,0,.2);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px">
+            <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.7);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">\uD83D\uDEA9 Starting Hole</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <select id="mmStartHoleSel" style="flex:1;padding:8px 10px;background:rgba(0,0,0,.3);border:1.5px solid rgba(255,255,255,.15);border-radius:8px;color:#f5e6b8;font-size:14px;font-weight:700;outline:none">${holeOpts}</select>
+              <button onclick="mmAdjustStartHole()" style="background:#c9a84c;color:#1a3a2a;border:none;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer">Apply</button>
+            </div>
+          </div>
+          <div style="width:130px;background:rgba(0,0,0,.2);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between">
+            <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.7);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">\uD83D\uDC26\uD83C\uDF7A Birdie Juice</div>
+            <div style="display:flex;background:rgba(0,0,0,.3);border-radius:6px;padding:2px;gap:2px">
+              <button onclick="setBirdieJuice(true)" id="mmBJOn" style="flex:1;padding:6px 4px;border:none;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">ON</button>
+              <button onclick="setBirdieJuice(false)" id="mmBJOff" style="flex:1;padding:6px 4px;border:none;border-radius:5px;font-size:11px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">OFF</button>
+            </div>
+          </div>
         </div>
-        <div class="card" id="mmPlayersCard">
-          <div id="mmPlayersList"></div>
-          ${G.n<5 ? `<button class="add-player-btn" onclick="mmAddPlayer()">+ Add Player</button>` : `<div style="font-size:11px;color:var(--inkl);text-align:center">Max 5 players</div>`}
+
+        ${so ? '<div style="background:rgba(0,0,0,.2);border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:13px;color:rgba(255,255,255,.5)">\uD83D\uDCCB Scorecard-only round \u2014 no betting games</div>' : ''}
+
+        ${so ? '' : `
+        <!-- Game Pills -->
+        <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.7);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Betting Games</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px">
+          <div class="mm-pill ${_isGameEnabled(0)?'active':''}" onclick="openMMGame(0)">
+            ${_isGameEnabled(0)?'<div class="mm-pill-dot"></div>':''}
+            <div class="mm-pill-icon">\uD83D\uDC0D</div>
+            <div class="mm-pill-label">Snake</div>
+          </div>
+          <div class="mm-pill ${_isGameEnabled(1)?'active':''}" onclick="openMMGame(1)">
+            ${_isGameEnabled(1)?'<div class="mm-pill-dot"></div>':''}
+            <div class="mm-pill-icon">\uD83C\uDFC6</div>
+            <div class="mm-pill-label">Nassau 2v2</div>
+          </div>
+          <div class="mm-pill ${_isGameEnabled(2)?'active':''}" onclick="openMMGame(2)">
+            ${_isGameEnabled(2)?'<div class="mm-pill-dot"></div>':''}
+            <div class="mm-pill-icon">\uD83E\uDD3A</div>
+            <div class="mm-pill-label">Nassau 1v1</div>
+          </div>
+          <div class="mm-pill ${_isGameEnabled(3)?'active':''}" onclick="openMMGame(3)">
+            ${_isGameEnabled(3)?'<div class="mm-pill-dot"></div>':''}
+            <div class="mm-pill-icon">\uD83C\uDFAF</div>
+            <div class="mm-pill-label">6-Point</div>
+          </div>
         </div>
-        ${scorecardInfo}
-      </div>
-      ${so ? '' : `
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">2v2 Nassau Games</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div class="card" id="mmTeamGamesCard">
-          <div style="font-size:12px;color:#666;margin:0 0 8px">Tap a pairing to add or remove it.</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+          <div class="mm-pill ${_isGameEnabled(4)?'active':''}" onclick="openMMGame(4)">
+            ${_isGameEnabled(4)?'<div class="mm-pill-dot"></div>':''}
+            <div class="mm-pill-icon">\uD83C\uDFC5</div>
+            <div class="mm-pill-label">Stableford</div>
+          </div>
+          <div class="mm-pill ${_isGameEnabled(5)?'active':''}" onclick="openMMGame(5)">
+            ${_isGameEnabled(5)?'<div class="mm-pill-dot"></div>':''}
+            <div class="mm-pill-icon">\uD83E\uDDB4</div>
+            <div class="mm-pill-label">Skins</div>
+          </div>
+          <div class="mm-pill ${_isGameEnabled(6)?'active':''}" onclick="openMMGame(6)">
+            ${_isGameEnabled(6)?'<div class="mm-pill-dot"></div>':''}
+            <div class="mm-pill-icon">\uD83C\uDFB0</div>
+            <div class="mm-pill-label">Vegas</div>
+          </div>
+          <div class="mm-pill" onclick="openMMGame(7)">
+            <div class="mm-pill-icon">\u2694\uFE0F</div>
+            <div class="mm-pill-label">Match Cards</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35);text-align:center;margin-bottom:6px">${footNote}</div>
+        `}
+
+        <!-- Hidden game content containers (rendered into sub-panels) -->
+        <div style="display:none">
           <div id="mmPairGrid"></div><div id="mmTeamGamesList"></div>
-        </div>
-      </div>
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">1v1 Nassau Games</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div class="card" id="mmSinglesCard">
-          <div style="font-size:12px;color:#666;margin:0 0 8px">Tap a matchup to add or remove it.</div>
           <div id="mmSinglesGrid"></div><div id="mmSingleGamesList"></div>
-        </div>
-      </div>
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#c9a84c">🎯 6-Point Game</span><span class="mmc" style="color:#c9a84c;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div class="card" id="mmSixPointCard" style="padding:10px">
-          <div style="font-size:12px;color:#666;margin-bottom:8px">Pick any 3 players — tap to add or remove.</div>
           <div id="mmSixPointGrid"></div><div id="mmSixPointList"></div>
-        </div>
-      </div>
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6c3483;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#9b59b6">🐍 Snake 3-Putt Game</span><span class="mmc" style="color:#9b59b6;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div class="card" id="mmSnakeCard" style="padding:10px;background:#1a0a2a;border:1px solid #6c3483">
           <div id="mmSnakeStatus"></div>
-        </div>
-      </div>
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#0d2a22;border:1.5px solid #0d5c4e;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#52b788">🏆 Stableford Game</span><span class="mmc" style="color:#52b788;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div class="card" id="mmStablefordCard" style="padding:10px;background:#fff;border:1.5px solid #0d5c4e">
           <div id="mmStablefordContent"></div>
-        </div>
-      </div>
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#0d2a22;border:1.5px solid #0d5c4e;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#52b788">💰 Skins Game</span><span class="mmc" style="color:#52b788;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div class="card" id="mmSkinsCard" style="padding:10px;background:#fff;border:1.5px solid #0d5c4e">
           <div id="mmSkinsContent"></div>
-        </div>
-      </div>
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#0d2a22;border:1.5px solid #0d5c4e;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#52b788">🎲 Vegas Game</span><span class="mmc" style="color:#52b788;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div class="card" id="mmVegasCard" style="padding:10px;background:#fff;border:1.5px solid #0d5c4e">
           <div id="mmVegasContent"></div>
-        </div>
-      </div>
-`}
-      <div onclick="var s=this.nextElementSibling;s.style.display=s.style.display==='none'?'block':'none';this.querySelector('.mmc').textContent=s.style.display==='none'?'▶':'▼'"
-        style="display:flex;align-items:center;justify-content:space-between;background:#2a1a3a;border:1.5px solid #6a4c93;border-radius:8px;padding:10px 14px;margin-bottom:4px;cursor:pointer">
-        <span style="font-size:13px;font-weight:700;color:#b389d4">⚔️ Match Cards</span><span class="mmc" style="color:#b389d4;font-size:12px">▶</span>
-      </div>
-      <div style="display:none;margin-bottom:8px">
-        <div class="card" id="mmMatchCardsCard" style="padding:10px;background:#fff;border:1.5px solid #6a4c93">
           <div id="mmMatchCardsContent"></div>
         </div>
+
       </div>
-      <div style="font-size:11px;color:var(--inkl);margin-top:10px;text-align:center">${footNote}</div>
-    </div>`;
-    document.body.appendChild(overlay);
+    </div>
+
+    <!-- Game sub-panels -->
+    <div id="mmGamePanel" class="mm-sub-panel" onclick="if(event.target===this)closeMMGame()">
+      <div class="mm-sub-sheet">
+        <div class="mm-sub-hdr">
+          <div id="mmGamePanelTitle" style="font-size:15px;font-weight:800;color:#c9a84c"></div>
+          <button onclick="closeMMGame()" style="background:#c9a84c;color:#1a3a2a;border:none;border-radius:10px;padding:7px 16px;font-size:13px;font-weight:800;cursor:pointer">Done</button>
+        </div>
+        <div id="mmGamePanelBody" style="padding:14px 16px"></div>
+      </div>
+    </div>
+    `;
+  document.body.appendChild(overlay);
   overlay.addEventListener('click',e=>{ if(e.target===overlay) closeMatchManager(); });
 
   renderMMPlayers();
+  _styleBJBtns('mmBJOn','mmBJOff');
   if(!so){ renderMMPairOptions(); renderMMSingles(); renderMMSixPoint(); renderMMSnake(); renderMMStableford(); renderMMSkins(); renderMMVegas(); }
-  renderMMMatchCards(); // always render — available in solo/scorecard-only rounds too
+  renderMMMatchCards();
 }
 
 function renderMMStableford(){
@@ -18833,6 +18835,72 @@ function closeMatchManager(){
   saveG();
   renderCard();
 }
+
+var _mmActiveGame = -1;
+const _MM_GAME_LABELS = ['🐍 Snake','🏆 Nassau 2v2','🤺 Nassau 1v1','🎯 6-Point','🏅 Stableford','🦴 Skins','🎲 Vegas','⚔️ Match Cards'];
+
+function openMMGame(i){
+  _mmActiveGame = i;
+  const panel = document.getElementById('mmGamePanel');
+  const title = document.getElementById('mmGamePanelTitle');
+  const body  = document.getElementById('mmGamePanelBody');
+  if(!panel||!title||!body) return;
+  title.textContent = _MM_GAME_LABELS[i] || '';
+  body.innerHTML = '';
+  // Render content into body
+  const so = !!G.scorecardOnly;
+  if(i===0){
+    body.innerHTML = '<div id="mmSnakeStatus"></div>';
+    renderMMSnake();
+  } else if(i===1){
+    body.innerHTML = '<div id="mmPairGrid" style="margin-bottom:10px"></div><div id="mmTeamGamesList"></div>';
+    renderMMPairOptions();
+  } else if(i===2){
+    body.innerHTML = '<div id="mmSinglesGrid" style="margin-bottom:10px"></div><div id="mmSingleGamesList"></div>';
+    renderMMSingles();
+  } else if(i===3){
+    body.innerHTML = '<div id="mmSixPointGrid"></div><div id="mmSixPointList"></div>';
+    renderMMSixPoint();
+  } else if(i===4){
+    body.innerHTML = '<div id="mmStablefordContent"></div>';
+    renderMMStableford();
+  } else if(i===5){
+    body.innerHTML = '<div id="mmSkinsContent"></div>';
+    renderMMSkins();
+  } else if(i===6){
+    body.innerHTML = '<div id="mmVegasContent"></div>';
+    renderMMVegas();
+  } else if(i===7){
+    body.innerHTML = '<div id="mmMatchCardsContent"></div>';
+    renderMMMatchCards();
+  }
+  panel.classList.add('open');
+}
+
+function closeMMGame(){
+  const panel = document.getElementById('mmGamePanel');
+  if(panel) panel.classList.remove('open');
+  // Refresh pill dots
+  const mmOverlay = document.getElementById('mmOverlay');
+  if(mmOverlay){
+    mmOverlay.querySelectorAll('.mm-pill').forEach(function(pill, i){
+      const active = _isGameEnabled(i) || (i===7 && G.matchCards && G.matchCards.enabled);
+      pill.classList.toggle('active', active);
+      const dot = pill.querySelector('.mm-pill-dot');
+      if(active && !dot){
+        const d = document.createElement('div');
+        d.className = 'mm-pill-dot';
+        pill.appendChild(d);
+      } else if(!active && dot){
+        dot.remove();
+      }
+    });
+  }
+  _mmActiveGame = -1;
+  saveG();
+  renderCard();
+}
+
 
 // Re-use the same pairing/singles logic but render into the mm- prefixed containers
 function renderMMPairOptions(){
@@ -21014,7 +21082,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v50.18. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v50.19. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -21510,7 +21578,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v50.18';
+const CURRENT_VERSION = 'pards-v50.19';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -21600,16 +21668,16 @@ const RELEASE_NOTES = [
   'v31.2 — Fixed: renderSingles undefined error on setup screen',
   'v31.1 — Weather: 7-day rain total added alongside 24hr in setup rain widget (one API call)',
   'v31.0 — Weather: rolling 24-hour rain total from WeatherLink historic API shown in setup rain widget',
-  'v50.18 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
-  'v50.18 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
-  'v50.18 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
-  'v50.18 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
-  'v50.18 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
-  'v50.18 — Score entry: deck fixed min-width so GC logo right edge always aligns',
-  'v50.18 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
-  'v50.18 — PDF: all auto-print removed; user taps Print button in new tab',
-  'v50.18 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
-  'v50.18 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
+  'v50.19 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
+  'v50.19 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
+  'v50.19 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
+  'v50.19 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
+  'v50.19 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
+  'v50.19 — Score entry: deck fixed min-width so GC logo right edge always aligns',
+  'v50.19 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
+  'v50.19 — PDF: all auto-print removed; user taps Print button in new tab',
+  'v50.19 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
+  'v50.19 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
   'v29.9 — PDF: Nassau match card scorecard also uses traditional score markings',
   'v29.8 — PDF scorecard: score markings now show birdie circles, bogey squares, eagle double circles (not stroke circles)',
   'v29.7 — PDF: pace of play added; snake settlements show play order for shotgun rounds',
@@ -21702,20 +21770,20 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v50.18 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v50.18 — Manage Favorites: COPY label added above the copy icon',
-  'v50.18 — Manage Favorites: copy button now dark background with white icon for better visibility',
-  'v50.18 — Manage Favorites: Idx label changed to Index',
-  'v50.18 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
-  'v50.18 — Setup: Snake game description updated with correct wording',
-  'v50.18 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
-  'v50.18 — Setup: Load My Favorites button colour matches Manage Favorites green',
-  'v50.18 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v50.18 — UI: tab references updated to reflect Games hub navigation',
-  'v50.18 — Score wheel: 2 cells each side, centred on typical score',
-  'v50.18 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v50.18 — Score wheel: left/right cells now relative to typical score, not par',
-  'v50.18 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v50.19 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v50.19 — Manage Favorites: COPY label added above the copy icon',
+  'v50.19 — Manage Favorites: copy button now dark background with white icon for better visibility',
+  'v50.19 — Manage Favorites: Idx label changed to Index',
+  'v50.19 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
+  'v50.19 — Setup: Snake game description updated with correct wording',
+  'v50.19 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
+  'v50.19 — Setup: Load My Favorites button colour matches Manage Favorites green',
+  'v50.19 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
+  'v50.19 — UI: tab references updated to reflect Games hub navigation',
+  'v50.19 — Score wheel: 2 cells each side, centred on typical score',
+  'v50.19 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v50.19 — Score wheel: left/right cells now relative to typical score, not par',
+  'v50.19 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -21734,47 +21802,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v50.18 — Games menu: ✕ close button added to sheet header',
-  'v50.18 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v50.18 — Snake tab: 3-putt log now sorted by hole number',
-  'v50.18 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v50.18 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v50.18 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v50.18 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v50.18 — Score entry: hole navigation arrows larger and more visible',
-  'v50.18 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v50.18 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v50.18 — Games tab icon changed to 💵',
-  'v50.18 — Birdie Juice tab restored to bottom nav',
-  'v50.18 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v50.18 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v50.18 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v50.18 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v50.18 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v50.18 — Setup: Snake participant names now sync live with player name changes',
-  'v50.18 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v50.18 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v50.18 — Fixed: player entry section now displays correctly',
-  'v50.18 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v50.18 — Setup: Round Setup header moved to the very top of the screen',
-  'v50.18 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v50.18 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v50.18 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v50.18 — Fixed: update notes modal now scrollable on iOS',
-  'v50.18 — Snake tab: current holder hidden after round is complete',
-  'v50.18 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v50.18 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v50.18 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v50.18 — Version number now shown beside Help button on every screen',
-  'v50.18 — Snake: resets every 3 holes; participant selection added to setup',
-  'v50.18 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v50.18 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v50.18 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v50.18 — New Round blocked if on hole 18 with missing scores',
-  'v50.18 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v50.18 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v50.18 — Fixed: ℹ️ update info button now appears correctly',
-  'v50.18 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v50.19 — Games menu: ✕ close button added to sheet header',
+  'v50.19 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v50.19 — Snake tab: 3-putt log now sorted by hole number',
+  'v50.19 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v50.19 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v50.19 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v50.19 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v50.19 — Score entry: hole navigation arrows larger and more visible',
+  'v50.19 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v50.19 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v50.19 — Games tab icon changed to 💵',
+  'v50.19 — Birdie Juice tab restored to bottom nav',
+  'v50.19 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v50.19 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v50.19 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v50.19 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v50.19 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v50.19 — Setup: Snake participant names now sync live with player name changes',
+  'v50.19 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v50.19 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v50.19 — Fixed: player entry section now displays correctly',
+  'v50.19 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v50.19 — Setup: Round Setup header moved to the very top of the screen',
+  'v50.19 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v50.19 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v50.19 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v50.19 — Fixed: update notes modal now scrollable on iOS',
+  'v50.19 — Snake tab: current holder hidden after round is complete',
+  'v50.19 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v50.19 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v50.19 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v50.19 — Version number now shown beside Help button on every screen',
+  'v50.19 — Snake: resets every 3 holes; participant selection added to setup',
+  'v50.19 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v50.19 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v50.19 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v50.19 — New Round blocked if on hole 18 with missing scores',
+  'v50.19 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v50.19 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v50.19 — Fixed: ℹ️ update info button now appears correctly',
+  'v50.19 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -22001,7 +22069,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v50.18';
+const CACHE='pards-v50.19';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
