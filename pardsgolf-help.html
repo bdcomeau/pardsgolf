@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pards Golf User Manual v40.0</title>
+<title>Pards Golf User Manual v50.0</title>
 <style>
   :root { --green:#1a3a2a; --gold:#c9a84c; --lgold:#f5e6b8; }
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -47,6 +47,11 @@
   .pill-icon { font-size:20px; display:block; margin-bottom:4px; }
   .pill-name { font-weight:800; color:var(--green); font-size:14px; }
   .pill-desc { font-size:13px; color:#555; margin-top:3px; }
+  .game-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0; }
+  .game-card { background:rgba(26,58,42,.06); border:1.5px solid rgba(26,58,42,.15); border-radius:10px; padding:12px 14px; }
+  .game-card .game-icon { font-size:22px; margin-bottom:4px; }
+  .game-card .game-name { font-weight:800; color:var(--green); font-size:14px; }
+  .game-card .game-desc { font-size:12px; color:#555; margin-top:3px; line-height:1.4; }
   .footer { text-align:center; padding:48px 20px 64px; color:#888; font-size:14px; }
   .footer .emoji { font-size:40px; display:block; margin-bottom:12px; }
   .footer .tagline { font-style:italic; color:#555; margin-top:8px; }
@@ -54,6 +59,7 @@
     .section { padding:24px 18px; border-radius:0; }
     h1.sec { font-size:22px; }
     .cover h1 { font-size:36px; }
+    .game-grid { grid-template-columns:1fr; }
   }
 </style>
 </head>
@@ -62,7 +68,7 @@
 <div class="cover">
   <span class="emoji">⛳</span>
   <h1>Pards Golf</h1>
-  <div class="sub">User Manual &nbsp;·&nbsp; Version 40.0</div>
+  <div class="sub">User Manual &nbsp;·&nbsp; Version 50.0</div>
   <div class="sub">A mobile scorecard, betting tracker, and Birdie Juice ledger</div>
   <div class="games">Nassau &nbsp;·&nbsp; 6-Point &nbsp;·&nbsp; Stableford &nbsp;·&nbsp; Skins &nbsp;·&nbsp; Vegas &nbsp;·&nbsp; Snake &nbsp;·&nbsp; Match Cards &nbsp;·&nbsp; The International</div>
 </div>
@@ -75,7 +81,7 @@
     <li><a href="#install">Installing Pards Golf on Your iPhone</a></li>
     <li><a href="#setup">Setting Up a Round</a></li>
     <li><a href="#scoring">Scoring — The Scorecard Screen</a></li>
-    <li><a href="#gametabs">The Betting Games Tab Bar</a></li>
+    <li><a href="#games">Configuring Betting Games</a></li>
     <li><a href="#nassau">Nassau Games</a></li>
     <li><a href="#sixpoint">The 6-Point Game</a></li>
     <li><a href="#stableford">Stableford</a></li>
@@ -87,7 +93,6 @@
     <li><a href="#coursepicker">The Course Picker</a></li>
     <li><a href="#history">Round History</a></li>
     <li><a href="#backup">Backup &amp; Restore</a></li>
-    <li><a href="#newround">Starting a New Round</a></li>
     <li><a href="#players">Manage Players</a></li>
     <li><a href="#courses">Courses</a></li>
     <li><a href="#trouble">Troubleshooting</a></li>
@@ -97,26 +102,26 @@
 <!-- ══ QUICK START ══ -->
 <div class="section" id="quickstart">
   <h1 class="sec">🚀 Quick Start — Do These First</h1>
-  <p>A handful of one-time settings make every round after this one faster and more accurate. Do these in order the first time you open the app:</p>
+  <p>A handful of one-time settings make every round faster and more accurate. Do these in order the first time you open the app:</p>
   <ul>
-    <li><strong>Have your Golf Canada username and password ready.</strong> You'll be asked once the first time you fetch any handicap, and the app remembers it after that.</li>
+    <li><strong>Have your Golf Canada username and password ready.</strong> You'll be asked once the first time you fetch any handicap — the app remembers after that.</li>
     <li><strong>Set yourself as "Me."</strong> In ⚙️ Manage Players, find your name and mark yourself as "Me." This auto-fills you as Player 1 every round.</li>
-    <li><strong>Set your Home City.</strong> On your "Me" entry. Drives live weather on the Setup screen.</li>
-    <li><strong>Set your Home Course.</strong> On your "Me" entry. Appears first in the course picker and is auto-selected every new round.</li>
+    <li><strong>Set your Home City</strong> on your "Me" entry. Drives live weather on the Setup screen.</li>
+    <li><strong>Set your Home Course</strong> on your "Me" entry. Appears first in the course picker and is auto-selected every new round.</li>
     <li><strong>Set your preferred tee.</strong> The app maps this to the closest-matching tee at every other course automatically.</li>
-    <li><strong>Add your regular players.</strong> Save your group as contacts, star your frequent partners as Favourites, and set each player's Score Wheel Default.</li>
+    <li><strong>Add your regular players.</strong> Save your group, star your frequent partners as Favourites, and set each player's Score Wheel Default.</li>
     <li><strong>Fetch everyone's handicap.</strong> Tap "🔄 Refresh All Handicaps" to pull all Golf Canada indexes at once.</li>
   </ul>
-  <div class="tip">Don't be surprised to see dozens of names already in Manage Players — a starter roster ships with the app and merges in safely by Golf Canada ID. It never overwrites anyone you've already saved.</div>
+  <div class="tip">Don't be surprised to see dozens of names already in Manage Players — a starter roster ships with the app and merges safely by Golf Canada ID. It never overwrites anyone you've already saved.</div>
 </div>
 
 <!-- ══ PRIVACY ══ -->
 <div class="section" id="privacy">
   <h1 class="sec">Privacy &amp; Data Security</h1>
   <h2 class="sub">Everything stays on your device</h2>
-  <p>All round data, player names, handicaps, betting results, and Golf Canada member IDs are stored exclusively in your iPhone's browser storage (localStorage). This data never leaves your device.</p>
+  <p>All round data, player names, handicaps, betting results, and Golf Canada member IDs are stored exclusively in your iPhone's browser storage. This data never leaves your device.</p>
   <h2 class="sub">Golf Canada Member ID &amp; Password</h2>
-  <p>Your Golf Canada credentials are used only to fetch your current handicap index — stored only on your device, never transmitted to anyone other than Golf Canada's own secure API.</p>
+  <p>Your credentials are used only to fetch your current handicap index — stored only on your device, never transmitted to anyone other than Golf Canada's own secure API.</p>
   <div class="note">Pards Golf does not collect analytics, does not serve ads, has no user accounts, and has no server. Your data is yours alone.</div>
 </div>
 
@@ -141,57 +146,48 @@
 <div class="section" id="setup">
   <h1 class="sec">2. Setting Up a Round</h1>
 
-  <div class="new"><b>🆕 New in v40.0:</b> The Setup screen has been redesigned to fit everything — including 5 players — on a single screen without scrolling.</div>
-
   <h2 class="sub">Step 1 — Choose Your Course</h2>
   <p>Tap the course picker at the top. Your Home Course always appears first. Courses are organised into Canada and USA region accordions — tap a region to expand it. Tap 📋 Info on any course row to see live weather, your history, and the full scorecard.</p>
 
   <h2 class="sub">Step 2 — Configure the Strip</h2>
-  <p>Three compact pills replace the old setup cards:</p>
+  <p>Two compact pills handle player count and starting hole:</p>
   <div class="pill-row">
     <div class="pill">
       <span class="pill-icon">👥</span>
       <div class="pill-name">Players</div>
-      <div class="pill-desc">Tap to set 1–5 players with a +/− counter</div>
+      <div class="pill-desc">Tap to set 1–5 players with +/− buttons</div>
     </div>
     <div class="pill">
       <span class="pill-icon">🚩</span>
       <div class="pill-name">Starts</div>
       <div class="pill-desc">Tap to pick starting hole (1–18 grid)</div>
     </div>
-    <div class="pill">
-      <span class="pill-icon">⚙️</span>
-      <div class="pill-name">Options</div>
-      <div class="pill-desc">Games, Birdie Juice, and Reset</div>
-    </div>
   </div>
-  <p>The <strong>⚙️ Options</strong> sheet contains:</p>
-  <ul>
-    <li><strong>📋 Scorekeeping Mode Only</strong> — ON removes all betting games; OFF (default) enables full game tracking</li>
-    <li><strong>🍺 Birdie Juice Tracking</strong> — toggle on or off</li>
-    <li><strong>🧹 Reset Round Setup</strong> — hold for 2 seconds to clear all players and games. This returns to the default: 4 players, Me in slot 1, 3 empty slots</li>
-  </ul>
 
   <h2 class="sub">Step 3 — Load Players</h2>
-  <p>Two equal buttons appear below the PLAYERS divider:</p>
   <ul>
-    <li><strong>⭐ Load My Favourites</strong> — fills all player slots from your starred contacts instantly</li>
-    <li><strong>⚙️ Manage Players</strong> — opens the full player management screen to add, edit, or configure players</li>
+    <li><strong>⭐ Load My Favourites</strong> — fills all player slots from your starred contacts instantly.</li>
+    <li><strong>⚙️ Manage Players</strong> — opens the full player management screen.</li>
+    <li>Tap any player row to open a picker (Me → Favourites → alphabetical). Tap <strong>＋ New Player</strong> to create someone new.</li>
+    <li>Selecting a player automatically loads their saved preferred tee for the active course and recalculates adjusted HCP.</li>
+    <li>Tap the <strong>tee button</strong> to change tees for this round.</li>
+    <li>Tap <strong>↻</strong> (green = Golf Canada ID on file) to fetch a fresh handicap.</li>
   </ul>
-
-  <h2 class="sub">Step 4 — Adjust Individual Players</h2>
-  <p>Each player row shows their name, tee deck, adjusted HCP, and a ↻ refresh button:</p>
-  <ul>
-    <li>Tap the <strong>player name</strong> to open a picker — Me first, then Favourites, then alphabetical. Tap <strong>＋ New Player</strong> at the top to create a new player in Manage Players.</li>
-    <li>Selecting a player automatically loads their saved preferred tee for the active course and recalculates their adjusted HCP.</li>
-    <li>Tap the <strong>tee button</strong> to change tees for this round. The HCP recalculates immediately.</li>
-    <li>Tap <strong>↻</strong> (green = Golf Canada ID on file) to fetch a fresh handicap from Golf Canada and recalculate immediately.</li>
-  </ul>
-
   <div class="note">Every fresh round starts with 4 players, Me in slot 1, and 3 empty slots ready to fill.</div>
 
-  <h2 class="sub">Step 5 — Start the Round</h2>
-  <p>Tap the gold <strong>⛳ Start Round →</strong> button. The Round Launch Summary appears for final review before play begins.</p>
+  <h2 class="sub">Step 4 — Settings</h2>
+  <p>Tap <strong>⚙️ Settings</strong> in the bottom action bar to open the Settings &amp; Help overlay:</p>
+  <ul>
+    <li><strong>🎮 Games</strong> — ON (default) enables all betting games. OFF switches to scorekeeping-only mode and hides all game config.</li>
+    <li><strong>🐦🥃 Birdie Juice</strong> — toggle tracking on or off.</li>
+    <li><strong>🧹 Start Over</strong> — hold for 2 seconds to clear all players and games. Returns to: 4 players, Me in slot 1, home course, hole 1.</li>
+  </ul>
+
+  <h2 class="sub">Step 5 — Configure Betting Games</h2>
+  <p>Eight game pills appear below the player section. Tap any pill to open that game's config overlay. A <strong>green dot</strong> on a pill means that game is configured and active. See <a href="#games">Section 6: Configuring Betting Games</a> for details.</p>
+
+  <h2 class="sub">Step 6 — Start</h2>
+  <p>Tap the gold <strong>⛳ Start Round →</strong> button. The Round Launch Summary appears for final review.</p>
   <div class="tip">Before any score is entered, tap "✏️ Edit Round Settings" to return to Setup.</div>
 </div>
 
@@ -200,53 +196,72 @@
   <h1 class="sec">3. Scoring — The Scorecard Screen</h1>
   <h2 class="sub">Entering Scores</h2>
   <p>Scroll each player's wheel to their score. A gold pending tile shows the score you've scrolled to — tap it to confirm, or tap the gold <strong>"✓ Confirm &amp; Next Hole →"</strong> button at the bottom. A birdie or better triggers a celebration popup. Correct any score by scrolling again — everything recalculates instantly.</p>
-  <div class="note">Confirm Scores is always ON. Every hole requires an explicit confirmation tap before advancing. There is no auto-advance mode.</div>
+  <div class="note">Confirm Scores is always ON. Every hole requires an explicit confirmation tap before advancing.</div>
 
-  <h2 class="sub">The Round Bar (During a Round)</h2>
-  <p>During an active round, the full bottom navigation is replaced by a slim gold bar showing the current hole.</p>
+  <h2 class="sub">The Scorecard Action Bar</h2>
+  <p>A slim fixed row at the top of the round bar gives quick access to:</p>
   <ul>
-    <li>Tap the bar to return to the scorecard from anywhere.</li>
-    <li>Tap <strong>☰ Menu</strong> to open the round menu sheet.</li>
-  </ul>
-
-  <h2 class="sub">The ☰ Menu (During a Round)</h2>
-  <ul>
-    <li>Return to Scorecard</li>
-    <li>Games — access all betting games</li>
-    <li>Birdie Juice — view credits and tracker</li>
-    <li>Round History — view past rounds</li>
-    <li>Mid-Round Settings — change handicaps, tees, players, games</li>
-    <li>Save &amp; End Round</li>
+    <li><strong>💵 Game Cards</strong> — view live Nassau, Vegas, and all game results</li>
+    <li><strong>🐦🥃 Birdie Juice</strong> — view credits and tracker (red badge shows remaining credits)</li>
+    <li><strong>⚙️ Settings</strong> — mid-round settings: handicaps, tees, players, games</li>
+    <li><strong>🏁 End Round</strong> — save, pause, or abandon the round</li>
   </ul>
 
   <h2 class="sub">Mid-Round Settings</h2>
-  <p>Access via ☰ Menu → Mid-Round Settings. All sections visible as collapsed headers — tap any to expand.</p>
-  <div class="tip">Any game can be added mid-round and will back-calculate results for holes already played.</div>
+  <p>Tap ⚙️ Settings during a round. All sections visible as collapsed headers — tap any to expand. Any game can be added mid-round and will back-calculate results for holes already played.</p>
 
   <h2 class="sub">Completing a Round</h2>
-  <p>On hole 18, once all scores are entered, the confirm button becomes <strong>"✓ Complete Round 🏆"</strong>. Tapping it saves the round immediately and offers:</p>
+  <p>On hole 18, once all scores are entered, the confirm button becomes <strong>"✓ Complete Round 🏆"</strong>. Tapping it saves the round and offers:</p>
   <ul>
     <li><strong>👇 Start New Round</strong></li>
-    <li><strong>📜 View &amp; Share Results</strong> — navigates directly to the completed round in History</li>
+    <li><strong>📜 View &amp; Share Results</strong> — goes straight to your completed round in History</li>
   </ul>
 </div>
 
-<!-- ══ GAME TABS ══ -->
-<div class="section" id="gametabs">
-  <h1 class="sec">4. The Betting Games Tab Bar</h1>
-  <p>Below the Start Round button, a two-row tab bar gives access to all eight betting games:</p>
+<!-- ══ GAME CONFIG ══ -->
+<div class="section" id="games">
+  <h1 class="sec">4. Configuring Betting Games</h1>
+
+  <div class="new"><b>🆕 New in v50.0:</b> All 8 game setup screens have been redesigned with a consistent dark green look. Every game uses the same pattern — tap a matchup or player to activate it, configure inline, no separate lists.</div>
+
+  <p>Eight pill buttons appear on the Setup screen. Tap any pill to open that game's overlay. A <strong>green dot</strong> on the pill means the game is configured and active.</p>
+
+  <div class="game-grid">
+    <div class="game-card"><div class="game-icon">🐍</div><div class="game-name">Snake</div><div class="game-desc">3-putt penalty game settling every 3 holes</div></div>
+    <div class="game-card"><div class="game-icon">🏆</div><div class="game-name">Nassau 2v2</div><div class="game-desc">Team Nassau with ball toss to pick sides</div></div>
+    <div class="game-card"><div class="game-icon">🤺</div><div class="game-name">Nassau 1v1</div><div class="game-desc">Individual Nassau — multiple matchups at once</div></div>
+    <div class="game-card"><div class="game-icon">🎯</div><div class="game-name">6-Point</div><div class="game-desc">Low net wins 4, 2nd wins 2, 3rd wins 0</div></div>
+    <div class="game-card"><div class="game-icon">🏅</div><div class="game-name">Stableford</div><div class="game-desc">Points per net score vs par</div></div>
+    <div class="game-card"><div class="game-icon">🦴</div><div class="game-name">Skins</div><div class="game-desc">Win the hole outright to claim the skin</div></div>
+    <div class="game-card"><div class="game-icon">🎰</div><div class="game-name">Vegas</div><div class="game-desc">2v2 — scores combine, birdie flips the number</div></div>
+    <div class="game-card"><div class="game-icon">⚔️</div><div class="game-name">Match Cards</div><div class="game-desc">Nassau vs players in other groups</div></div>
+  </div>
+
+  <h2 class="sub">Ball Toss (Nassau 2v2 &amp; Vegas)</h2>
+  <p>Both 2v2 games use a ball toss to pick teams. Tap 2 partners in the grid — matches generate automatically:</p>
+  <ul>
+    <li><strong>4 players:</strong> 1 match (toss partners vs the other two)</li>
+    <li><strong>5 players:</strong> 3 matches — the toss partners become the Swing Team, playing one match against each combo of the other three</li>
+  </ul>
+  <p>Each match card shows its own bet amount and ON/OFF toggle. Tap <strong>⚙️ Manual team selection</strong> to pick matchups yourself instead.</p>
+
+  <h2 class="sub">Inline Config Pattern</h2>
+  <p>For 1v1 Nassau, 6-Point, Stableford, Skins, Vegas (manual), and Match Cards — tap any row or player to activate it. The row expands inline with bet buttons and a ✕ Remove option. No separate active list appears below.</p>
+
+  <h2 class="sub">Default Bets</h2>
   <table>
-    <thead><tr><th>Row</th><th>Tabs</th></tr></thead>
+    <thead><tr><th>Game</th><th>Default bet</th></tr></thead>
     <tbody>
-      <tr><td>Top</td><td>SNAKE · NASSAU 2v2 · NASSAU 1v1 · 6-POINT</td></tr>
-      <tr><td>Bottom</td><td>STABLEFORD · SKINS · VEGAS · MATCH CARDS</td></tr>
+      <tr><td>Snake</td><td>$5/settlement</td></tr>
+      <tr><td>Nassau 2v2</td><td>$5/side</td></tr>
+      <tr><td>Nassau 1v1</td><td>$5/side</td></tr>
+      <tr><td>6-Point</td><td>$1/pt</td></tr>
+      <tr><td>Stableford</td><td>$1/pt</td></tr>
+      <tr><td>Skins</td><td>$5/skin</td></tr>
+      <tr><td>Vegas</td><td>$1/pt</td></tr>
+      <tr><td>Match Cards</td><td>$5/side</td></tr>
     </tbody>
   </table>
-  <ul>
-    <li>Tap a tab to expand its setup panel. Tap the active tab again to collapse it.</li>
-    <li>A <strong>green dot</strong> means that game is configured and ON.</li>
-    <li>If you don't have enough players for a game, the tab shows the minimum player requirement.</li>
-  </ul>
 </div>
 
 <!-- ══ NASSAU ══ -->
@@ -254,31 +269,35 @@
   <h1 class="sec">5. Nassau Games</h1>
   <p>A three-part bet — Front 9, Back 9, Total 18. Auto-presses tracked automatically.</p>
   <h2 class="sub">2v2 Nassau (High-Low)</h2>
-  <p>Two teams of two. Each team contributes their Low ball and High ball net score. A gold ✓ appears next to whichever player's score counted.</p>
+  <p>Two teams of two. Each team contributes their Low ball and High ball net score per hole. Use the ball toss to pick teams — tap 2 partners and matches are generated automatically. A gold ✓ appears next to whichever player's score counted on each hole.</p>
   <h2 class="sub">1v1 Nassau</h2>
-  <p>One player vs another. Multiple matchups can run simultaneously.</p>
+  <p>One player vs another. Multiple matchups can run simultaneously. Tap a matchup row to activate it — bet buttons and Remove appear inline. Each matchup can have its own bet amount.</p>
   <h2 class="sub">The International (The Big I)</h2>
-  <p>Available after Hole 17 to the losing team. A single Hole 18 can cancel, double, or leave unchanged the entire pot. A full-screen reminder appears at hole 18.</p>
+  <p>Available after Hole 17 to the losing team. A single Hole 18 can cancel, double, or leave unchanged the entire pot. A full-screen reminder appears at hole 18 so you never forget to offer it.</p>
 </div>
 
 <!-- ══ 6-POINT ══ -->
 <div class="section" id="sixpoint">
   <h1 class="sec">6. The 6-Point Game</h1>
-  <p>Three-player game. Each hole: low net wins 4 pts, second wins 2, third wins 0. Ties for low give 3 pts each.</p>
+  <p>Three-player game. Each hole: low net wins 4 pts, second wins 2, third wins 0. Ties for low give 3 pts each. 6 points in play on every hole — highest total over 18 wins.</p>
+  <p>Tap any 3-player combo to activate it. Bet options run from 25¢ to $10 per point. Multiple groups of 3 can run simultaneously from the same pool of players.</p>
 </div>
 
 <!-- ══ STABLEFORD ══ -->
 <div class="section" id="stableford">
   <h1 class="sec">7. Stableford</h1>
+  <p>Points-based individual game — full handicap applied. Highest points total wins; losers pay the winner the points difference × bet per point.</p>
+  <p>Tap player chips to include them. Once selected, a points table appears with +/− controls to adjust any score category, plus a bet per point row. Tap ↺ Reset to restore default point values.</p>
   <table>
-    <thead><tr><th>Net Score</th><th>Points</th></tr></thead>
+    <thead><tr><th>Net Score</th><th>Default Points</th></tr></thead>
     <tbody>
       <tr><td>Double Bogey or worse</td><td>0</td></tr>
       <tr><td>Bogey</td><td>1</td></tr>
       <tr><td>Par</td><td>2</td></tr>
       <tr><td>Birdie</td><td>3</td></tr>
-      <tr><td>Eagle</td><td>4</td></tr>
-      <tr><td>Albatross</td><td>5</td></tr>
+      <tr><td>Eagle</td><td>5</td></tr>
+      <tr><td>Albatross</td><td>6</td></tr>
+      <tr><td>Hole-in-One</td><td>8</td></tr>
     </tbody>
   </table>
 </div>
@@ -286,32 +305,48 @@
 <!-- ══ SKINS ══ -->
 <div class="section" id="skins">
   <h1 class="sec">8. Skins</h1>
-  <p>Win outright → win the skin. Tie → skin carries over. Select players, set dollars per skin, choose Gross or Net. After 18: Void (default) or Last Hole Sweeps.</p>
+  <p>Win a hole outright to claim the skin. Ties carry the skin over to the next hole — pots build up. Tap player chips to include them, then configure:</p>
+  <ul>
+    <li><strong>Value per skin</strong> — $1, $2, $5, $10, or $20</li>
+    <li><strong>Scoring</strong> — Net (handicap applied) or Gross</li>
+    <li><strong>On a tie</strong> — Carry over (skin accumulates) or No carry</li>
+    <li><strong>After hole 18</strong> (if carry is on) — Wash (leftovers void) or Last Hole Sweeps (hole 18 takes the accumulated pot)</li>
+  </ul>
 </div>
 
 <!-- ══ VEGAS ══ -->
 <div class="section" id="vegas">
   <h1 class="sec">9. Vegas</h1>
-  <p>Two-against-two. Scores combine low digit first (4 and 5 = 45). The Flip: an opponent birdie flips your number (45 → 54).</p>
+  <p>Two-against-two. Each team combines their two scores into a two-digit number, lowest digit first — a 4 and a 5 become 45. Teams play the difference × bet each hole. Requires 4 or 5 players.</p>
+  <p><strong>The Flip:</strong> if the opposing team makes a birdie, your number flips high-digit first (45 becomes 54). High variance, high drama.</p>
+  <p>Use the <strong>ball toss</strong> to pick teams (same as Nassau 2v2 — tap 2 partners, matches auto-generate with Swing Team for 5-player groups). Each match card lets you set $/point, Gross/Net, and Flip on/off independently. Tap <strong>⚙️ Manual team selection</strong> if you'd rather pick matchups yourself.</p>
 </div>
 
 <!-- ══ SNAKE ══ -->
 <div class="section" id="snake">
   <h1 class="sec">10. The Snake 3-Putt Money Game</h1>
-  <p>Settles every 3 holes. Whoever holds the snake at holes 3, 6, 9, 12, 15, 18 pays each other participant the bet amount.</p>
+  <p>Any 3-putt picks up the snake 🐍. Whoever holds the snake at settlement holes (3, 6, 9, 12, 15, 18) pays every other participant the bet amount. The snake resets after each settlement.</p>
+  <p>Configure participants and the bet per settlement in the Snake overlay. The snake holder is tracked live on the scorecard.</p>
 </div>
 
 <!-- ══ MATCH CARDS ══ -->
 <div class="section" id="matchcards">
   <h1 class="sec">11. Match Cards</h1>
-  <p>Play 1v1 Nassau against up to 4 golfers in OTHER groups. Your scores tracked live — opponents' scores entered later in the clubhouse via History.</p>
-  <div class="tip">After completing a round with Match Cards, tap 📜 View &amp; Share Results to go straight to your round in History and score your opponents.</div>
+  <p>Play 1v1 Nassau against up to 4 golfers in <strong>other groups</strong>. Your scores are tracked live during your round. Opponents' scores are entered later in the clubhouse from History — your scores are pre-filled automatically.</p>
+  <p>Tap <strong>⚔️ Enable Match Cards</strong> to turn it on, then use the 4 opponent tabs to add each opponent. For each opponent you can:</p>
+  <ul>
+    <li>Select from your saved players or type a name manually</li>
+    <li>Set their handicap index and preferred tee (adjusted HCP calculates automatically)</li>
+    <li>Fetch their Golf Canada handicap live if they have a GC ID on file</li>
+    <li>Set the Nassau bet per side</li>
+  </ul>
+  <div class="tip">After completing a round with Match Cards, tap 📜 View &amp; Share Results to go straight to your round in History and enter opponents' scores.</div>
 </div>
 
 <!-- ══ BIRDIE JUICE ══ -->
 <div class="section" id="bj">
   <h1 class="sec">12. Birdie Juice</h1>
-  <p>Toggle on/off via the ⚙️ Options pill on the Setup screen. Works in both Games mode and Scores Only mode.</p>
+  <p>Toggle on/off via <strong>⚙️ Settings</strong> in the bottom action bar. Works in both Games mode and Scores Only mode.</p>
   <table>
     <thead><tr><th>Score</th><th>Credits</th></tr></thead>
     <tbody>
@@ -332,24 +367,24 @@
       <tr><td>7+</td><td>👑 Legend</td></tr>
     </tbody>
   </table>
-  <div class="dyk">Career Birdie Juice totals are now tracked in each player's profile — the app scans all your history rounds automatically to calculate a lifetime gross birdie count.</div>
+  <div class="dyk">A red badge on the 🐦🥃 button in the scorecard action bar shows remaining Birdie Juice credits for the group at a glance.</div>
 </div>
 
 <!-- ══ COURSE PICKER ══ -->
 <div class="section" id="coursepicker">
   <h1 class="sec">13. The Course Picker</h1>
-  <p>Courses are organised into Canada and USA region accordions. Your home course is always pinned at the top. Tap 📋 Info on any course row to see live weather, your history, and the full 18-hole scorecard.</p>
+  <p>Tap the course picker at the top of Setup. Your home course is always pinned first. Courses are organised into Canada and USA region accordions with flag icons. Tap 📋 Info on any row for live weather, your round history at that course, and the full 18-hole scorecard with all tee yardages, ratings, and slopes.</p>
 </div>
 
 <!-- ══ HISTORY ══ -->
 <div class="section" id="history">
   <h1 class="sec">14. Round History</h1>
-  <p>Access via ☰ Menu → Round History during a round, or the History tab on the setup screen.</p>
+  <p>Access via the History tab on the Setup screen, or via ⚙️ Settings → Round History during a round.</p>
   <ul>
-    <li><strong>Saving</strong> — tap 💾 Save Round, or rounds save automatically on New Round.</li>
-    <li><strong>Locking</strong> — tap 🔓 to lock; hold 🔒 for 2 seconds to unlock.</li>
-    <li><strong>Editing</strong> — tap ✏️ Edit on any completed round.</li>
-    <li><strong>Pausing</strong> — tap ☰ Menu → End Round Early → 💾 Save &amp; Pause Round. Resume from History.</li>
+    <li><strong>Saving</strong> — rounds save automatically when you start a new round. Tap 💾 Save Round to save manually at any time.</li>
+    <li><strong>Locking</strong> — tap 🔓 to lock a round; hold 🔒 for 2 seconds to unlock.</li>
+    <li><strong>Editing</strong> — tap ✏️ Edit on any completed round to change scores or game results.</li>
+    <li><strong>Pausing</strong> — tap 🏁 End Round → Save &amp; Pause Round to pause mid-round and resume later from History.</li>
   </ul>
 </div>
 
@@ -364,82 +399,65 @@
   <div class="warn">Export a backup regularly. iOS can wipe PWA storage when you remove the Home Screen icon or run low on storage.</div>
 </div>
 
-<!-- ══ NEW ROUND ══ -->
-<div class="section" id="newround">
-  <h1 class="sec">16. Starting a New Round</h1>
-  <p>Tap 🔄 New Round in the bottom nav. Hold the confirmation button for 2 seconds. The setup screen resets to 4 players with Me in slot 1.</p>
-</div>
-
 <!-- ══ MANAGE PLAYERS ══ -->
 <div class="section" id="players">
-  <h1 class="sec">17. Manage Players</h1>
-
-  <div class="new"><b>🆕 Completely rebuilt in v40.0</b> — full player profiles with career stats, a clean two-panel interface, and custom pickers for all settings.</div>
-
+  <h1 class="sec">16. Manage Players</h1>
   <p>Tap ⚙️ Manage Players from the Setup screen or the bottom navigation.</p>
 
   <h2 class="sub">Player List</h2>
   <ul>
     <li>Shows all saved players: Me first → ⭐ Favourites → alphabetical</li>
-    <li>Tap any row to open their full profile and edit screen</li>
+    <li>Tap any row to open their full profile</li>
     <li>Tap the <strong>★/☆ star</strong> to instantly favourite or unfavourite — no need to open the record</li>
     <li>Tap <strong>＋ Add New Player</strong> to create a new player</li>
     <li>Tap <strong>🔄 Refresh All Handicaps</strong> to fetch Golf Canada indexes for everyone at once</li>
   </ul>
-  <p>A hint at the top of the list reads: <em>Tap any player to view or edit · Tap ★ to favourite</em></p>
 
   <h2 class="sub">Player Profile / Edit Screen</h2>
-  <p>Tap any player row to open their full profile. Tap <strong>‹ Players</strong> (or anywhere on the header bar) to return to the list. If you've made changes, tapping back shows an action sheet: <strong>Save &amp; Return</strong> / <strong>Discard &amp; Return</strong> / <strong>Cancel</strong>.</p>
+  <p>Tap any player row to open their full profile. Tap <strong>‹ Players</strong> to return. If you've made changes, tapping back shows an action sheet: <strong>Save &amp; Return / Discard &amp; Return / Cancel</strong>.</p>
 
   <h3 class="sub3">Toggles</h3>
   <ul>
-    <li><strong>★ Favourite</strong> — tap to toggle on/off instantly. Saves immediately — no Save Changes needed. Me is always a favourite and cannot be unstarred. Maximum 4 non-Me favourites.</li>
-    <li><strong>✓ This is Me</strong> — tap to see an immediate warning dialog explaining the impact. Inside the dialog, hold <strong>Hold to Confirm</strong> for 2 seconds to enact the change. This prevents accidental Me changes which affect career earnings attribution.</li>
+    <li><strong>★ Favourite</strong> — tap to toggle instantly. Me is always a favourite. Maximum 4 non-Me favourites (5 total).</li>
+    <li><strong>✓ This is Me</strong> — tap to see a warning. Hold <strong>Hold to Confirm</strong> for 2 seconds to change the Me player.</li>
   </ul>
 
   <h3 class="sub3">Identity</h3>
   <ul>
-    <li><strong>Player Name</strong> — renaming a player without a GC ID who has history shows a warning about data integrity.</li>
-    <li><strong>Golf Canada ID</strong> — the field is locked with 🔒 once a GC ID is saved. Hold 🔒 for 2 seconds to unlock and edit. This protects against accidental changes that would break handicap fetching.</li>
-    <li><strong>Fetch HCP button</strong> — activates the moment you type a valid 10-digit GC ID. Fetches live from Golf Canada and updates the index and adjusted HCP immediately.</li>
+    <li><strong>Player Name</strong> — renaming a player without a GC ID who has history shows a data integrity warning.</li>
+    <li><strong>Golf Canada ID</strong> — locked with 🔒 once set. Hold 🔒 for 2 seconds to unlock.</li>
+    <li><strong>Fetch HCP</strong> — activates the moment you type a valid 10-digit GC ID.</li>
   </ul>
 
   <h3 class="sub3">Handicap &amp; Tee</h3>
   <ul>
-    <li><strong>Golf Canada Index</strong> — auto-populated by Fetch; can also be entered manually for players without a GC ID.</li>
-    <li><strong>Adjusted HCP</strong> — automatically calculated from Index × Slope formula for the selected tee. Updates live as you change index or tee.</li>
-    <li><strong>Preferred Tee</strong> — opens a custom dark green picker showing all tee boxes with coloured badges and yardage. The selected tee is remembered per player per course.</li>
-    <li><strong>Score Wheel Default</strong> — Par, Bogey, or Double. Sets the starting position of the score entry wheel for this player.</li>
+    <li><strong>Golf Canada Index</strong> — auto-populated by Fetch; can be entered manually.</li>
+    <li><strong>Adjusted HCP</strong> — calculated from Index × (Slope ÷ 113) + (Course Rating − Par). Updates live.</li>
+    <li><strong>Preferred Tee</strong> — remembered per player per course. Custom picker with coloured badges and yardage.</li>
+    <li><strong>Score Wheel Default</strong> — Par, Bogey, or Double. Sets the score entry wheel starting position.</li>
   </ul>
 
   <h3 class="sub3">Me Settings <small>(Me players only)</small></h3>
   <ul>
-    <li><strong>Home City</strong> — sets which city's weather shows on the Setup screen.</li>
-    <li><strong>Home Course</strong> — sets your default course. Changing this automatically updates the Preferred Tee picker to show that course's tee boxes.</li>
+    <li><strong>Home City</strong> — drives weather on the Setup screen.</li>
+    <li><strong>Home Course</strong> — auto-selected on new rounds. Changing it updates the Preferred Tee picker.</li>
   </ul>
 
   <h3 class="sub3">Career Stats <small>(read-only)</small></h3>
   <ul>
-    <li><strong>Career Birdie Juice</strong> — total gross birdies automatically counted from all history rounds.</li>
-    <li><strong>Overall Match Record</strong> — W/L/T across all games (accumulates going forward from v40.0).</li>
+    <li><strong>Career Birdie Juice</strong> — total gross birdies scanned from all history rounds.</li>
+    <li><strong>Overall Match Record</strong> — W/L/T across all games.</li>
     <li><strong>vs [Me Name]</strong> — head-to-head record against the Me player.</li>
-    <li><strong>Career Earnings</strong> — cumulative net money across all recorded rounds.</li>
+    <li><strong>Career Earnings</strong> — cumulative net money across all rounds.</li>
     <li><strong>Total Rounds Played / Last Round Played</strong> — non-Me players only.</li>
   </ul>
 
-  <h2 class="sub">Favourite Rules</h2>
-  <ul>
-    <li>Me is always a favourite and cannot be unstarred</li>
-    <li>Maximum 4 other players can be starred (5 total including Me)</li>
-    <li>⭐ Load My Favourites fills all player slots from your starred players</li>
-  </ul>
-
-  <div class="dyk">The tee you set in Preferred Tee is remembered per player per course — not just one global preference. Switch to a different course and each player's tee preference for that specific course is recalled automatically.</div>
+  <div class="dyk">Preferred tee is remembered per player per course — not a single global preference. Switch to a different course and each player's tee for that course is recalled automatically.</div>
 </div>
 
 <!-- ══ COURSES ══ -->
 <div class="section" id="courses">
-  <h1 class="sec">18. Courses</h1>
+  <h1 class="sec">17. Courses</h1>
   <p>140+ courses built in — all tees, par, stroke index, slope, and rating pre-loaded. No internet required for scoring.</p>
 
   <h2 class="sub">Canada</h2>
@@ -460,9 +478,9 @@
 
 <!-- ══ TROUBLESHOOTING ══ -->
 <div class="section" id="trouble">
-  <h1 class="sec">19. Troubleshooting</h1>
+  <h1 class="sec">18. Troubleshooting</h1>
   <h2 class="sub">My round disappeared 🏌️</h2>
-  <p>Use 💾 Save &amp; Pause Round before ending early. Without saving, data cannot be recovered.</p>
+  <p>Use 🏁 End Round → Save &amp; Pause Round before ending early. Without saving, data cannot be recovered.</p>
   <h2 class="sub">The app looks outdated 🤔</h2>
   <p>Tap Update App. If that doesn't work, clear Safari site data for bdcomeau.github.io, force-close, reopen.</p>
   <h2 class="sub">Pop-ups aren't appearing 😶</h2>
@@ -470,7 +488,7 @@
   <h2 class="sub">Player data or history disappeared 😱</h2>
   <p>Likely caused by "Remove App." Restore from a backup file if available. Always export backups regularly.</p>
   <h2 class="sub">A player left mid-round 🚑</h2>
-  <p>Tap ☰ Menu → Mid-Round Settings and remove them there.</p>
+  <p>Tap ⚙️ Settings during the round → Players section → remove them there.</p>
   <h2 class="sub">Weather not showing in course picker 🌦️</h2>
   <p>Weather loads in the background after launch. Wait a moment and reopen the picker.</p>
   <h2 class="sub">Handicap strokes wrong ✏️</h2>
@@ -479,11 +497,11 @@
   <p>Hold for the full 2 seconds without moving your finger.</p>
   <h2 class="sub">Confirm button not appearing 🤔</h2>
   <p>Once all players have a score on the current hole, the gold "✓ Confirm &amp; Next Hole →" button appears at the bottom of the scorecard. Confirm Scores is always ON.</p>
-  <h2 class="sub">Save Changes in Manage Players does nothing 🔧</h2>
-  <p>The Save Changes button only appears after you've actually changed a field. If no fields have changed from their original values, the button stays hidden — this is by design.</p>
+  <h2 class="sub">Nassau 2v2 pill shows green dot but no games set 🟢</h2>
+  <p>This was fixed in v50.0. If you still see it after updating, tap the 🏆 Nassau 2v2 pill, verify no matches are listed, and close the overlay — the dot will clear.</p>
   <h2 class="sub">A score or game looks wrong 🧮</h2>
   <ul>
-    <li>Handicaps are editable mid-round in ☰ Menu → Mid-Round Settings.</li>
+    <li>Handicaps are editable mid-round via ⚙️ Settings.</li>
     <li>Scores are correctable at any time — all totals recalculate instantly.</li>
     <li>Wrong tee: go to Manage Players → open the player → change Preferred Tee.</li>
   </ul>
@@ -491,7 +509,7 @@
 
 <div class="footer">
   <span class="emoji">⛳</span>
-  <strong>Pards Golf &nbsp;·&nbsp; Version 40.0 &nbsp;·&nbsp; Edmonton, AB</strong>
+  <strong>Pards Golf &nbsp;·&nbsp; Version 50.0 &nbsp;·&nbsp; Edmonton, AB</strong>
   <div class="tagline">
     Thanks for playing.<br>
     May your drives be long, your putts be true,<br>
@@ -499,6 +517,9 @@
   </div>
 </div>
 
-
+<div style="position:fixed;bottom:0;left:0;right:0;padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom));background:linear-gradient(135deg,#1a3a2a,#2d6a4f);border-top:2px solid #c9a84c;z-index:9999;display:flex;justify-content:center">
+  <button onclick="history.back()" style="background:#c9a84c;color:#1a3a2a;border:none;border-radius:12px;padding:12px 40px;font-size:15px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">← Back to Pards Golf</button>
+</div>
+<div style="height:80px"></div>
 </body>
 </html>
