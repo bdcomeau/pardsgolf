@@ -914,16 +914,31 @@ input::placeholder{color:#bbb}
   </div>
 
   <div id="vegasSetupWrap">
-  <div  style="display:flex;align-items:center;justify-content:space-between;background:#1a2a3a;border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:10px 14px;margin:0 0 4px">
-    <span style="display:flex;align-items:center;gap:6px"><span class="slabel" style="color:#c9a84c;margin:0;padding:0;background:none;font-size:13px">🎲 Vegas</span><span id="activeLabelVegas" style="font-size:10px;font-weight:800;color:#52b788;display:none">✓ Active</span></span><span class="sc" style="color:#c9a84c;font-size:12px;display:none"></span>
-  </div>
-  <div style="display:none;margin-bottom:8px">
-    <div class="card" id="vegasSetupCard" style="background:#e8eef5">
-      <div style="font-size:12px;color:#666;margin:0 0 8px">Fixed 2-vs-2. Each team's two scores combine into a number, low score first (a 4 and 5 make 45). Teams play the difference each hole × the dollar value. If the other team makes a birdie, your number flips high-first (45 → 54). Needs exactly 4 players.</div>
-      <div id="vegasGamesList"></div>
-      <div id="vegasGrid"></div>
-      
+  <div style="display:none"></div>
+  <div style="display:none">
+    <div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:16px;padding:12px 14px;background:rgba(255,255,255,.05);border-radius:10px">
+      2v2 — scores combine low digit first (4+5=45). Teams play the difference × bet. Opponent birdie flips your number (45→54).
     </div>
+    <!-- Vegas Ball Toss -->
+    <div id="vegasTossPanel">
+      <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.7);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Ball Toss — Pick 2 Partners</div>
+      <div id="vegasTossPlayerGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px"></div>
+      <div id="vegasTossMatchesPanel" style="display:none">
+        <div id="vegasTossInfoBanner" style="background:rgba(82,183,136,.1);border:1px solid rgba(82,183,136,.3);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:12px;color:#52b788;font-weight:700"></div>
+        <div id="vegasTossMatchCards"></div>
+      </div>
+    </div>
+    <!-- Manual override -->
+    <div id="vegasManualPanel" style="display:none">
+      <div style="font-size:10px;font-weight:800;color:rgba(201,168,76,.7);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Matchups</div>
+      <div id="vegasGrid"></div>
+    </div>
+    <div style="margin-top:10px">
+      <button onclick="toggleVegasManual(true)" id="vegasManualLink" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:11px;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent">⚙️ Manual team selection</button>
+      <button onclick="toggleVegasManual(false)" id="vegasTossLink" style="display:none;background:none;border:none;color:rgba(255,255,255,.3);font-size:11px;cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent">🎲 Switch to Ball Toss</button>
+    </div>
+    <div id="vegasGamesList" style="display:none"></div>
+    <span id="activeLabelVegas" style="display:none"></span>
   </div>
   </div>
 
@@ -6892,7 +6907,7 @@ function openGameOverlay(i){
   if(i===3){ renderSixPointOptions(); renderSixPointGamesList(); }
   if(i===4){ renderStablefordOptions(); renderStablefordGamesList(); }
   if(i===5){ renderSkinsOptions(); renderSkinsGamesList(); }
-  if(i===6){ renderVegasOptions(); renderVegasGamesList(); }
+  if(i===6){ renderVegasOptions(); renderVegasGamesList(); if(!_vegasManualMode) renderVegasTossPlayerGrid(); }
   if(i===7){ renderMatchCardsSetupVisibility(); renderMatchCardsConfig(); }
 
   ov.style.display = 'flex';
@@ -6980,6 +6995,10 @@ function closeGameOverlay(){
   // If closing 2v2 overlay with no confirmed toss, clear any stale teamGames
   if(_activeGameOverlay === 1 && !_nassauManualMode && _tossPartners.length < 2){
     G.teamGames = [];
+  }
+  // If closing Vegas overlay with no confirmed toss, clear stale vegasGames
+  if(_activeGameOverlay === 6 && !_vegasManualMode && _vegasTossPartners.length < 2){
+    G.vegasGames = [];
   }
   _closeGameOverlayInternal();
   var ov = document.getElementById('gameOverlay');
@@ -7234,6 +7253,124 @@ function _getTossMatchList(){
   }
   return matches;
 }
+
+// ── Vegas Ball Toss ────────────────────────────────────────────────────────
+var _vegasTossPartners = [];
+var _vegasManualMode = false;
+
+function toggleVegasManual(manual){
+  _vegasManualMode = manual;
+  if(!manual){ _vegasTossPartners = []; }
+  renderVegasOptions();
+  updateActiveLabels();
+}
+
+function renderVegasTossPlayerGrid(){
+  var grid = document.getElementById('vegasTossPlayerGrid');
+  if(!grid) return;
+  var nm = names();
+  var html = '';
+  for(var i=0;i<G.n;i++){
+    var isSel = _vegasTossPartners.indexOf(i)>=0;
+    html += '<button onclick="toggleVegasTossPartner('+i+')" style="padding:12px 8px;border-radius:10px;border:1.5px solid '
+      + (isSel ? 'rgba(201,168,76,.6)' : 'rgba(255,255,255,.15)')
+      + ';background:' + (isSel ? 'rgba(201,168,76,.15)' : 'rgba(0,0,0,.2)')
+      + ';color:' + (isSel ? '#c9a84c' : 'rgba(255,255,255,.6)')
+      + ';font-size:13px;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;width:100%;text-align:center">'
+      + (isSel ? '✓ ' : '') + nm[i] + '</button>';
+  }
+  grid.innerHTML = html;
+  renderVegasTossMatches();
+}
+
+function toggleVegasTossPartner(i){
+  var idx = _vegasTossPartners.indexOf(i);
+  if(idx>=0){ _vegasTossPartners.splice(idx,1); }
+  else if(_vegasTossPartners.length < 2){ _vegasTossPartners.push(i); }
+  else { _vegasTossPartners = [_vegasTossPartners[1], i]; }
+  renderVegasTossPlayerGrid();
+}
+
+function renderVegasTossMatches(){
+  var panel  = document.getElementById('vegasTossMatchesPanel');
+  var banner = document.getElementById('vegasTossInfoBanner');
+  var cards  = document.getElementById('vegasTossMatchCards');
+  if(!panel||!banner||!cards) return;
+  if(_vegasTossPartners.length < 2){
+    panel.style.display='none';
+    G.vegasGames=[];
+    updateActiveLabels(); renderGameTabs(); return;
+  }
+  panel.style.display = 'block';
+  var nm = names();
+  var p0 = _vegasTossPartners[0], p1 = _vegasTossPartners[1];
+  var others = [];
+  for(var i=0;i<G.n;i++){ if(i!==p0&&i!==p1) others.push(i); }
+  var matches = [];
+  if(others.length === 2){
+    banner.textContent = '✓ 1 match generated';
+    matches.push({a:[p0,p1], b:[others[0],others[1]]});
+  } else if(others.length === 3){
+    banner.innerHTML = '✓ <strong>Swing Team: ' + nm[p0] + ' & ' + nm[p1] + '</strong> — 3 matches generated';
+    for(var x=0;x<others.length;x++) for(var y=x+1;y<others.length;y++)
+      matches.push({a:[p0,p1], b:[others[x],others[y]], swing:true});
+  } else {
+    panel.style.display='none'; return;
+  }
+  // Sync with G.vegasGames — add missing, keep settings
+  matches.forEach(function(m){
+    var aKey=JSON.stringify(m.a), bKey=JSON.stringify(m.b);
+    var exists = G.vegasGames.find(function(g){ return g&&g.teamA&&g.teamB&&JSON.stringify(g.teamA)===aKey&&JSON.stringify(g.teamB)===bKey; });
+    var prev = G.vegasGames[0]||{};
+    if(!exists) G.vegasGames.push({teamA:[...m.a], teamB:[...m.b], perPoint:prev.perPoint||1, mode:prev.mode||'gross', flip:prev.flip!==false});
+  });
+  G.vegasGames = G.vegasGames.filter(function(g){
+    return matches.some(function(m){ return g&&g.teamA&&g.teamB&&JSON.stringify(g.teamA)===JSON.stringify(m.a)&&JSON.stringify(g.teamB)===JSON.stringify(m.b); });
+  });
+  // Render match cards
+  var html = '';
+  matches.forEach(function(m, mi){
+    var aKey=JSON.stringify(m.a), bKey=JSON.stringify(m.b);
+    var g = G.vegasGames.find(function(g){ return g&&g.teamA&&JSON.stringify(g.teamA)===aKey&&JSON.stringify(g.teamB)===bKey; });
+    if(!g) return;
+    if(g.perPoint===undefined) g.perPoint=1;
+    if(g.mode===undefined) g.mode='gross';
+    if(g.flip===undefined) g.flip=true;
+    var gIdx = G.vegasGames.indexOf(g);
+    html += '<div style="background:rgba(0,0,0,.25);border:1.5px solid rgba(201,168,76,.2);border-radius:12px;padding:12px 14px;margin-bottom:10px">';
+    html += '<div style="font-size:13px;font-weight:800;margin-bottom:10px">';
+    html += '<span style="color:#c9a84c">'+nm[m.a[0]]+' & '+nm[m.a[1]]+'</span>';
+    if(m.swing) html += '<span style="display:inline-block;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);border-radius:20px;padding:1px 8px;font-size:9px;font-weight:800;color:#c9a84c;margin-left:5px">Swing</span>';
+    html += '<br><span style="font-size:11px;color:rgba(255,255,255,.4)">vs</span>';
+    html += '<br><span style="color:#52b788">'+nm[m.b[0]]+' & '+nm[m.b[1]]+'</span>';
+    html += '</div>';
+    var lbl = 'font-size:10px;font-weight:800;color:rgba(201,168,76,.7);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px';
+    var btnB = 'border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent';
+    function sb(on){ return on?'rgba(201,168,76,.5)':'rgba(255,255,255,.12)'; }
+    function sbg(on){ return on?'rgba(201,168,76,.15)':'transparent'; }
+    function sc(on){ return on?'#c9a84c':'rgba(255,255,255,.4)'; }
+    // $/point
+    html += '<div style="'+lbl+'">$/point</div><div style="display:flex;gap:6px;margin-bottom:10px">';
+    VEGAS_POINT_OPTIONS.forEach(function(v){
+      html += '<button onclick="setVegasPoint('+gIdx+','+v+')" style="flex:1;padding:9px 4px;'+btnB+';border:1.5px solid '+sb(g.perPoint===v)+';background:'+sbg(g.perPoint===v)+';color:'+sc(g.perPoint===v)+'">'+(v<1?(v*100)+'¢':'$'+v)+'</button>';
+    });
+    html += '</div>';
+    // Scoring
+    html += '<div style="'+lbl+'">Scoring</div><div style="display:flex;gap:6px;margin-bottom:10px">';
+    html += '<button onclick="setVegasMode('+gIdx+',\\x27gross\\x27)" style="flex:1;padding:9px 6px;'+btnB+';border:1.5px solid '+sb(g.mode==='gross')+';background:'+sbg(g.mode==='gross')+';color:'+sc(g.mode==='gross')+'">Gross</button>';
+    html += '<button onclick="setVegasMode('+gIdx+',\\x27net\\x27)" style="flex:1;padding:9px 6px;'+btnB+';border:1.5px solid '+sb(g.mode==='net')+';background:'+sbg(g.mode==='net')+';color:'+sc(g.mode==='net')+'">Net</button>';
+    html += '</div>';
+    // Flip
+    html += '<div style="'+lbl+'">Birdie flip</div><div style="display:flex;gap:6px">';
+    html += '<button onclick="setVegasFlip('+gIdx+',true)" style="flex:1;padding:9px 6px;'+btnB+';border:1.5px solid '+sb(g.flip===true)+';background:'+sbg(g.flip===true)+';color:'+sc(g.flip===true)+'">Flip on</button>';
+    html += '<button onclick="setVegasFlip('+gIdx+',false)" style="flex:1;padding:9px 6px;'+btnB+';border:1.5px solid '+sb(g.flip===false)+';background:'+sbg(g.flip===false)+';color:'+sc(g.flip===false)+'">No flip</button>';
+    html += '</div></div>';
+  });
+  cards.innerHTML = html;
+  updateActiveLabels();
+  renderGameTabs();
+}
+
 
 function setInternational(on){
   G.teamInternational = on;
@@ -8046,6 +8183,8 @@ function renderRoundSummary(previewPlayers){
     // Vegas
     if(vegasActive){
       let inner='';
+      const vgBets=[...new Set(G.vegasGames.filter(g=>g&&g.perPoint).map(g=>g.perPoint))];
+      const vgBetLabel=vgBets.length===1?'$'+vgBets[0]+'/pt':'mixed/pt';
       G.vegasGames.forEach(g=>{
         if(!g.teamA||g.teamA.length<2||!g.teamB||g.teamB.length<2) return;
         const [a0,a1]=[g.teamA[0],g.teamA[1]];
@@ -8055,9 +8194,10 @@ function renderRoundSummary(previewPlayers){
         const bNames=`${previewPlayers[b0].name} (${courseHcp(previewPlayers[b0])} · ${previewPlayers[b0].deck}) & ${previewPlayers[b1].name} (${courseHcp(previewPlayers[b1])} · ${previewPlayers[b1].deck})`;
         let chips='';
         if(mode==='net') chips=hcpChips([a0,a1,b0,b1],[a0,a1,b0,b1],'relative');
-        inner+=matchupBlock(aNames,bNames,chips,'','vs');
+        const betChip=vgBets.length>1?`<span style="font-size:10px;font-weight:800;color:#c9a84c;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);border-radius:4px;padding:1px 6px;margin-left:4px">$${g.perPoint}/pt</span>`:'';
+        inner+=matchupBlock(aNames+betChip,bNames,chips,'','vs');
       });
-      gamesHtml+=gameBlock('🎲','Vegas','$'+((G.vegasGames.find(g=>g&&g.bet)||{bet:1}).bet||1)+'/pt',inner);
+      gamesHtml+=gameBlock('🎲','Vegas',vgBetLabel,inner);
     }
 
     // Snake
@@ -9032,34 +9172,82 @@ function renderVegasOptions(){
   const wrap = document.getElementById('vegasSetupWrap');
   const vegasOK = (G.n === 4 || G.n === 5);
   if(wrap) wrap.style.display = (!vegasOK || scoresOnly) ? 'none' : 'block';
-  const el = document.getElementById('vegasGrid');
-  if(!el) return;
-  if(!vegasOK){ el.innerHTML = '<div style="font-size:13px;color:var(--red);padding:4px 0">Vegas needs 4 or 5 players.</div>'; return; }
-  const nm = names();
-  const combos = allPairCombos();
-  window._vegasCombos = combos;
-  // Find which combos are currently active in G.vegasGames
-  function comboActive(c){
-    const aKey=JSON.stringify([...c.a].sort()), bKey=JSON.stringify([...c.b].sort());
-    return G.vegasGames.some(g=>{
-      if(!g||!g.teamA||!g.teamB) return false;
-      const gA=JSON.stringify([...g.teamA].sort()), gB=JSON.stringify([...g.teamB].sort());
-      return (gA===aKey&&gB===bKey)||(gA===bKey&&gB===aKey);
-    });
+  if(!vegasOK){
+    const el = document.getElementById('vegasGrid');
+    if(el) el.innerHTML = '<div style="font-size:13px;color:rgba(255,255,255,.4);padding:4px 0">Vegas needs 4 or 5 players.</div>';
+    return;
   }
-  let h = '<div style="font-size:11px;color:#888;margin-bottom:6px">Tap to add/remove matchups — select as many as you like:</div><div class="pair-grid">';
-  combos.forEach((c,i)=>{
-    const sel = comboActive(c);
-    const aKey=JSON.stringify([...c.a].sort()),bKey=JSON.stringify([...c.b].sort());
-    const _vg=G.vegasGames.find(function(g){
-      if(!g||!g.teamA||!g.teamB) return false;
-      const gA=JSON.stringify([...g.teamA].sort()),gB=JSON.stringify([...g.teamB].sort());
-      return (gA===aKey&&gB===bKey)||(gA===bKey&&gB===aKey);
+  // Show toss vs manual panel
+  var tossPanel   = document.getElementById('vegasTossPanel');
+  var manualPanel = document.getElementById('vegasManualPanel');
+  var tossLink    = document.getElementById('vegasTossLink');
+  var manualLink  = document.getElementById('vegasManualLink');
+  if(_vegasManualMode){
+    if(tossPanel)   tossPanel.style.display   = 'none';
+    if(manualPanel) manualPanel.style.display = 'block';
+    if(tossLink)    tossLink.style.display    = 'inline';
+    if(manualLink)  manualLink.style.display  = 'none';
+    // Render manual matchup rows
+    const nm = names();
+    const combos = allPairCombos();
+    window._vegasCombos = combos;
+    function findGame(c){
+      const aKey=JSON.stringify([...c.a].sort()), bKey=JSON.stringify([...c.b].sort());
+      return G.vegasGames.find(function(g){
+        if(!g||!g.teamA||!g.teamB) return false;
+        const gA=JSON.stringify([...g.teamA].sort()), gB=JSON.stringify([...g.teamB].sort());
+        return (gA===aKey&&gB===bKey)||(gA===bKey&&gB===aKey);
+      });
+    }
+    const btnBase = 'border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent';
+    function selBorder(on){ return on?'rgba(201,168,76,.5)':'rgba(255,255,255,.12)'; }
+    function selBg(on){ return on?'rgba(201,168,76,.15)':'transparent'; }
+    function selCol(on){ return on?'#c9a84c':'rgba(255,255,255,.4)'; }
+    let h = '';
+    combos.forEach(function(c,i){
+      const g = findGame(c);
+      const on = !!g;
+      const label = nm[c.a[0]]+' & '+nm[c.a[1]]+' <span style="font-size:11px;color:rgba(255,255,255,.35)">vs</span> '+nm[c.b[0]]+' & '+nm[c.b[1]];
+      if(on){
+        const gIdx = G.vegasGames.indexOf(g);
+        if(g.perPoint===undefined) g.perPoint=1;
+        if(g.mode===undefined) g.mode='gross';
+        if(g.flip===undefined) g.flip=true;
+        const ptRow = VEGAS_POINT_OPTIONS.map(function(v){
+          return '<button onclick="setVegasPoint('+gIdx+','+v+')" style="flex:1;padding:9px 4px;'+btnBase+';border:1.5px solid '+selBorder(g.perPoint===v)+';background:'+selBg(g.perPoint===v)+';color:'+selCol(g.perPoint===v)+'">'+(v<1?(v*100)+'¢':'$'+v)+'</button>';
+        }).join('');
+        const modeRow =
+          '<button onclick="setVegasMode('+gIdx+',\x27gross\x27)" style="flex:1;padding:9px 6px;'+btnBase+';border:1.5px solid '+selBorder(g.mode==='gross')+';background:'+selBg(g.mode==='gross')+';color:'+selCol(g.mode==='gross')+'">Gross</button>'+
+          '<button onclick="setVegasMode('+gIdx+',\x27net\x27)" style="flex:1;padding:9px 6px;'+btnBase+';border:1.5px solid '+selBorder(g.mode==='net')+';background:'+selBg(g.mode==='net')+';color:'+selCol(g.mode==='net')+'">Net</button>';
+        const flipRow =
+          '<button onclick="setVegasFlip('+gIdx+',true)" style="flex:1;padding:9px 6px;'+btnBase+';border:1.5px solid '+selBorder(g.flip===true)+';background:'+selBg(g.flip===true)+';color:'+selCol(g.flip===true)+'">Flip on</button>'+
+          '<button onclick="setVegasFlip('+gIdx+',false)" style="flex:1;padding:9px 6px;'+btnBase+';border:1.5px solid '+selBorder(g.flip===false)+';background:'+selBg(g.flip===false)+';color:'+selCol(g.flip===false)+'">No flip</button>';
+        const lbl = 'font-size:10px;font-weight:800;color:rgba(201,168,76,.7);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px';
+        h += '<div style="background:rgba(0,0,0,.25);border:1.5px solid rgba(201,168,76,.3);border-radius:12px;padding:12px 14px;margin-bottom:8px">';
+        h += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">';
+        h += '<div style="font-size:13px;font-weight:800;color:#f5e6b8">'+label+'</div>';
+        h += '<button onclick="toggleVegasTeams('+i+')" style="background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.4);color:#e74c3c;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:800;cursor:pointer;flex-shrink:0;-webkit-tap-highlight-color:transparent">✕ Remove</button>';
+        h += '</div>';
+        h += '<div style="'+lbl+'">$/point</div><div style="display:flex;gap:6px;margin-bottom:12px">'+ptRow+'</div>';
+        h += '<div style="'+lbl+'">Scoring</div><div style="display:flex;gap:6px;margin-bottom:12px">'+modeRow+'</div>';
+        h += '<div style="'+lbl+'">Birdie flip</div><div style="display:flex;gap:6px">'+flipRow+'</div>';
+        h += '</div>';
+      } else {
+        h += '<div onclick="toggleVegasTeams('+i+')" style="display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,.2);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:11px 14px;margin-bottom:8px;cursor:pointer;-webkit-tap-highlight-color:transparent">';
+        h += '<div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.6)">'+label+'</div>';
+        h += '<div style="font-size:11px;color:rgba(255,255,255,.25)">Tap to add</div>';
+        h += '</div>';
+      }
     });
-    h += `<div class="pbtn${sel?' sel':''}" onclick="toggleVegasTeams(${i})">${nm[c.a[0]]} & ${nm[c.a[1]]}<div class="pn-vs">vs</div><div class="pn">${nm[c.b[0]]} & ${nm[c.b[1]]}</div>${_vg?'<div style="font-size:9px;font-weight:800;color:#1a3a2a;background:rgba(26,58,42,.12);border-radius:4px;padding:1px 5px;margin-top:2px">Vegas · $'+_vg.perPoint+'/pt</div>':''}</div>`;
-  });
-  h += '</div>';
-  el.innerHTML = h;
+    const el = document.getElementById('vegasGrid');
+    if(el) el.innerHTML = h;
+  } else {
+    if(tossPanel)   tossPanel.style.display   = 'block';
+    if(manualPanel) manualPanel.style.display = 'none';
+    if(tossLink)    tossLink.style.display    = 'none';
+    if(manualLink)  manualLink.style.display  = 'inline';
+    renderVegasTossPlayerGrid();
+  }
 }
 
 function toggleVegasTeams(i){
@@ -9087,36 +9275,14 @@ function toggleVegasTeams(i){
 }
 
 function renderVegasGamesList(){
+  // No-op — config is now inline in renderVegasOptions rows
   const el = document.getElementById('vegasGamesList');
-  if(!el) return;
-  const active = G.vegasGames.filter(g=>g&&g.teamA&&g.teamB&&g.teamA.length===2&&g.teamB.length===2);
-  if((G.n !== 4 && G.n !== 5) || !active.length){ el.innerHTML = ''; return; }
-  const nm = names();
-  let html = '';
-  active.forEach((g,gi)=>{
-    if(g.perPoint===undefined) g.perPoint=1;
-    if(g.mode===undefined) g.mode='gross';
-    if(g.flip===undefined) g.flip=true;
-    // gi is the index in G.vegasGames (same since we only push valid games)
-    const gIdx = G.vegasGames.indexOf(g);
-    const ptRow = VEGAS_POINT_OPTIONS.map(v =>
-      `<button onclick="setVegasPoint(${gIdx},${v})" style="padding:6px 10px;border-radius:8px;border:1.5px solid ${g.perPoint===v?'#1a3a2a':'#ccc'};background:${g.perPoint===v?'#1a3a2a':'#fff'};color:${g.perPoint===v?'#c9a84c':'#555'};font-size:12px;font-weight:700;cursor:pointer">${v<1?(v*100)+'¢':'$'+v}</button>`
-    ).join('');
-    const modeBtn=(m,label)=>`<button onclick="setVegasMode(${gIdx},'${m}')" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid ${g.mode===m?'#1a3a2a':'#ccc'};background:${g.mode===m?'#1a3a2a':'#fff'};color:${g.mode===m?'#c9a84c':'#555'};font-size:12px;font-weight:700;cursor:pointer">${label}</button>`;
-    const flipBtn=(f,label)=>`<button onclick="setVegasFlip(${gIdx},${f})" style="flex:1;padding:7px;border-radius:8px;border:1.5px solid ${g.flip===f?'#1a3a2a':'#ccc'};background:${g.flip===f?'#1a3a2a':'#fff'};color:${g.flip===f?'#c9a84c':'#555'};font-size:12px;font-weight:700;cursor:pointer">${label}</button>`;
-    html += `<div style="background:#fff;border-radius:8px;padding:10px 12px;border:1px solid #ddd;margin-top:8px">`;
-    html += `<div style="font-size:12px;font-weight:700;color:#1a3a2a;margin-bottom:2px">🎲 ${nm[g.teamA[0]]} & ${nm[g.teamA[1]]} <span style="color:#999">vs</span> ${nm[g.teamB[0]]} & ${nm[g.teamB[1]]}</div><div style="font-size:10px;font-weight:700;color:#4a7a5a;margin-bottom:8px">Vegas · $${g.perPoint}/pt · ${g.mode}</div>`;
-    html += `<div style="font-size:11px;color:#888;margin-bottom:6px">Dollar per point:</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">${ptRow}</div>`;
-    html += `<div style="font-size:11px;color:#888;margin-bottom:6px">Scoring:</div><div style="display:flex;gap:6px;margin-bottom:12px">${modeBtn('gross','Gross')}${modeBtn('net','Net (handicap)')}</div>`;
-    html += `<div style="font-size:11px;color:#888;margin-bottom:6px">Flip on opponent birdie:</div><div style="display:flex;gap:6px">${flipBtn(true,'Flip on')}${flipBtn(false,'No flip')}</div>`;
-    html += `</div>`;
-  });
-  el.innerHTML = html;
+  if(el) el.innerHTML = '';
   if(typeof renderGameTabs==="function") renderGameTabs();
 }
-function setVegasPoint(gi,v){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].perPoint=v; saveG(); renderVegasGamesList(); renderVegasOptions(); }
-function setVegasMode(gi,m){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].mode=m; saveG(); renderVegasGamesList(); }
-function setVegasFlip(gi,f){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].flip=f; saveG(); renderVegasGamesList(); }
+function setVegasPoint(gi,v){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].perPoint=v; saveG(); if(_vegasManualMode) renderVegasOptions(); else renderVegasTossMatches(); updateActiveLabels(); }
+function setVegasMode(gi,m){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].mode=m; saveG(); if(_vegasManualMode) renderVegasOptions(); else renderVegasTossMatches(); }
+function setVegasFlip(gi,f){ if(!G.vegasGames[gi]) return; G.vegasGames[gi].flip=f; saveG(); if(_vegasManualMode) renderVegasOptions(); else renderVegasTossMatches(); }
 
 
 // Show/hide the whole Match Cards section based on player count and mode.
@@ -9773,7 +9939,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v40.66</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v40.69</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -10614,7 +10780,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.69</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
   var _bjrb = document.getElementById('bjReturnBar');
@@ -12065,7 +12231,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.66</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.69</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -14607,7 +14773,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.69</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -15404,7 +15570,7 @@ function renderHistory(){
       </div>`;
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.66</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v40.69</div></div>';
   document.getElementById('historyBody').innerHTML=html;
 }
 
@@ -15680,7 +15846,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v40.66</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v40.69</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -15825,7 +15991,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v40.66');
+  lines.push('— Pards Golf · v40.69');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -16553,7 +16719,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v40.66 · ${dateStr}</div>
+<div class="foot">Pards Golf · v40.69 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -20763,7 +20929,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v40.66. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v40.69. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -21259,7 +21425,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v40.66';
+const CURRENT_VERSION = 'pards-v40.69';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -21349,16 +21515,16 @@ const RELEASE_NOTES = [
   'v31.2 — Fixed: renderSingles undefined error on setup screen',
   'v31.1 — Weather: 7-day rain total added alongside 24hr in setup rain widget (one API call)',
   'v31.0 — Weather: rolling 24-hour rain total from WeatherLink historic API shown in setup rain widget',
-  'v40.66 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
-  'v40.66 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
-  'v40.66 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
-  'v40.66 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
-  'v40.66 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
-  'v40.66 — Score entry: deck fixed min-width so GC logo right edge always aligns',
-  'v40.66 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
-  'v40.66 — PDF: all auto-print removed; user taps Print button in new tab',
-  'v40.66 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
-  'v40.66 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
+  'v40.69 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
+  'v40.69 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
+  'v40.69 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
+  'v40.69 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
+  'v40.69 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
+  'v40.69 — Score entry: deck fixed min-width so GC logo right edge always aligns',
+  'v40.69 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
+  'v40.69 — PDF: all auto-print removed; user taps Print button in new tab',
+  'v40.69 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
+  'v40.69 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
   'v29.9 — PDF: Nassau match card scorecard also uses traditional score markings',
   'v29.8 — PDF scorecard: score markings now show birdie circles, bogey squares, eagle double circles (not stroke circles)',
   'v29.7 — PDF: pace of play added; snake settlements show play order for shotgun rounds',
@@ -21451,20 +21617,20 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v40.66 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v40.66 — Manage Favorites: COPY label added above the copy icon',
-  'v40.66 — Manage Favorites: copy button now dark background with white icon for better visibility',
-  'v40.66 — Manage Favorites: Idx label changed to Index',
-  'v40.66 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
-  'v40.66 — Setup: Snake game description updated with correct wording',
-  'v40.66 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
-  'v40.66 — Setup: Load My Favorites button colour matches Manage Favorites green',
-  'v40.66 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v40.66 — UI: tab references updated to reflect Games hub navigation',
-  'v40.66 — Score wheel: 2 cells each side, centred on typical score',
-  'v40.66 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v40.66 — Score wheel: left/right cells now relative to typical score, not par',
-  'v40.66 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v40.69 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v40.69 — Manage Favorites: COPY label added above the copy icon',
+  'v40.69 — Manage Favorites: copy button now dark background with white icon for better visibility',
+  'v40.69 — Manage Favorites: Idx label changed to Index',
+  'v40.69 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
+  'v40.69 — Setup: Snake game description updated with correct wording',
+  'v40.69 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
+  'v40.69 — Setup: Load My Favorites button colour matches Manage Favorites green',
+  'v40.69 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
+  'v40.69 — UI: tab references updated to reflect Games hub navigation',
+  'v40.69 — Score wheel: 2 cells each side, centred on typical score',
+  'v40.69 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v40.69 — Score wheel: left/right cells now relative to typical score, not par',
+  'v40.69 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -21483,47 +21649,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v40.66 — Games menu: ✕ close button added to sheet header',
-  'v40.66 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v40.66 — Snake tab: 3-putt log now sorted by hole number',
-  'v40.66 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v40.66 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v40.66 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v40.66 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v40.66 — Score entry: hole navigation arrows larger and more visible',
-  'v40.66 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v40.66 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v40.66 — Games tab icon changed to 💵',
-  'v40.66 — Birdie Juice tab restored to bottom nav',
-  'v40.66 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v40.66 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v40.66 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v40.66 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v40.66 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v40.66 — Setup: Snake participant names now sync live with player name changes',
-  'v40.66 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v40.66 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v40.66 — Fixed: player entry section now displays correctly',
-  'v40.66 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v40.66 — Setup: Round Setup header moved to the very top of the screen',
-  'v40.66 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v40.66 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v40.66 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v40.66 — Fixed: update notes modal now scrollable on iOS',
-  'v40.66 — Snake tab: current holder hidden after round is complete',
-  'v40.66 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v40.66 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v40.66 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v40.66 — Version number now shown beside Help button on every screen',
-  'v40.66 — Snake: resets every 3 holes; participant selection added to setup',
-  'v40.66 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v40.66 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v40.66 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v40.66 — New Round blocked if on hole 18 with missing scores',
-  'v40.66 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v40.66 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v40.66 — Fixed: ℹ️ update info button now appears correctly',
-  'v40.66 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v40.69 — Games menu: ✕ close button added to sheet header',
+  'v40.69 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v40.69 — Snake tab: 3-putt log now sorted by hole number',
+  'v40.69 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v40.69 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v40.69 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v40.69 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v40.69 — Score entry: hole navigation arrows larger and more visible',
+  'v40.69 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v40.69 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v40.69 — Games tab icon changed to 💵',
+  'v40.69 — Birdie Juice tab restored to bottom nav',
+  'v40.69 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v40.69 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v40.69 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v40.69 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v40.69 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v40.69 — Setup: Snake participant names now sync live with player name changes',
+  'v40.69 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v40.69 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v40.69 — Fixed: player entry section now displays correctly',
+  'v40.69 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v40.69 — Setup: Round Setup header moved to the very top of the screen',
+  'v40.69 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v40.69 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v40.69 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v40.69 — Fixed: update notes modal now scrollable on iOS',
+  'v40.69 — Snake tab: current holder hidden after round is complete',
+  'v40.69 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v40.69 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v40.69 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v40.69 — Version number now shown beside Help button on every screen',
+  'v40.69 — Snake: resets every 3 holes; participant selection added to setup',
+  'v40.69 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v40.69 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v40.69 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v40.69 — New Round blocked if on hole 18 with missing scores',
+  'v40.69 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v40.69 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v40.69 — Fixed: ℹ️ update info button now appears correctly',
+  'v40.69 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -21750,7 +21916,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v40.66';
+const CACHE='pards-v40.69';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
