@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pards Golf User Manual v50.0</title>
+<title>Pards Golf User Manual v60.0</title>
 <style>
   :root { --green:#1a3a2a; --gold:#c9a84c; --lgold:#f5e6b8; }
   * { box-sizing:border-box; margin:0; padding:0; }
@@ -68,7 +68,7 @@
 <div class="cover">
   <span class="emoji">⛳</span>
   <h1>Pards Golf</h1>
-  <div class="sub">User Manual &nbsp;·&nbsp; Version 50.0</div>
+  <div class="sub">User Manual &nbsp;·&nbsp; Version 60.0</div>
   <div class="sub">A mobile scorecard, betting tracker, and Birdie Juice ledger</div>
   <div class="games">Nassau &nbsp;·&nbsp; 6-Point &nbsp;·&nbsp; Stableford &nbsp;·&nbsp; Skins &nbsp;·&nbsp; Vegas &nbsp;·&nbsp; Snake &nbsp;·&nbsp; Match Cards &nbsp;·&nbsp; The International</div>
 </div>
@@ -180,14 +180,14 @@
   <ul>
     <li><strong>🎮 Games</strong> — ON (default) enables all betting games. OFF switches to scorekeeping-only mode and hides all game config.</li>
     <li><strong>🐦🥃 Birdie Juice</strong> — toggle tracking on or off.</li>
-    <li><strong>🧹 Start Over</strong> — hold for 2 seconds to clear all players and games. Returns to: 4 players, Me in slot 1, home course, hole 1.</li>
+    <li><strong>🧹 Start Over</strong> — hold for 2 seconds to clear all players and games. Returns to: 4 players, Me in slot 1, home course, hole 1, Birdie Juice ON.</li>
   </ul>
 
   <h2 class="sub">Step 5 — Configure Betting Games</h2>
   <p>Eight game pills appear below the player section. Tap any pill to open that game's config overlay. A <strong>green dot</strong> on a pill means that game is configured and active. See <a href="#games">Section 6: Configuring Betting Games</a> for details.</p>
 
   <h2 class="sub">Step 6 — Start</h2>
-  <p>Tap the gold <strong>⛳ Start Round →</strong> button. The Round Launch Summary appears for final review.</p>
+  <p>Tap the gold <strong>⛳ Start Round →</strong> button. The Round Launch Summary appears for final review — you can toggle <strong>Birdie Juice ON/OFF</strong> directly from this screen before starting.</p>
   <div class="tip">Before any score is entered, tap "✏️ Edit Round Settings" to return to Setup.</div>
 </div>
 
@@ -203,12 +203,22 @@
   <ul>
     <li><strong>💵 Game Cards</strong> — view live Nassau, Vegas, and all game results</li>
     <li><strong>🐦🥃 Birdie Juice</strong> — view credits and tracker (red badge shows remaining credits)</li>
-    <li><strong>⚙️ Settings</strong> — mid-round settings: handicaps, tees, players, games</li>
+    <li><strong>⚙️ Settings</strong> — mid-round settings</li>
     <li><strong>🏁 End Round</strong> — save, pause, or abandon the round</li>
   </ul>
 
+  <div class="new"><b>🆕 New in v60.0:</b> All game screens now have a sticky ⛳ <strong>Scorecard</strong> button in the header — tap it to return from any game card instantly.</div>
+
   <h2 class="sub">Mid-Round Settings</h2>
-  <p>Tap ⚙️ Settings during a round. All sections visible as collapsed headers — tap any to expand. Any game can be added mid-round and will back-calculate results for holes already played.</p>
+  <div class="new"><b>🆕 New in v60.0:</b> Mid-Round Settings completely redesigned — no more accordion rows.</div>
+  <p>Tap ⚙️ Settings during a round to open the new Mid-Round Settings sheet:</p>
+  <ul>
+    <li><strong>👥 Players &amp; Handicaps</strong> — all players shown inline; tap ✕ to clear a player from remaining holes (existing scores kept); tap <strong>+ Add Player</strong> to add someone</li>
+    <li><strong>🚩 Starting Hole</strong> — change shotgun start mid-round; all game cards recalculate</li>
+    <li><strong>🐦🥃 Birdie Juice</strong> — ON/OFF toggle, right there in the sheet</li>
+    <li><strong>8 game pills</strong> — same grid as setup screen; green dot = active; tap any pill to open that game's config in a sub-panel</li>
+  </ul>
+  <p>Any game can be added mid-round and will back-calculate results for holes already played.</p>
 
   <h2 class="sub">Completing a Round</h2>
   <p>On hole 18, once all scores are entered, the confirm button becomes <strong>"✓ Complete Round 🏆"</strong>. Tapping it saves the round and offers:</p>
@@ -379,12 +389,15 @@
 <!-- ══ HISTORY ══ -->
 <div class="section" id="history">
   <h1 class="sec">14. Round History</h1>
-  <p>Access via the History tab on the Setup screen, or via ⚙️ Settings → Round History during a round.</p>
+  <div class="new"><b>🆕 New in v60.0:</b> History header shows round count and a 💾 Backup shortcut. Search by player name or course, or filter by course from the dropdown.</div>
+  <p>Access via the History tab on the Setup screen, or via ⚙️ Settings during a round.</p>
   <ul>
-    <li><strong>Saving</strong> — rounds save automatically when you start a new round. Tap 💾 Save Round to save manually at any time.</li>
-    <li><strong>Locking</strong> — tap 🔓 to lock a round; hold 🔒 for 2 seconds to unlock.</li>
-    <li><strong>Editing</strong> — tap ✏️ Edit on any completed round to change scores or game results.</li>
-    <li><strong>Pausing</strong> — tap 🏁 End Round → Save &amp; Pause Round to pause mid-round and resume later from History.</li>
+    <li><strong>🔍 Search</strong> — type any player name or course name to filter the list live</li>
+    <li><strong>Course filter</strong> — dropdown shows only courses you've actually played</li>
+    <li><strong>Saving</strong> — rounds save automatically on new round. Tap 💾 Save Round to save manually.</li>
+    <li><strong>Locking</strong> — tap 🔓 to lock; hold 🔒 for 2 seconds to unlock.</li>
+    <li><strong>Editing</strong> — tap ✏️ Edit on any completed round.</li>
+    <li><strong>Pausing</strong> — tap 🏁 End Round → Save &amp; Pause Round to pause and resume later.</li>
   </ul>
 </div>
 
@@ -445,10 +458,7 @@
 
   <h3 class="sub3">Career Stats <small>(read-only)</small></h3>
   <ul>
-    <li><strong>Career Birdie Juice</strong> — total gross birdies scanned from all history rounds.</li>
-    <li><strong>Overall Match Record</strong> — W/L/T across all games.</li>
-    <li><strong>vs [Me Name]</strong> — head-to-head record against the Me player.</li>
-    <li><strong>Career Earnings</strong> — cumulative net money across all rounds.</li>
+    <li><strong>Career Birdie Juice</strong> and <strong>Career Earnings</strong> — shown side by side.</li>
     <li><strong>Total Rounds Played / Last Round Played</strong> — non-Me players only.</li>
   </ul>
 
@@ -497,8 +507,14 @@
   <p>Hold for the full 2 seconds without moving your finger.</p>
   <h2 class="sub">Confirm button not appearing 🤔</h2>
   <p>Once all players have a score on the current hole, the gold "✓ Confirm &amp; Next Hole →" button appears at the bottom of the scorecard. Confirm Scores is always ON.</p>
-  <h2 class="sub">Nassau 2v2 pill shows green dot but no games set 🟢</h2>
-  <p>This was fixed in v50.0. If you still see it after updating, tap the 🏆 Nassau 2v2 pill, verify no matches are listed, and close the overlay — the dot will clear.</p>
+  <h2 class="Nassau 2v2 pill shows green dot but no games set 🟢</h2>
+  <p>Fixed in v50.0. If still visible: tap the pill, verify no matches listed, close — dot clears.</p>
+
+  <h2 class="sub">Game pill dots showing after ending a round 🎮</h2>
+  <p>Fixed in v60.0. All game dots, player names, and game config now clear completely after Save &amp; Pause, Abandon, New Round, and View &amp; Share Results.</p>
+
+  <h2 class="sub">Birdie Juice keeps turning off 🐦</h2>
+  <p>Fixed in v60.0. Birdie Juice now always defaults to ON for every new round regardless of the previous round's setting.</p>
   <h2 class="sub">A score or game looks wrong 🧮</h2>
   <ul>
     <li>Handicaps are editable mid-round via ⚙️ Settings.</li>
@@ -509,7 +525,7 @@
 
 <div class="footer">
   <span class="emoji">⛳</span>
-  <strong>Pards Golf &nbsp;·&nbsp; Version 50.0 &nbsp;·&nbsp; Edmonton, AB</strong>
+  <strong>Pards Golf &nbsp;·&nbsp; Version 60.0 &nbsp;·&nbsp; Edmonton, AB</strong>
   <div class="tagline">
     Thanks for playing.<br>
     May your drives be long, your putts be true,<br>
