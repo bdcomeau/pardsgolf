@@ -971,22 +971,22 @@ input::placeholder{color:#bbb}
 
 <!-- ══════════ BIRDIE JUICE ══════════ -->
 <div class="screen" id="screen-snake">
-  <div class="shdr"><div class="mm-title">🐍 Snake 3-Putt</div></div>
+  <div class="shdr" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px"><div class="mm-title">🐍 Snake 3-Putt</div><button onclick="showS('score')" style="background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);color:#c9a84c;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">⛳ Scorecard</button></div>
   <div id="snakeTabBody" style="height:calc(100% - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch"></div>
 </div>
 
 <div class="screen" id="screen-stableford">
-  <div class="shdr"><div class="mm-title">🏆 Stableford</div></div>
+  <div class="shdr" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px"><div class="mm-title">🏆 Stableford</div><button onclick="showS('score')" style="background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);color:#c9a84c;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">⛳ Scorecard</button></div>
   <div id="stablefordTabBody" style="height:calc(100% - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 10px 120px"></div>
 </div>
 
 <div class="screen" id="screen-skins">
-  <div class="shdr"><div class="mm-title">💰 Skins</div></div>
+  <div class="shdr" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px"><div class="mm-title">💰 Skins</div><button onclick="showS('score')" style="background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);color:#c9a84c;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">⛳ Scorecard</button></div>
   <div id="skinsTabBody" style="height:calc(100% - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 10px 120px"></div>
 </div>
 
 <div class="screen" id="screen-vegas">
-  <div class="shdr"><div class="mm-title">🎲 Vegas</div></div>
+  <div class="shdr" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px"><div class="mm-title">🎲 Vegas</div><button onclick="showS('score')" style="background:rgba(201,168,76,.15);border:1.5px solid rgba(201,168,76,.4);color:#c9a84c;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent">⛳ Scorecard</button></div>
   <div id="vegasTabBody" style="height:calc(100% - 52px);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 10px 120px"></div>
 </div>
 
@@ -8939,9 +8939,17 @@ function computeSkins(game){
   let lastPlayedHole = -1;
   let unresolvedPot = 0; // skins left unresolved on a tied final hole (lastHole mode)
 
-  for(let h = 0; h < 18; h++){
+  // Iterate in play order so carry-over pot accumulates correctly
+  const _skinsPlayOrder = typeof actualHoleIdx==='function'
+    ? Array.from({length:18},function(_,i){ return actualHoleIdx(i); })
+    : Array.from({length:18},function(_,i){ return i; });
+  // Pre-fill holeResult with nulls so raw indexing works for render
+  for(let _f=0;_f<18;_f++) holeResult.push(null);
+
+  for(let _pi=0; _pi<18; _pi++){
+    const h = _skinsPlayOrder[_pi];
     const grosses = idxs.map(pi => G.scores[pi] ? G.scores[pi][h] : null);
-    if(grosses.some(g => g === null)){ holeResult.push(null); continue; }
+    if(grosses.some(g => g === null)){ continue; }
     holesPlayed++;
     lastPlayedHole = h;
     const isFinalHole = (h === finalActualHole);
@@ -8954,7 +8962,7 @@ function computeSkins(game){
       const decided = 1 + pot;       // this hole's skin plus anything carried
       skinsWon[winners[0]] += decided;
       pot = 0;
-      holeResult.push({ winner: winners[0], potValue: decided, carriedIn, washed:false });
+      holeResult[h] = { winner: winners[0], potValue: decided, carriedIn, washed:false };
     } else {
       // Tie on this hole
       if(isFinalHole && endgame==='lastHole'){
@@ -8962,13 +8970,13 @@ function computeSkins(game){
         // can't carry anywhere — flag it as unresolved for a real-life playoff.
         unresolvedPot = 1 + pot;
         pot = 0;
-        holeResult.push({ winner: null, potValue: 0, carriedIn, washed:false, unresolved:1+carriedIn });
+        holeResult[h] = { winner: null, potValue: 0, carriedIn, washed:false, unresolved:1+carriedIn };
       } else if(carry){
         pot += 1;                    // tie: this hole's skin carries forward
-        holeResult.push({ winner: null, potValue: 0, carriedIn, washed:false });
+        holeResult[h] = { winner: null, potValue: 0, carriedIn, washed:false };
       } else {
         pot = 0;                     // no-carry: skin washes
-        holeResult.push({ winner: null, potValue: 0, carriedIn, washed:true });
+        holeResult[h] = { winner: null, potValue: 0, carriedIn, washed:true };
       }
     }
   }
@@ -9019,34 +9027,34 @@ function computeVegas(game){
   const stk = {};
   [...A, ...B].forEach(pi => { stk[pi] = strokeMap(pi); });
 
-  const holeResult = [];      // [hole] = {aNum,bNum,aFlip,bFlip,points(+ to A),null if unplayed}
-  let runningA = 0;           // net points to Team A (positive = A winning)
+  const holeResult = [];      // indexed by RAW hole [0-17]
+  let runningA = 0;           // accumulated in PLAY order
   let holesPlayed = 0;
 
+  // First pass: compute per-hole results in raw order
   for(let h=0; h<18; h++){
     const gA = A.map(pi => G.scores[pi] ? G.scores[pi][h] : null);
     const gB = B.map(pi => G.scores[pi] ? G.scores[pi][h] : null);
     if([...gA, ...gB].some(s => s === null)){ holeResult.push(null); continue; }
     holesPlayed++;
     const par = G.par[h];
-
-    // Flip triggers on a GROSS birdie-or-better by the opposing team (any one player).
     const aBirdie = gA.some(s => s < par);
     const bBirdie = gB.some(s => s < par);
-    const aFlip = flipOn && bBirdie;  // opponent (B) birdied → A's number flips
-    const bFlip = flipOn && aBirdie;  // opponent (A) birdied → B's number flips
-
-    // Numbers use gross or net scores depending on mode.
+    const aFlip = flipOn && bBirdie;
+    const bFlip = flipOn && aBirdie;
     const aS = mode==='net' ? A.map((pi,ii)=> gA[ii] - stk[pi][h]) : gA;
     const bS = mode==='net' ? B.map((pi,ii)=> gB[ii] - stk[pi][h]) : gB;
     const aNum = vegasNumber(aS[0], aS[1], aFlip);
     const bNum = vegasNumber(bS[0], bS[1], bFlip);
-
-    // Lower number is better; A gains (bNum - aNum) points.
     const points = bNum - aNum;
-    runningA += points;
     holeResult.push({ aNum, bNum, aFlip, bFlip, points, aBirdie, bBirdie });
   }
+
+  // Second pass: accumulate running total in PLAY order
+  const _vegasPlayOrder = typeof actualHoleIdx==='function'
+    ? Array.from({length:18},function(_,i){ return actualHoleIdx(i); })
+    : Array.from({length:18},function(_,i){ return i; });
+  _vegasPlayOrder.forEach(function(h){ const hr=holeResult[h]; if(hr) runningA+=hr.points; });
 
   // Settlement only when all 18 are in. Money is per-player:
   // each Team A player is +runningA*perPoint; each Team B player is -runningA*perPoint.
@@ -9779,7 +9787,7 @@ function renderStablefordCard(game, gi){
     const h = actualHoleIdx(hi);
     const par = G.par[h];
     const hcp = G.si[h];
-    const holePts = result.pointsPerHole[hi];
+    const holePts = result.pointsPerHole[h];
     const rowBg = hi%2===0 ? '#f9fafb' : '#fff';
 
     html += `<tr>`;
@@ -9897,7 +9905,7 @@ function printStablefordCard(gi){
   for(let hi=0; hi<18; hi++){
     const h = actualHoleIdx(hi);
     const par = G.par[h], hcp = G.si[h];
-    const holePts = result.pointsPerHole[hi];
+    const holePts = result.pointsPerHole[h];
     const rowBg = hi%2===0 ? '#f9fafb' : '#fff';
 
     rows += `<tr>`;
@@ -9992,7 +10000,7 @@ function printStablefordCard(gi){
       <div style="font-size:11px;font-weight:800;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Points Table</div>
       <table style="border-collapse:collapse;font-size:12px">${ptTableRows}</table>
     </div>
-    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v50.23</div>
+    <div style="margin-top:16px;font-size:10px;color:#bbb;text-align:center">Pards Golf · v50.26</div>
   </body></html>`;
 
   const blob = new Blob([html],{type:'text/html'});
@@ -10833,7 +10841,7 @@ function renderBirdieJuice(){
   html+='</div>';
 
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.23</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.26</div>';
   html+='</div>';
   document.getElementById('birdieJuiceBody').innerHTML=html;
   var _bjrb = document.getElementById('bjReturnBar');
@@ -12284,7 +12292,7 @@ function renderBets(){
     matchups.forEach((m,mi)=>{ html+=renderOneMatchCard(m, mi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.23</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.26</div></div>';
   document.getElementById('betsBody').innerHTML=html;
 }
 
@@ -14830,7 +14838,7 @@ function renderSixPoint(){
     G.sixPointGames.forEach((game,gi)=>{ html+=renderSixPointCard(game, gi); });
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.23</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.26</div>';
   html+='</div>';
   document.getElementById('sixPointBody').innerHTML=html;
 }
@@ -15652,7 +15660,7 @@ function renderHistory(){
       html+='</div>';
     });
   }
-  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.23</div></div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:rgba(255,255,255,.35);font-size:10px">Pards Golf · v50.26</div></div>';
   document.getElementById('historyBody').innerHTML=html;
   _filterHistory();
 }
@@ -15952,7 +15960,7 @@ function openHistoryDetail(i){
     html+=`</div>`; // close card
   }
 
-  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v50.23</div>';
+  html+='<div style="text-align:center;padding:14px 0 8px;color:var(--inkl);font-size:10px;opacity:.6">Pards Golf · v50.26</div>';
 
   document.getElementById('historyDetailBody').innerHTML=html;
 
@@ -16097,7 +16105,7 @@ function shareRoundText(){
     }
     lines.push('');
   }
-  lines.push('— Pards Golf · v50.23');
+  lines.push('— Pards Golf · v50.26');
   const text=lines.join('\n');
   if(navigator.share){ navigator.share({title:'Pards Golf — '+_historyDateStr,text}).catch(()=>{}); }
   else { navigator.clipboard.writeText(text).then(()=>{ const btn=document.getElementById('historyTextBtn');const orig=btn.textContent;btn.textContent='✓ Copied';setTimeout(()=>btn.textContent=orig,2000); }).catch(()=>alert(text)); }
@@ -16825,7 +16833,7 @@ ${matchSections ? '<div style="page-break-before:always"></div>'+matchSections :
 ${snakeSection}
 
 ${paceOfPlayStr()?`<div style="text-align:center;font-size:11px;color:#555;margin-top:10px;padding-top:6px;border-top:1px solid #eee">⏱️ ${paceOfPlayStr()}</div>`:''}
-<div class="foot">Pards Golf · v50.23 · ${dateStr}</div>
+<div class="foot">Pards Golf · v50.26 · ${dateStr}</div>
 </body></html>`;
 }
 
@@ -17088,8 +17096,10 @@ function mmAddPlayer(){
   if(existingForm){ existingForm.remove(); return; }
 
   const contacts = loadContacts();
-  const contactOpts = contacts.length
-    ? `<option value="">— saved players —</option>`+contacts.map(c=>`<option value="${c.name}|${c.idx}">${c.name} (${c.idx})</option>`).join('')
+  const currentNames = new Set(G.players.map(p=>p&&p.name).filter(Boolean));
+  const available = contacts.filter(c=>!currentNames.has(c.name));
+  const contactOpts = available.length
+    ? `<option value="">— saved players —</option>`+available.map(c=>`<option value="${c.name}|${c.idx}">${c.name} (${c.idx})</option>`).join('')
     : `<option value="">No saved players</option>`;
 
   const form=document.createElement('div');
@@ -17107,11 +17117,6 @@ function mmAddPlayer(){
   `;
   // Insert form after mmPlayersList
   listEl.insertAdjacentElement('afterend', form);
-  document.getElementById('mmNewName').focus();
-
-
-
-
   document.getElementById('mmNewName').focus();
 }
 
@@ -17144,9 +17149,11 @@ function mmConfirmAddPlayer(){
 
 function mmRemovePlayer(i){
   // Inline confirmation instead of confirm() (unreliable in iOS PWA standalone mode)
-  const card=document.getElementById('mmPlayersCard');
+  const listEl2=document.getElementById('mmPlayersList');
+  const card=listEl2 ? listEl2.parentElement : null;
   const existing=document.getElementById('mmDelConfirm');
   if(existing) existing.remove();
+  if(!card) return;
 
   const p=G.players[i];
   const inGames = G.teamGames.some(g=>g.a.includes(i)||g.b.includes(i))
@@ -17157,12 +17164,12 @@ function mmRemovePlayer(i){
 
   const box=document.createElement('div');
   box.id='mmDelConfirm';
-  box.style.cssText='margin-top:8px;padding:10px;background:#fff5f5;border:1.5px solid var(--red);border-radius:8px';
+  box.style.cssText='margin-top:8px;padding:12px;background:rgba(192,57,43,.1);border:1.5px solid rgba(192,57,43,.4);border-radius:10px';
   box.innerHTML=`
-    <div style="font-size:13px;color:var(--ink);margin-bottom:8px">${msg}</div>
+    <div style="font-size:13px;color:#f5e6b8;margin-bottom:10px">${msg}</div>
     <div style="display:flex;gap:8px">
-      <button class="mm-close" style="background:var(--red);color:#fff;flex:1" onclick="mmConfirmRemovePlayer(${i})">Remove</button>
-      <button class="mm-close" style="background:#eee;color:var(--ink);flex:1" onclick="document.getElementById('mmDelConfirm').remove()">Cancel</button>
+      <button style="background:#c0392b;color:#fff;flex:1;border:none;border-radius:8px;padding:9px;font-size:13px;font-weight:800;cursor:pointer" onclick="mmConfirmRemovePlayer(${i})">Remove</button>
+      <button style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);flex:1;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:9px;font-size:13px;font-weight:700;cursor:pointer" onclick="document.getElementById('mmDelConfirm').remove()">Cancel</button>
     </div>`;
   card.appendChild(box);
 }
@@ -21079,7 +21086,7 @@ function bestFitTeeForCourse(course, refSlope, refYards){
   return best;
 }
 
-// ONE-TIME forced recalculation — v50.23. Overwrites every contact's non-Derrick
+// ONE-TIME forced recalculation — v50.26. Overwrites every contact's non-Derrick
 // deckByCourse entries using the new explicit slope/yardage targets, even if a
 // value was already set from the old (less accurate) matching logic. Runs only
 // once per browser via its own localStorage flag, then never again — after this,
@@ -21300,7 +21307,7 @@ function renderSkinsCard(game, gi){
   for(let hi=0; hi<18; hi++){
     const h = actualHoleIdx(hi);
     const par = G.par[h];
-    const hr  = result.holeResult[hi];
+    const hr  = result.holeResult[h];
     const rowBg = hi%2===0 ? '#f9fafb' : '#fff';
     html += `<tr>`;
     html += `<td style="background:${rowBg};padding:4px 6px;font-weight:800;color:#333;text-align:center">${h+1}</td>`;
@@ -21425,7 +21432,7 @@ function renderVegasCard(game, gi){
   for(let hi=0; hi<18; hi++){
     const h = actualHoleIdx(hi);
     const par = G.par[h];
-    const hr  = result.holeResult[hi];
+    const hr  = result.holeResult[h];
     const rowBg = hi%2===0 ? '#f9fafb' : '#fff';
     html += `<tr>`;
     html += `<td style="background:${rowBg};padding:4px 6px;font-weight:800;color:#333;text-align:center">${h+1}</td>`;
@@ -21575,7 +21582,7 @@ seedContactsIfEmpty();forceRecalcDeckTargetsOnce();migrateDecksFromDerrick();ren
 /* ═══════════════════════════════════════════════
    VERSION POLLING + UPDATE BANNER
 ═══════════════════════════════════════════════ */
-const CURRENT_VERSION = 'pards-v50.23';
+const CURRENT_VERSION = 'pards-v50.26';
 // Stamp all version labels as soon as the constant is available
 (()=>{
   const v = CURRENT_VERSION.replace('pards-','');
@@ -21665,16 +21672,16 @@ const RELEASE_NOTES = [
   'v31.2 — Fixed: renderSingles undefined error on setup screen',
   'v31.1 — Weather: 7-day rain total added alongside 24hr in setup rain widget (one API call)',
   'v31.0 — Weather: rolling 24-hour rain total from WeatherLink historic API shown in setup rain widget',
-  'v50.23 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
-  'v50.23 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
-  'v50.23 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
-  'v50.23 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
-  'v50.23 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
-  'v50.23 — Score entry: deck fixed min-width so GC logo right edge always aligns',
-  'v50.23 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
-  'v50.23 — PDF: all auto-print removed; user taps Print button in new tab',
-  'v50.23 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
-  'v50.23 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
+  'v50.26 — Fixed: new round popup shows Start New Round when complete, Abandon only when truly in progress',
+  'v50.26 — New round popup: hold button says Start New Round when complete, Abandon when in progress',
+  'v50.26 — Mid-round New Round popup: hold-to-confirm button replaces tap for abandon',
+  'v50.26 — Abandon round: swipe slider replaced with hold-to-confirm button (2 sec) — works on all devices',
+  'v50.26 — Abandon round slider: fixed for iPad and desktop with pointer/mouse events and proper cleanup',
+  'v50.26 — Score entry: deck fixed min-width so GC logo right edge always aligns',
+  'v50.26 — Score entry: index left of GC logo; logo fixed-width so all logos align vertically',
+  'v50.26 — PDF: all auto-print removed; user taps Print button in new tab',
+  'v50.26 — PDF: sticky Print button in new tab instead of auto-print (fixes iOS Safari block)',
+  'v50.26 — PDF: traditional score markings on master scorecard only; stroke circles retained on Nassau/6-Point',
   'v29.9 — PDF: Nassau match card scorecard also uses traditional score markings',
   'v29.8 — PDF scorecard: score markings now show birdie circles, bogey squares, eagle double circles (not stroke circles)',
   'v29.7 — PDF: pace of play added; snake settlements show play order for shotgun rounds',
@@ -21767,20 +21774,20 @@ const RELEASE_NOTES = [
   'v21.2 — Manage Favorites: Me button moved below the star',
   'v21.1 — Manage Favorites: player card layout cleaned up, fields properly aligned',
   'v21.0 — Manage Favorites: GC logo on ID, info button on Score Wheel Default',
-  'v50.23 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
-  'v50.23 — Manage Favorites: COPY label added above the copy icon',
-  'v50.23 — Manage Favorites: copy button now dark background with white icon for better visibility',
-  'v50.23 — Manage Favorites: Idx label changed to Index',
-  'v50.23 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
-  'v50.23 — Setup: Snake game description updated with correct wording',
-  'v50.23 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
-  'v50.23 — Setup: Load My Favorites button colour matches Manage Favorites green',
-  'v50.23 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
-  'v50.23 — UI: tab references updated to reflect Games hub navigation',
-  'v50.23 — Score wheel: 2 cells each side, centred on typical score',
-  'v50.23 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
-  'v50.23 — Score wheel: left/right cells now relative to typical score, not par',
-  'v50.23 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
+  'v50.26 — Manage Favorites: Typical Score label renamed to Score Wheel Default',
+  'v50.26 — Manage Favorites: COPY label added above the copy icon',
+  'v50.26 — Manage Favorites: copy button now dark background with white icon for better visibility',
+  'v50.26 — Manage Favorites: Idx label changed to Index',
+  'v50.26 — Manage Favorites: Typical Score and Preferred Tee Deck labels; Golf Canada ID label with copy button',
+  'v50.26 — Setup: Snake game description updated with correct wording',
+  'v50.26 — Master scorecard: scores now marked by gross result — red circle (birdie), double red circle (eagle), green diamond (hole-in-one), black square (bogey), double black square (double+)',
+  'v50.26 — Setup: Load My Favorites button colour matches Manage Favorites green',
+  'v50.26 — Major release: Games hub navigation, Snake money game, Typical Score wheel, hole wheel picker, setup screen redesign, and many more improvements since v16',
+  'v50.26 — UI: tab references updated to reflect Games hub navigation',
+  'v50.26 — Score wheel: 2 cells each side, centred on typical score',
+  'v50.26 — Fixed: arrow buttons start from typical score not par; no false Birdie Juice triggers',
+  'v50.26 — Score wheel: left/right cells now relative to typical score, not par',
+  'v50.26 — Fixed: tapping score cell now records correctly; setTypicalScore wired up properly',
   'v18.9 — Fixed: score wheel center cell now correctly shows Bogey/Double for players with typical score set',
   'v18.8 — Fixed: score wheel center shows typical score; tap confirms it directly',
   'v18.7 — Fixed: score wheel now visually centers on Typical Score when no score entered',
@@ -21799,47 +21806,47 @@ const RELEASE_NOTES = [
   'v17.2 — Fixed: update banner now sits above the nav bar correctly',
   'v17.1 — Master scorecard: snake 🐍 now shown in the loser\'s score cell (with purple tint) instead of the hole number',
   'v17.0 — Major update: Games hub, Snake money game, hole wheel picker, and many more improvements',
-  'v50.23 — Games menu: ✕ close button added to sheet header',
-  'v50.23 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
-  'v50.23 — Snake tab: 3-putt log now sorted by hole number',
-  'v50.23 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
-  'v50.23 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
-  'v50.23 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
-  'v50.23 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
-  'v50.23 — Score entry: hole navigation arrows larger and more visible',
-  'v50.23 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
-  'v50.23 — Snake tab: current holder now shows which hole they 3-putted on',
-  'v50.23 — Games tab icon changed to 💵',
-  'v50.23 — Birdie Juice tab restored to bottom nav',
-  'v50.23 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
-  'v50.23 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
-  'v50.23 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
-  'v50.23 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
-  'v50.23 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
-  'v50.23 — Setup: Snake participant names now sync live with player name changes',
-  'v50.23 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
-  'v50.23 — Fixed: Snake participant names now update correctly when favorites are loaded',
-  'v50.23 — Fixed: player entry section now displays correctly',
-  'v50.23 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
-  'v50.23 — Setup: Round Setup header moved to the very top of the screen',
-  'v50.23 — Fixed: What\'s New page now renders emoji and special characters correctly',
-  'v50.23 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
-  'v50.23 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
-  'v50.23 — Fixed: update notes modal now scrollable on iOS',
-  'v50.23 — Snake tab: current holder hidden after round is complete',
-  'v50.23 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
-  'v50.23 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
-  'v50.23 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
-  'v50.23 — Version number now shown beside Help button on every screen',
-  'v50.23 — Snake: resets every 3 holes; participant selection added to setup',
-  'v50.23 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
-  'v50.23 — Setup screen: Round Setup header added to clarify the screen purpose',
-  'v50.23 — Fixed: ℹ️ release notes button now correctly parses the notes list',
-  'v50.23 — New Round blocked if on hole 18 with missing scores',
-  'v50.23 — New Round dialog is now context-aware: completed rounds show a green confirmation',
-  'v50.23 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
-  'v50.23 — Fixed: ℹ️ update info button now appears correctly',
-  'v50.23 — Update banner now shows a ℹ️ button with release notes for what changed',
+  'v50.26 — Games menu: ✕ close button added to sheet header',
+  'v50.26 — Snake: settlement hole labels now dynamic and correct for shotgun starts',
+  'v50.26 — Snake tab: 3-putt log now sorted by hole number',
+  'v50.26 — Hole wheel: long press moved from ◀▶ buttons to the hole/par text in the header',
+  'v50.26 — Hole picker replaced with a spinning wheel — hold ◀ or ▶, spin to hole, tap Go',
+  'v50.26 — Hold ◀ or ▶ to get a hole picker; removed Front 9/Back 9 tabs',
+  'v50.26 — Double-tap ◀ to jump to hole 1, double-tap ▶ to jump to hole 18',
+  'v50.26 — Score entry: hole navigation arrows larger and more visible',
+  'v50.26 — Birdie Juice removed from Games pull-up menu (still accessible via its own tab)',
+  'v50.26 — Snake tab: current holder now shows which hole they 3-putted on',
+  'v50.26 — Games tab icon changed to 💵',
+  'v50.26 — Birdie Juice tab restored to bottom nav',
+  'v50.26 — Bottom nav: Nassau/6-Point/Snake/Birdie Juice tabs removed; all accessible via 🎮 Games pull-up menu',
+  'v50.26 — Bottom nav: individual game tabs replaced with a 🎮 Games hub that slides up a menu to pick any game',
+  'v50.26 — Manage Matches: Snake participants and 6-Point games now fully editable mid-round',
+  'v50.26 — Manage Matches: now shows 6-Point, Snake, and auto-advance status alongside Nassau games',
+  'v50.26 — Setup: Load My Favorites button shows actual favorite names inline; updates when names change',
+  'v50.26 — Setup: Snake participant names now sync live with player name changes',
+  'v50.26 — Setup: Load My Favorites button moved into Round Setup box; favorites preview shows names and decks',
+  'v50.26 — Fixed: Snake participant names now update correctly when favorites are loaded',
+  'v50.26 — Fixed: player entry section now displays correctly',
+  'v50.26 — Emergency backup persists until next round; pulsing dot on scorecard tab when hole partially scored; snake tab shows 3-putt log',
+  'v50.26 — Setup: Round Setup header moved to the very top of the screen',
+  'v50.26 — Fixed: What\'s New page now renders emoji and special characters correctly',
+  'v50.26 — Master scorecard: 🐍 + holder name shown on settlement holes (3,6,9,12,15,18)',
+  'v50.26 — Fixed: What\'s New opens as a full scrollable page instead of a stuck modal',
+  'v50.26 — Fixed: update notes modal now scrollable on iOS',
+  'v50.26 — Snake tab: current holder hidden after round is complete',
+  'v50.26 — Snake: after hole 18 scorecard shows a tap-to-view pointer instead of full results box',
+  'v50.26 — Master scorecard: Snake $ row added to money totals alongside Nassau and 6-Point',
+  'v50.26 — Snake: scorecard panel now shows stretch holder (resets after each settlement)',
+  'v50.26 — Version number now shown beside Help button on every screen',
+  'v50.26 — Snake: resets every 3 holes; participant selection added to setup',
+  'v50.26 — Snake 3-Putt is now a full money game with its own tab and settlement holes',
+  'v50.26 — Setup screen: Round Setup header added to clarify the screen purpose',
+  'v50.26 — Fixed: ℹ️ release notes button now correctly parses the notes list',
+  'v50.26 — New Round blocked if on hole 18 with missing scores',
+  'v50.26 — New Round dialog is now context-aware: completed rounds show a green confirmation',
+  'v50.26 — Solo mode: set players to 1 for scorecard-only with no matches or betting',
+  'v50.26 — Fixed: ℹ️ update info button now appears correctly',
+  'v50.26 — Update banner now shows a ℹ️ button with release notes for what changed',
 ];
 let _pendingReleaseNotes = null;
 let _updateAvailable = false;
@@ -22066,7 +22073,7 @@ window.addEventListener('focus', function(){ setTimeout(syncBottomBars, 50); });
 // Inline service worker for PWA offline support
 if('serviceWorker' in navigator && !location.protocol.startsWith('blob')){
   const swCode=`
-const CACHE='pards-v50.23';
+const CACHE='pards-v50.26';
 self.addEventListener('install',e=>{
   e.waitUntil(
     caches.open(CACHE).then(c=>c.addAll(['./','pardsgolf-help.html','gc_id.jpg']))
