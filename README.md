@@ -3,7 +3,9 @@
 A mobile-first Progressive Web App for scoring golf rounds and tracking betting games with your regular group.
 
 **Live app:** https://bdcomeau.github.io/pardsgolf/pards-golf.html  
-**Current version:** v60.0
+**Current version:** v60.0  
+**In-app help:** https://bdcomeau.github.io/pardsgolf/pardsgolf-help.html  
+**📖 Illustrated Manual:** https://bdcomeau.github.io/pardsgolf/pardsgolf-help-v60.0-illustrated.html
 
 ---
 
