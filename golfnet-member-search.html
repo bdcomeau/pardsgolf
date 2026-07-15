@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GC Member">
+<meta name="theme-color" content="#1a3a2a">
+<title>Golf Canada Member Search</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green-dark:#1a3a2a; --green-mid:#2d5a3d; --green-light:#3d7a52;
+    --gold:#c9a84c; --gold-light:#e8c97a;
+    --gray-1:#f0ede8; --gray-2:#d8d3cc; --gray-3:#8a8580;
+    --text:#1a1a18; --text-muted:#5a5850; --red:#c0392b;
+    --font-d:'Georgia',serif; --font-b:system-ui,-apple-system,sans-serif; --font-m:'Courier New',monospace;
+  }
+  body { background:var(--green-dark); font-family:var(--font-b); color:var(--text); min-height:100vh; }
+  header { background:linear-gradient(135deg,var(--green-dark),var(--green-mid)); border-bottom:2px solid var(--gold); padding:20px 24px; display:flex; align-items:center; gap:14px; }
+  .logo { width:44px;height:44px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0; }
+  header h1 { font-family:var(--font-d);color:#fff;font-size:20px;font-weight:normal; }
+  header p  { color:var(--gold-light);font-size:12px;margin-top:2px; }
+  main { max-width:860px;margin:0 auto;padding:24px 16px; }
+  .panel { background:#fff;border-radius:10px;padding:20px;margin-bottom:16px;box-shadow:0 4px 20px rgba(0,0,0,.3); }
+  .panel h2 { font-family:var(--font-d);font-size:11px;color:var(--green-dark);margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--gray-2);padding-bottom:8px; }
+  .row { display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap; }
+  .field { display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px; }
+  .field label { font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted); }
+  .field input { border:1.5px solid var(--gray-2);border-radius:6px;padding:10px 12px;font-size:14px;color:var(--text);background:#f7f3ec;width:100%; }
+  .field input:focus { outline:none;border-color:var(--green-light);background:#fff; }
+  .field input.mono { font-family:var(--font-m);font-size:13px; }
+  .cred-note { font-size:12px;margin-top:10px;padding:8px 12px;border-radius:6px;display:none; }
+  .cred-note.ok  { background:#dff0e8;color:var(--green-dark);display:block; }
+  .cred-note.err { background:#fdecea;color:var(--red);display:block; }
+  .btn { border:none;border-radius:6px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s; }
+  .btn:disabled { opacity:.5;cursor:not-allowed; }
+  .btn-p { background:var(--green-mid);color:#fff;height:42px; } .btn-p:hover:not(:disabled){background:var(--green-light);}
+  .btn-s { background:var(--gray-1);color:var(--text);border:1.5px solid var(--gray-2);height:42px; }
+  .hint { font-size:12px;color:var(--text-muted);margin-top:8px;line-height:1.5; }
+  .hint b { color:var(--green-dark); }
+  .status { border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:10px 14px;font-size:13px;color:var(--text-muted);margin-bottom:14px;display:none;background:#f7f3ec; }
+  .status.err { border-left-color:var(--red);color:var(--red); }
+  .status.on  { display:block; }
+  .results-hdr { font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;padding:0 2px; }
+  .mcard { background:#fff;border-radius:8px;padding:14px 16px;margin-bottom:8px;box-shadow:0 2px 8px rgba(0,0,0,.15);display:flex;align-items:center;gap:14px;cursor:pointer;border:2px solid transparent;transition:border-color .15s; }
+  .mcard:hover { border-color:var(--gold); }
+  .mcard.copied { border-color:var(--green-mid);background:#f0f8f3; }
+  .mcard-avatar { width:40px;height:40px;background:linear-gradient(135deg,var(--green-dark),var(--green-mid));border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:16px;font-weight:700;flex-shrink:0; }
+  .mcard-info { flex:1;min-width:0; }
+  .mcard-name { font-size:15px;font-weight:700;color:var(--green-dark);font-family:var(--font-d); }
+  .mcard-sub  { font-size:12px;color:var(--text-muted);margin-top:2px; }
+  .mcard-id   { text-align:right;flex-shrink:0; }
+  .mcard-id strong { display:block;font-size:18px;color:var(--green-mid);font-family:var(--font-m);font-weight:700; }
+  .mcard-id span   { font-size:10px;color:var(--text-muted); }
+  .mcard-copy { background:var(--gold);color:var(--green-dark);border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0; }
+  .mcard-copy:hover { background:var(--gold-light); }
+  .raw-box { background:#1e1e1e;color:#d4d4d4;border-radius:6px;padding:14px;font-family:var(--font-m);font-size:11px;overflow:auto;max-height:320px;white-space:pre;margin-top:12px;display:none; }
+  .toggle-raw { font-size:11px;color:var(--text-muted);cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block; }
+  .spin { display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:5px; }
+  .spin.dk { border:2px solid var(--gray-2);border-top-color:var(--green-mid); }
+  @keyframes sp{to{transform:rotate(360deg)}}
+  @media(max-width:600px){.row{flex-direction:column}.mcard{flex-wrap:wrap}.mcard-id{text-align:left}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🍁</div>
+  <div>
+    <h1>Golf Canada Member Search</h1>
+    <p>Look up Golf Canada IDs by player name · via gc-proxy.bdapple.workers.dev</p>
+  </div>
+</header>
+<main>
+
+  <!-- Credentials -->
+  <div class="panel">
+    <h2>Golf Canada Login</h2>
+    <div class="row">
+      <div class="field"><label>Worker URL</label><input id="workerUrl" class="mono" value="https://gc-proxy.bdapple.workers.dev"></div>
+      <div class="field"><label>Username</label><input id="gcUser" type="text" placeholder="email@example.com" autocomplete="username"></div>
+      <div class="field"><label>Password</label><input id="gcPass" type="password" placeholder="••••••••" autocomplete="current-password"></div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:10px">
+      <button class="btn btn-p" onclick="saveAndTest()">Save &amp; Test Login</button>
+      <button class="btn btn-s" onclick="clearCreds()">Clear</button>
+    </div>
+    <div class="cred-note" id="credNote"></div>
+  </div>
+
+  <!-- Search -->
+  <div class="panel">
+    <h2>Search by Name</h2>
+    <div class="row">
+      <div class="field">
+        <label>Last Name</label>
+        <input id="lastName" placeholder="Comeau" autofocus>
+      </div>
+      <div class="field">
+        <label>First Name (optional)</label>
+        <input id="firstName" placeholder="Al">
+      </div>
+      <button class="btn btn-p" id="btnSearch" onclick="doSearch()">Search</button>
+    </div>
+    <p class="hint" style="margin-top:10px">
+      Search format: <b>LASTNAME, FIRSTNAME</b> — omit first name to search by last name only.<br>
+      Click any result to <b>copy the Golf Canada ID</b> to clipboard.
+    </p>
+  </div>
+
+  <div class="status" id="statusBar"></div>
+  <div id="resultsHdr" class="results-hdr" style="display:none"></div>
+  <div id="resultsList"></div>
+  <div id="rawSection" style="display:none">
+    <span class="toggle-raw" onclick="toggleRaw()">▶ Show raw JSON response</span>
+    <div class="raw-box" id="rawBox"></div>
+  </div>
+
+</main>
+<script>
+const SK = 'pards_gc';
+let _tok = null, _tokExp = 0;
+let _rawShown = false;
+
+function loadCreds() { try { return JSON.parse(localStorage.getItem(SK) || '{}') } catch(e) { return {} } }
+function saveCreds(c) { try { localStorage.setItem(SK, JSON.stringify(c)) } catch(e) {} }
+
+window.addEventListener('DOMContentLoaded', () => {
+  const c = loadCreds();
+  if (c.worker)   document.getElementById('workerUrl').value = c.worker;
+  if (c.username) document.getElementById('gcUser').value = c.username;
+  if (c.password) document.getElementById('gcPass').value = c.password;
+  if (c.worker && c.username && c.password) credNote('✓ Credentials loaded — ready to search.', true);
+
+  ['lastName', 'firstName'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+  });
+});
+
+function credNote(msg, ok) {
+  const el = document.getElementById('credNote');
+  el.textContent = msg;
+  el.className = 'cred-note ' + (ok ? 'ok' : 'err');
+}
+
+function wBase() {
+  return (loadCreds().worker || 'https://gc-proxy.bdapple.workers.dev').replace(/\/+$/, '');
+}
+
+async function saveAndTest() {
+  const w = document.getElementById('workerUrl').value.trim();
+  const u = document.getElementById('gcUser').value.trim();
+  const p = document.getElementById('gcPass').value;
+  if (!w || !u || !p) { credNote('Fill in all three fields.', false); return; }
+  saveCreds({ ...loadCreds(), worker: w, username: u, password: p });
+  _tok = null; _tokExp = 0;
+  credNote('Testing…', true);
+  try {
+    await getToken();
+    credNote('✓ Login successful — credentials saved.', true);
+  } catch(e) {
+    credNote('✗ ' + e.message, false);
+  }
+}
+
+function clearCreds() {
+  localStorage.removeItem(SK);
+  _tok = null; _tokExp = 0;
+  document.getElementById('gcUser').value = '';
+  document.getElementById('gcPass').value = '';
+  credNote('Cleared.', true);
+}
+
+async function getToken() {
+  const now = Date.now();
+  if (_tok && now < _tokExp - 10000) return _tok;
+  const c = loadCreds();
+  if (!c.worker || !c.username || !c.password) throw new Error('No credentials saved.');
+  const r = await fetch(c.worker.replace(/\/+$/, '') + '/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: c.username, password: c.password })
+  });
+  if (!r.ok) { const t = await r.text(); throw new Error('Login failed (' + r.status + '): ' + t.slice(0, 120)); }
+  const d = await r.json();
+  if (!d.access_token) throw new Error('No token returned.');
+  _tok = d.access_token;
+  _tokExp = now + ((d.expires_in || 3600) * 1000);
+  return _tok;
+}
+
+function showStatus(msg, err = false) {
+  const el = document.getElementById('statusBar');
+  el.innerHTML = msg;
+  el.className = 'status on' + (err ? ' err' : '');
+}
+function hideStatus() { document.getElementById('statusBar').className = 'status'; }
+
+async function doSearch() {
+  const last  = document.getElementById('lastName').value.trim();
+  const first = document.getElementById('firstName').value.trim();
+  if (!last) { showStatus('Enter a last name to search.', true); return; }
+
+  const keywords = first ? last + ', ' + first : last;
+
+  const btn = document.getElementById('btnSearch');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Searching…';
+  document.getElementById('resultsList').innerHTML = '';
+  document.getElementById('resultsHdr').style.display = 'none';
+  document.getElementById('rawSection').style.display = 'none';
+  showStatus('<span class="spin dk"></span>Searching for <b>' + esc(keywords) + '</b>…');
+
+  try {
+    const tok = await getToken();
+    const params = new URLSearchParams({ keywords, skip: 0, take: 50 });
+    const r = await fetch(wBase() + '/member/search?' + params, {
+      headers: { Authorization: 'Bearer ' + tok }
+    });
+
+    const rawText = await r.text();
+
+    // Show raw toggle
+    document.getElementById('rawBox').textContent = rawText;
+    document.getElementById('rawSection').style.display = 'block';
+    _rawShown = false;
+    document.querySelector('.toggle-raw').textContent = '▶ Show raw JSON response';
+    document.getElementById('rawBox').style.display = 'none';
+
+    if (!r.ok) throw new Error('HTTP ' + r.status + ': ' + rawText.slice(0, 200));
+
+    let data;
+    try { data = JSON.parse(rawText); } catch(e) { throw new Error('Invalid JSON response — check worker logs.'); }
+
+    // GolfNet wraps results in data[] or returns array directly
+    const members = Array.isArray(data) ? data : (data.data || data.members || data.results || []);
+
+    renderResults(members, keywords);
+  } catch(e) {
+    showStatus('Search failed: ' + e.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Search';
+  }
+}
+
+function renderResults(members, keywords) {
+  const list = document.getElementById('resultsList');
+  const hdr  = document.getElementById('resultsHdr');
+
+  if (!members.length) {
+    showStatus('No members found for <b>' + esc(keywords) + '</b>. Try last name only, or check spelling.', false);
+    list.innerHTML = '';
+    hdr.style.display = 'none';
+    return;
+  }
+
+  hideStatus();
+  hdr.textContent = members.length + ' result' + (members.length !== 1 ? 's' : '') + ' for "' + keywords + '"';
+  hdr.style.display = 'block';
+
+  list.innerHTML = members.map((m, i) => {
+    // GolfNet member/getByKeyword field names
+    const firstName = m.firstName || '';
+    const lastName  = m.lastName  || '';
+    const fullName  = (firstName + ' ' + lastName).trim() || 'Unknown';
+    const gcId      = m.golfCanadaCardId || m.cardId || m.id || '';
+    const club      = m.clubName || '';
+    const hdcp      = (m.displayHandicap && m.displayHandicap !== 'NA') ? m.displayHandicap : null;
+    const initial   = (fullName[0] || '?').toUpperCase();
+
+    return `
+      <div class="mcard" id="mc${i}" onclick="copyId('${esc(String(gcId))}', ${i}, '${esc(fullName)}')">
+        <div class="mcard-avatar">${initial}</div>
+        <div class="mcard-info">
+          <div class="mcard-name">${esc(fullName)}</div>
+          <div class="mcard-sub">${[club, hdcp != null ? 'HCP ' + hdcp : ''].filter(Boolean).join(' · ') || 'No club info'}</div>
+        </div>
+        <div class="mcard-id">
+          <strong>${esc(String(gcId)) || '—'}</strong>
+          <span>Golf Canada ID</span>
+        </div>
+        <button class="mcard-copy" onclick="event.stopPropagation();copyId('${esc(String(gcId))}', ${i}, '${esc(fullName)}')">Copy ID</button>
+      </div>`;
+  }).join('');
+}
+
+function copyId(id, idx, name) {
+  if (!id || id === 'undefined') { showStatus('No Golf Canada ID available for this member.', true); return; }
+  navigator.clipboard.writeText(id).then(() => {
+    document.querySelectorAll('.mcard').forEach(c => c.classList.remove('copied'));
+    const card = document.getElementById('mc' + idx);
+    if (card) card.classList.add('copied');
+    showStatus('✓ Copied Golf Canada ID <b>' + esc(id) + '</b> for ' + esc(name));
+  }).catch(() => {
+    // Fallback for non-https
+    showStatus('ID: <b>' + esc(id) + '</b> — copy manually', false);
+  });
+}
+
+function toggleRaw() {
+  _rawShown = !_rawShown;
+  document.getElementById('rawBox').style.display = _rawShown ? 'block' : 'none';
+  document.querySelector('.toggle-raw').textContent = (_rawShown ? '▼ Hide' : '▶ Show') + ' raw JSON response';
+}
+
+function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+</script>
+</body>
+</html>
