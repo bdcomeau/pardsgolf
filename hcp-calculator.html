@@ -237,8 +237,12 @@ async function searchPlayer(){
     members.forEach(m=>{
       const div = document.createElement('div');
       div.className = 'result-item';
-      const idx = m.handicapIndex!=null ? ' · Index '+m.handicapIndex : '';
-      div.innerHTML = '<div class="result-name">'+m.displayName+'</div><div class="result-meta">GC '+m.cardNumber+idx+'</div>';
+      const fullName = ((m.firstName||'')+' '+(m.lastName||'')).trim();
+      const gcId = m.golfCanadaCardId || '';
+      const hdcp = (m.displayHandicap && m.displayHandicap!=='NA') ? m.displayHandicap : null;
+      const club = m.clubName || '';
+      const sub = [club, hdcp ? 'Index '+hdcp : ''].filter(Boolean).join(' · ');
+      div.innerHTML = '<div class="result-name">'+fullName+'</div><div class="result-meta">GC '+gcId+(sub?' · '+sub:'')+'</div>';
       div.onclick = ()=>selectPlayer(m);
       resultsEl.appendChild(div);
     });
@@ -249,10 +253,13 @@ async function searchPlayer(){
 }
 
 function selectPlayer(m){
-  _selectedGid = m.cardNumber;
-  _selectedIndex = m.handicapIndex;
-  document.getElementById('playerName').textContent = m.displayName;
-  document.getElementById('playerMeta').textContent = 'GC '+m.cardNumber+' · Index '+m.handicapIndex;
+  const fullName = ((m.firstName||'')+' '+(m.lastName||'')).trim();
+  const gcId = m.golfCanadaCardId || '';
+  const hdcp = (m.displayHandicap && m.displayHandicap!=='NA') ? parseFloat(m.displayHandicap) : null;
+  _selectedGid = gcId;
+  _selectedIndex = hdcp;
+  document.getElementById('playerName').textContent = fullName;
+  document.getElementById('playerMeta').textContent = 'GC '+gcId+(hdcp!=null?' · Index '+hdcp:'') + (m.clubName ? ' · '+m.clubName : '');
   document.getElementById('selectedPlayer').style.display = 'block';
   document.getElementById('searchResults').style.display = 'none';
   showStatus('searchStatus','');
