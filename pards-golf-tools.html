@@ -166,33 +166,47 @@
   .crs-section-hdr { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-muted);border-bottom:1.5px solid var(--gray-2);padding-bottom:7px;margin-bottom:13px; }
   .am-grid { display:flex;flex-wrap:wrap;gap:8px; }
   .am-chip { display:flex;align-items:center;gap:5px;background:#dff0e8;color:var(--green-dark);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600; }
-  .tee-pills { display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px; }
-  .tee-pill { display:flex;align-items:center;gap:5px;border:2px solid var(--gray-2);background:#fff;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s; }
-  .tee-pill:hover { border-color:var(--green-light); }
-  .tee-pill.on { background:var(--green-dark);color:#fff;border-color:var(--green-dark); }
-  .tee-hero { display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px; }
-  .tee-hero-stat { background:var(--green-dark);border-radius:9px;padding:14px 8px;color:#fff;text-align:center; }
-  .tee-hero-stat label { font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--gold-light);display:block;margin-bottom:5px; }
-  .tee-hero-stat span { font-size:24px;font-family:var(--font-d);line-height:1; }
-  .tee-sub-stats { display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px; }
-  .tee-sub-stat { background:var(--gray-1);border-radius:6px;padding:8px;text-align:center; }
-  .tee-sub-stat label { font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);display:block;margin-bottom:2px; }
-  .tee-sub-stat span { font-size:13px;font-weight:700;color:var(--green-dark); }
-  .sc-wrap { overflow-x:auto;border-radius:8px;border:1px solid var(--gray-2); }
-  .sc-table { width:100%;border-collapse:collapse;font-size:11px;min-width:440px; }
-  .sc-table thead th { background:var(--green-dark);color:var(--gold-light);padding:7px 4px;text-align:center;font-size:9px;text-transform:uppercase;font-weight:700; }
-  .sc-table thead th:first-child { text-align:left;padding-left:10px;min-width:44px; }
-  .sc-table th.front { background:#1a5c30; }
-  .sc-table th.back  { background:#163324; }
-  .sc-table th.sub   { background:#0d2318;color:var(--gold);font-size:10px; }
-  .sc-table tbody tr:nth-child(odd)  { background:#fff; }
-  .sc-table tbody tr:nth-child(even) { background:#f7f9f7; }
-  .sc-table td { padding:6px 4px;text-align:center;border-bottom:1px solid var(--gray-2); }
-  .sc-table td:first-child { text-align:left;padding-left:10px;font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted); }
-  .sc-table .p3 { color:#1565c0;font-weight:700; }
-  .sc-table .p4 { color:var(--green-dark); }
-  .sc-table .p5 { color:#e65100;font-weight:700; }
-  .sc-table td.sub { background:#edf4ee;font-weight:700;color:var(--green-dark);border-left:1px solid #ccdccc; }
+  /* ---- Stacked scorecard (v1.9) ---- */
+  /* Rating/Slope summary table */
+  .tee-sum-wrap { margin-bottom:14px;border-radius:8px;overflow:hidden;border:1px solid var(--gray-2);box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .tee-sum-table { width:100%;border-collapse:collapse;font-size:11px; }
+  .tee-sum-table thead th { background:var(--green-dark);color:var(--gold-light);padding:7px 10px;text-align:center;font-size:9px;text-transform:uppercase;letter-spacing:.5px;font-weight:700; }
+  .tee-sum-table thead th:first-child { text-align:left;min-width:80px; }
+  .tee-sum-row td { padding:7px 10px;text-align:center;border-bottom:1px solid var(--gray-2);background:#fff;font-size:12px;font-weight:600;color:var(--green-dark); }
+  .tee-sum-row:last-child td { border-bottom:none; }
+  .tee-sum-row td:first-child { text-align:left;background:#fafcfa; }
+  .tee-sum-row td.rs-front, .tee-sum-row td.rs-back { font-size:10px;font-weight:500;color:var(--text-muted); }
+  .tee-name-cell { display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:12px;color:#222; }
+  /* Full stacked scorecard */
+  .sc2-wrap { overflow-x:auto;border-radius:8px;border:1px solid var(--gray-2);box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  .sc2-table { width:100%;border-collapse:collapse;font-size:11px;min-width:480px; }
+  .sc2-table th { background:var(--green-dark);color:var(--gold-light);padding:8px 3px;text-align:center;font-size:9px;text-transform:uppercase;font-weight:700;letter-spacing:.3px; }
+  .sc2-table th:first-child { text-align:left;padding-left:10px;min-width:56px;white-space:nowrap; }
+  .sc2-table th.front { background:#1b6035; }
+  .sc2-table th.back  { background:#113d24; }
+  .sc2-table th.sub   { background:#0a2a18;color:var(--gold);font-size:10px;min-width:30px; }
+  .sc2-table th.tot   { background:#071510;color:var(--gold);font-size:11px;min-width:34px; }
+  /* HCP row */
+  .sc2-hcp-row td { background:#f4f6f4;color:#888;font-size:10px;padding:5px 3px;border-bottom:2px solid var(--gray-2); }
+  .sc2-hcp-row td:first-child { font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding-left:10px; }
+  .sc2-hcp-row td.sub { background:#e8ede8;color:#999;border-left:1px solid #cfdccf; }
+  /* Tee yardage rows */
+  .sc2-tee-row td { background:#fffef5;padding:6px 3px;border-bottom:1px solid #e8e8e4;font-size:11px;font-weight:600;color:#333;text-align:center; }
+  .sc2-tee-row td:first-child { padding-left:0;border-left:4px solid var(--tc,#888);background:#faf9f0; }
+  .sc2-tee-row td.sub { background:#edf4ee;font-weight:700;color:var(--green-dark);border-left:1px solid #c8dcc8; }
+  .sc2-tee-row td.tot { background:#dff0e0;font-weight:800;color:#0d3320;border-left:2px solid #aacbaa; }
+  .sc2-tee-label { display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:11px;white-space:nowrap;padding:0 6px; }
+  /* Par row */
+  .sc2-par-row td { background:#e8f4eb;font-weight:700;padding:7px 3px;text-align:center;border-top:2px solid #8fba8f; }
+  .sc2-par-row td:first-child { background:var(--green-dark);color:var(--gold-light);font-size:9px;text-transform:uppercase;letter-spacing:.5px;padding-left:10px;border-left:none; }
+  .sc2-par-row .p3 { color:#1565c0; }
+  .sc2-par-row .p4 { color:#1a4a2a; }
+  .sc2-par-row .p5 { color:#c84800;font-weight:800; }
+  .sc2-par-row td.sub { background:#d4ecd6;font-weight:800;color:#0d3320;border-left:1px solid #9fc99f; }
+  .sc2-par-row td.tot { background:#c0e0c4;font-weight:800;color:#071510;border-left:2px solid #8fba8f; }
+  /* Section header with front/back rating sub-line */
+  .sc-hdr-wrap { display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px;border-bottom:1.5px solid var(--gray-2);padding-bottom:7px;margin-bottom:13px; }
+  .sc-hdr-title { font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--text-muted); }
 
   /* ---- HCP Calculator tab (hcp- prefixed to avoid collisions with shared classes) ---- */
   .hcp-wrap { color:#f5e6b8; }
@@ -484,10 +498,11 @@ const SK = 'pards_gc';
    deploy: pards-tools-v1.0 -> v1.1 -> v1.2 ... Two occurrences in the file
    need the bump — this const, and nowhere else (the header badge reads it
    live via displayVersion()). */
-const CURRENT_VERSION = 'pards-tools-v1.8';
+const CURRENT_VERSION = 'pards-tools-v1.9';
 const LIVE_URL = 'https://bdcomeau.github.io/pardsgolf/pards-golf-tools.html';
 const VERSION_REGEX = /const CURRENT_VERSION = '(pards-tools-v[\d.]+)'/;
 const RELEASE_NOTES = [
+  'v1.9 — Courses tab: full stacked scorecard — all tees shown at once with rating/slope summary, classic golf scorecard layout.',
   'v1.8 — Course Lookup simplified to a single GolfNet ID direct lookup.',
   'v1.7 — Fixed app header overlapping iPhone status bar/clock — now respects safe-area-inset-top.',
   'v1.6 — Removed Cloudflare worker URL field from login — hardcoded internally.',
@@ -1353,19 +1368,13 @@ function buildCol(slot){
       ${mt.length?`
       <div class="crs-section">
         <div class="crs-section-hdr">⛳ Men's Tees</div>
-        <div class="tee-pills" id="mpills${slot}">
-          ${mt.map((t,i)=>`<button class="tee-pill${i===0?' on':''}" onclick="selTee2(${slot},'m',${i})"><span class="tdot" style="background:${tc(t.color)}"></span>${esc(t.name)}</button>`).join('')}
-        </div>
-        <div id="mdetail${slot}">${teePanelHtml(mt[0])}</div>
+        ${scorecardHtml(mt)}
       </div>`:''}
 
       ${wt.length?`
       <div class="crs-section">
         <div class="crs-section-hdr">⛳ Women's Tees</div>
-        <div class="tee-pills" id="wpills${slot}">
-          ${wt.map((t,i)=>`<button class="tee-pill${i===0?' on':''}" onclick="selTee2(${slot},'w',${i})"><span class="tdot" style="background:${tc(t.color)}"></span>${esc(t.name)}</button>`).join('')}
-        </div>
-        <div id="wdetail${slot}">${teePanelHtml(wt[0])}</div>
+        ${scorecardHtml(wt)}
       </div>`:''}
 
       ${!mt.length&&!wt.length?'<p style="font-size:12px;color:var(--text-muted)">No tee data available for this course.</p>':''}
@@ -1382,46 +1391,102 @@ function buildCol(slot){
   </div>`;
 }
 
-function teePanelHtml(t){
-  if(!t)return'';
-  const h=t.holes||[];
-  const f=h.filter(x=>x.number<=9), b=h.filter(x=>x.number>=10);
-  const fY=f.reduce((s,x)=>s+(x.yardage||0),0), bY=b.reduce((s,x)=>s+(x.yardage||0),0);
-  const fP=f.reduce((s,x)=>s+(x.par||0),0),     bP=b.reduce((s,x)=>s+(x.par||0),0);
+function scorecardHtml(tees){
+  if(!tees||!tees.length) return '<p style="font-size:12px;color:var(--text-muted)">No tee data available.</p>';
+  // Use first tee for shared hole structure (HCP, Par numbers)
+  const ref=tees[0];
+  const refHoles=ref.holes||[];
+  const front=refHoles.filter(h=>h.number<=9);
+  const back=refHoles.filter(h=>h.number>=10);
+  const is18=back.length>0;
+  const hasHoles=refHoles.length>0;
   function pCls(p){return p===3?'p3':p===5?'p5':'p4';}
+
+  // ── Rating/Slope summary table ──────────────────────────────────────
+  const ratingRows=tees.map(t=>{
+    const dot=`<span class="tdot" style="background:${tc(t.color)}"></span>`;
+    const fr=t.frontRating&&t.frontSlope?`${t.frontRating} / ${t.frontSlope}`:'—';
+    const br=t.backRating&&t.backSlope?`${t.backRating} / ${t.backSlope}`:'—';
+    return `<tr class="tee-sum-row">
+      <td><span class="tee-name-cell">${dot}${esc(t.name)}</span></td>
+      <td>${t.yardage?t.yardage.toLocaleString():'—'}</td>
+      <td>${t.par||'—'}</td>
+      <td>${t.rating||'—'}</td>
+      <td>${t.slope||'—'}</td>
+      <td class="rs-front">${fr}</td>
+      <td class="rs-back">${br}</td>
+    </tr>`;
+  }).join('');
+
+  // ── Stacked yardage rows — one per tee ──────────────────────────────
+  const teeRows=tees.map(t=>{
+    const h=t.holes||[];
+    const f=h.filter(x=>x.number<=9);
+    const b=h.filter(x=>x.number>=10);
+    const fY=f.reduce((s,x)=>s+(x.yardage||0),0);
+    const bY=b.reduce((s,x)=>s+(x.yardage||0),0);
+    const dot=`<span class="tdot" style="background:${tc(t.color)}"></span>`;
+    // pad missing holes so alignment stays correct against ref
+    const fCells=front.map(ref=>{const hh=f.find(x=>x.number===ref.number);return `<td>${hh&&hh.yardage?hh.yardage:'—'}</td>`;}).join('');
+    const bCells=back.map(ref=>{const hh=b.find(x=>x.number===ref.number);return `<td>${hh&&hh.yardage?hh.yardage:'—'}</td>`;}).join('');
+    return `<tr class="sc2-tee-row" style="--tc:${tc(t.color)}">
+      <td><span class="sc2-tee-label">${dot}${esc(t.name)}</span></td>
+      ${fCells}
+      <td class="sub">${fY||'—'}</td>
+      ${is18?bCells:''}
+      ${is18?`<td class="sub">${bY||'—'}</td>`:''}
+      <td class="tot">${t.yardage?t.yardage.toLocaleString():'—'}</td>
+    </tr>`;
+  }).join('');
+
+  // ── HCP row ─────────────────────────────────────────────────────────
+  const hcpRow=hasHoles?`<tr class="sc2-hcp-row">
+    <td>HCP</td>
+    ${front.map(x=>`<td>${x.handicap||'—'}</td>`).join('')}
+    <td class="sub"></td>
+    ${is18?back.map(x=>`<td>${x.handicap||'—'}</td>`).join(''):''}
+    ${is18?`<td class="sub"></td>`:''}
+    <td class="tot"></td>
+  </tr>`:'';
+
+  // ── Par row ──────────────────────────────────────────────────────────
+  const fP=front.reduce((s,x)=>s+(x.par||0),0);
+  const bP=back.reduce((s,x)=>s+(x.par||0),0);
+  const parRow=hasHoles?`<tr class="sc2-par-row">
+    <td>Par</td>
+    ${front.map(x=>`<td class="${pCls(x.par)}">${x.par||'—'}</td>`).join('')}
+    <td class="sub">${fP||''}</td>
+    ${is18?back.map(x=>`<td class="${pCls(x.par)}">${x.par||'—'}</td>`).join(''):''}
+    ${is18?`<td class="sub">${bP||''}</td>`:''}
+    <td class="tot">${ref.par||(fP+bP)||''}</td>
+  </tr>`:'';
+
   return `
-    <div class="tee-hero">
-      <div class="tee-hero-stat"><label>Yardage</label><span>${t.yardage?t.yardage.toLocaleString():'—'}</span></div>
-      <div class="tee-hero-stat"><label>Par</label><span>${t.par||'—'}</span></div>
-      <div class="tee-hero-stat"><label>Rating</label><span>${t.rating||'—'}</span></div>
-      <div class="tee-hero-stat"><label>Slope</label><span>${t.slope||'—'}</span></div>
+    <div class="tee-sum-wrap">
+      <table class="tee-sum-table">
+        <thead><tr>
+          <th>Tee</th><th>Yards</th><th>Par</th><th>Rating</th><th>Slope</th>
+          <th>Front R/S</th><th>Back R/S</th>
+        </tr></thead>
+        <tbody>${ratingRows}</tbody>
+      </table>
     </div>
-    <div class="tee-sub-stats">
-      <div class="tee-sub-stat"><label>Front Rating</label><span>${t.frontRating||'—'}</span></div>
-      <div class="tee-sub-stat"><label>Front Slope</label><span>${t.frontSlope||'—'}</span></div>
-      <div class="tee-sub-stat"><label>Back Rating</label><span>${t.backRating||'—'}</span></div>
-      <div class="tee-sub-stat"><label>Back Slope</label><span>${t.backSlope||'—'}</span></div>
-    </div>
-    ${h.length?`<div class="sc-wrap"><table class="sc-table">
+    ${hasHoles?`<div class="sc2-wrap"><table class="sc2-table">
       <thead><tr>
-        <th></th>
-        ${f.map(x=>`<th class="front">${x.number}</th>`).join('')}<th class="sub">OUT</th>
-        ${b.map(x=>`<th class="back">${x.number}</th>`).join('')}<th class="sub">IN</th><th class="sub">TOT</th>
+        <th>Hole</th>
+        ${front.map(x=>`<th class="front">${x.number}</th>`).join('')}
+        <th class="sub">OUT</th>
+        ${is18?back.map(x=>`<th class="back">${x.number}</th>`).join(''):''}
+        ${is18?`<th class="sub">IN</th>`:''}
+        <th class="tot">TOT</th>
       </tr></thead>
       <tbody>
-        <tr><td>Par</td>${f.map(x=>`<td class="${pCls(x.par)}">${x.par}</td>`).join('')}<td class="sub">${fP}</td>${b.map(x=>`<td class="${pCls(x.par)}">${x.par}</td>`).join('')}<td class="sub">${bP}</td><td class="sub">${t.par}</td></tr>
-        <tr><td>Yards</td>${f.map(x=>`<td>${x.yardage||'—'}</td>`).join('')}<td class="sub">${fY}</td>${b.map(x=>`<td>${x.yardage||'—'}</td>`).join('')}<td class="sub">${bY}</td><td class="sub">${t.yardage||'—'}</td></tr>
-        <tr><td>HCP</td>${f.map(x=>`<td>${x.handicap||'—'}</td>`).join('')}<td class="sub">—</td>${b.map(x=>`<td>${x.handicap||'—'}</td>`).join('')}<td class="sub">—</td><td class="sub">—</td></tr>
+        ${hcpRow}
+        ${teeRows}
+        ${parRow}
       </tbody>
-    </table></div>`:''}`;
-}
-
-function selTee2(slot,gender,idx){
-  const pillsId=gender==='m'?'mpills':'wpills';
-  const detailId=gender==='m'?'mdetail':'wdetail';
-  const list=gender==='m'?window['_mt'+slot]:window['_wt'+slot];
-  document.querySelectorAll('#'+pillsId+slot+' .tee-pill').forEach((p,i)=>p.classList.toggle('on',i===idx));
-  if(list&&list[idx]) document.getElementById(detailId+slot).innerHTML=teePanelHtml(list[idx]);
+    </table></div>`:'<p style="margin-top:8px;font-size:12px;color:var(--text-muted)">Hole-by-hole data not available for this course.</p>'}
+  `;
 }
 
 function toggleCrsJson(slot){
