@@ -420,20 +420,10 @@
   <!-- ============ TAB 3: COURSE LOOKUP ============ -->
   <section class="tab-page" id="page-lookup">
     <div class="panel">
-      <h2>Search by Keyword + Location</h2>
-      <div class="grid3">
-        <div class="field"><label>Keyword</label><input id="keywords" value="Derrick"></div>
-        <div class="field"><label>Coordinates — paste from Google Maps (any format)</label><div style="display:flex;gap:6px;align-items:center"><input id="coords" placeholder="53.46752, -113.54290  or  (33.5202, -82.0201)" value="53.46752451538905, -113.54290708863726" style="flex:1"><button class="btn btn-s" style="height:40px;padding:0 12px;font-size:12px;flex-shrink:0" onclick="document.getElementById('coords').value='';document.getElementById('coords').focus()">Clear</button></div></div>
-        <button class="btn btn-p" id="lookupBtnSearch" onclick="searchCourses()">Search</button>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>Direct Lookup by GolfNet ID</h2>
-      <div class="grid3i">
-        <div class="field"><label>GolfNet ID #1</label><input id="id1" class="mono" placeholder="e.g. 18662"></div>
-        <div class="field"><label>GolfNet ID #2 (optional)</label><input id="id2" class="mono" placeholder="e.g. 17982"></div>
-        <button class="btn btn-p" id="btnFetch" onclick="directLookup()">Fetch</button>
+      <h2>Course Lookup</h2>
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <div class="field" style="flex:1;margin:0"><label>GolfNet ID</label><input id="id1" class="mono" placeholder="e.g. 18662" style="width:100%"></div>
+        <button class="btn btn-p" id="btnFetch" onclick="directLookup()" style="height:44px;padding:0 20px;flex-shrink:0">Fetch</button>
       </div>
     </div>
 
@@ -494,10 +484,11 @@ const SK = 'pards_gc';
    deploy: pards-tools-v1.0 -> v1.1 -> v1.2 ... Two occurrences in the file
    need the bump — this const, and nowhere else (the header badge reads it
    live via displayVersion()). */
-const CURRENT_VERSION = 'pards-tools-v1.7';
+const CURRENT_VERSION = 'pards-tools-v1.8';
 const LIVE_URL = 'https://bdcomeau.github.io/pardsgolf/pards-golf-tools.html';
 const VERSION_REGEX = /const CURRENT_VERSION = '(pards-tools-v[\d.]+)'/;
 const RELEASE_NOTES = [
+  'v1.8 — Course Lookup simplified to a single GolfNet ID direct lookup.',
   'v1.7 — Fixed app header overlapping iPhone status bar/clock — now respects safe-area-inset-top.',
   'v1.6 — Removed Cloudflare worker URL field from login — hardcoded internally.',
   'v1.5 — Course Lookup redesigned: hero header, contact strip, stats bar, amenity chips, tee selector with full-size rating/slope panels, colour-coded 18-hole scorecard.',
@@ -1205,20 +1196,18 @@ async function loadFromSearch(id,idx){
   document.querySelectorAll('.rcard').forEach(c=>c.classList.remove('sel'));
   const card=document.getElementById('rc'+idx);if(card)card.classList.add('sel');
   document.getElementById('id1').value=id;
-  document.getElementById('id2').value='';
   await fetchAndRender(id,null);
 }
 
 async function directLookup(){
   const id1=document.getElementById('id1').value.trim();
-  const id2=document.getElementById('id2').value.trim();
-  if(!id1){showLookupStatus('Enter at least one GolfNet ID.',true);return;}
+  if(!id1){showLookupStatus('Enter a GolfNet ID.',true);return;}
   const btn=document.getElementById('btnFetch');
   btn.disabled=true;btn.innerHTML='<span class="spin"></span>Fetching…';
   document.getElementById('detailCols').style.display='none';
   document.getElementById('exportBar').style.display='none';
   showLookupStatus('<span class="spin dk"></span>Fetching course data…');
-  try{await fetchAndRender(id1,id2||null);}
+  try{await fetchAndRender(id1,null);}
   finally{btn.disabled=false;btn.textContent='Fetch';}
 }
 
@@ -1530,9 +1519,7 @@ window.addEventListener('DOMContentLoaded', () => {
   ['searchFirst','searchLast'].forEach(id => {
     document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') searchPlayer(); });
   });
-  ['keywords','coords','id1','id2'].forEach(id=>{
-    document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')(id==='keywords'?searchCourses:directLookup)()});
-  });
+  document.getElementById('id1').addEventListener('keydown',e=>{if(e.key==='Enter')directLookup();});
 
   buildCourseSelect();
   renderRecentChips();
