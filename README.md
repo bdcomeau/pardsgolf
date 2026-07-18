@@ -1,143 +1,122 @@
-# Pards Golf v84.7
+# ⛳ Pards Golf
 
-A single-file HTML Progressive Web App for scoring golf rounds and tracking betting games at Derrick Golf & Winter Club, Edmonton AB.
+**A single-file Progressive Web App for tracking golf betting rounds among a regular group of senior golfers.**
 
-**Live:** https://bdcomeau.github.io/pardsgolf/pards-golf.html
-
----
-
-## ⚠️ Installation — PWA Required
-
-Pards Golf **must** be installed as a PWA (Progressive Web App). It will not work correctly in a browser.
-
-**iPhone (Safari):**
-1. Tap the **•••** button, then tap **□↑ Share**
-2. Tap **Add to Home Screen** → **Add**
-3. Launch from your home screen
-
-**Android (Chrome):**
-1. Tap the **⋮** menu → **Add to Home Screen** or **Install App**
-2. Launch from your home screen or app drawer
+Live at: **[bdcomeau.github.io/pardsgolf/pards-golf.html](https://bdcomeau.github.io/pardsgolf/pards-golf.html)**
 
 ---
 
-## Supported Games
+## What It Does
 
-| Game | Players |
-|------|---------|
-| Snake 3-Putt | 2–5 |
-| Nassau 2v2 (High-Low) | 4 |
-| Nassau 1v1 | 2–5 |
-| 6-Point Game | 3 |
-| Stableford Points | 2–5 |
-| Skins | 2–5 |
-| Vegas Golf Game | 4 |
-| Match Cards | 2–3 |
-| Birdie Juice | 2–5 |
+Pards Golf is a mobile-first scorecard and betting calculator built specifically for Safari on iPhone. It handles everything from score entry to real-time money calculations across multiple simultaneous betting games.
 
----
+### Betting Games Supported
+- **Nassau 2v2** (High-Low) — with ball toss, swing team, press tracking, and International ("Big I")
+- **Nassau 1v1** — with full press and International support
+- **6-Point** — three simultaneous 1v1 matches with points and money
+- **Snake 3-Putt** — hole-by-hole 3-putt penalty tracking
+- **Stableford** — points-based scoring
+- **Skins** — per-hole with carryover
+- **Vegas** — combined digit scoring, 2v2 with flip-on-birdie rule
+- **Match Cards** — 1v1 Nassau vs players from other groups, scored separately
+- **Birdie Juice** — side bet pool, per-hole birdie accumulation
+- **Side Bets** — custom per-round bets between any players
 
-## First-Time Setup
-
-On first launch the app walks you through setup:
-
-1. **Create your "Me" profile** — Tap Manage Players, enter your name, handicap index, home course, and preferred tee deck, then tap Set as Me
-2. **Add playing partners** — Name, handicap index, Golf Canada ID if available (10 digits, from the Golf Canada website — not their app)
-3. **Sync Golf Canada handicaps** — Tap Refresh Handicaps in Manage Players, enter GC credentials once
-4. **Set up Quick Adds & Buddies** — Up to 4 Quick Adds; unlimited Buddies
-5. **Start a round** — Pick course, add players, choose betting games, tap Start Round
-
----
-
-## Key Features
-
-- Nassau betting — 2v2 High-Low and 1v1 with auto-press, The International
-- Live standings — real-time $ standings mid-round
-- Golf Canada handicap integration via Cloudflare Worker proxy (live sync)
-- Weather — WeatherLink (Derrick) + Open-Meteo (all other courses)
-- Birdie Juice — credit tracking for birdies and eagles
-- Full round history with replay and edit
-- Backup/Restore — local JSON export/import
-- Side Bets — event betting (2026 Derrick Member Guest)
-- 20+ courses with GPS coordinates and logo art
-- Ball Toss team assignment
-- Easter eggs — Doug Boyer's Astrolab, Billy's Bunker, Stu's Bunker, Greg's Quiet Zone
-
----
-
-## Architecture
-
-- **Single file:** `pards-golf.html` — all HTML + CSS + JS + assets (base64 encoded)
-- **Size:** ~5.5 MB (images are the primary cost)
-- **No server** — runs fully offline after first load
-- **PWA:** Installable on iPhone via Safari → Add to Home Screen
-
----
-
-## Deployment
-
-Three files uploaded to GitHub Pages per release:
-1. `pards-golf.html`
-2. `index.html` (copy, root redirect)
-3. `pards-golf-vXX.X.html` (versioned archive)
-
----
-
-## Icon System (v84.x)
-
-All 8 game icons are custom illustrated PNGs displayed in:
-- Round setup game pills (landscape, height:56px)
-- Mid-round settings game pills (same spec)
-- Game popup headers (28px via `_MM_GAME_ICONS` array)
-
-Manage Players icons:
-- ⚡ Gold lightning bolt = active Quick Add
-- ⚡ Black lightning bolt at 25% opacity = inactive Quick Add
-- 👥 Gold buddies = active Buddy
-- 👥 Black buddies at 25% opacity = inactive Buddy
-- Me contact is always Quick Add + Buddy
-
-UI icons are gold PNGs (not emoji) for: settings gear, cloud upload, golfer, flag, info "i", lightning bolt, two-golfers, birdie juice glass.
-
----
-
-## Onboarding (v83.x)
-
-Two-screen onboarding system on first launch:
-
-**Screen 1 — Browser detected:** Shown when app is opened in a browser instead of as a PWA. Includes Safari/Android install instructions, copy-link button, and Pards Golf icon so users know what to look for on their home screen.
-
-**Screen 2 — PWA first launch:** 5-step setup walkthrough. Dismissed permanently after tapping "Got it." Never shown again.
-
-Returning users see neither screen.
-
----
-
-## Technical Notes
-
-- iOS compat: `function()` syntax in `renderMMSixPoint` (no arrow functions)
-- Viewport: `interactive-widget=resizes-content` — do not remove
-- Scroll: `history.scrollRestoration = 'manual'` at top of script — do not remove
-- Syntax check: `node --check` on extracted script block after every change
-- Weather: Edmonton courses → WeatherLink; all others → Open-Meteo
-- Version bump: replace `CURRENT_VERSION` and `CACHE` strings only (exactly 2 occurrences)
+### Key Features
+- 🏌️ **Live scoring** — score wheel with instant feedback, auto-advance, confirm & next hole
+- 💰 **Real-time money** — running totals per player across all active games
+- 🌍 **International ("Big I")** — full pot calculation, what-if scenarios, Taylor/Toma Rules variant
+- 📋 **Scorecards overlay** — mid-round view of all game cards + live standings in one tap
+- 🏆 **Round history** — full searchable history with edit, rematch, and share/print
+- 👥 **Manage Players** — Golf Canada ID lookup, handicap fetch, career money, last round from GC
+- 🏫 **131 courses** — full tee data (rating, slope, yardages, par, SI) across Canada
+- 🌤️ **Live weather** — temperature and wind at the course, updates every 5 minutes
+- 🔄 **Auto-update** — silently checks for new versions every 90 seconds
 
 ---
 
 ## Version History
 
-| Version | Highlights |
-|---------|-----------|
-| v84.7 | Manage Players icons fixed (gold active / black 25% inactive), Me auto-sets Quick Add + Buddy, onboarding syntax fix |
-| v84.x | Onboarding browser detection, new Pards Golf icon, contact icon overhaul |
-| v83.x | Onboarding system (Screen 1: browser install, Screen 2: PWA first launch), Safari copy-link, version stamp |
-| v82.x | Side Bets live for all users, 2026 Derrick Member Guest teams loaded, BJ button sync fix, Side Bets sticky header |
-| v81.x | Snake 3-Putt picker, Mid-Round Nassau matchups, Match Cards tabbed UI, starting hole picker, history course filter |
-| v80.0 | Milestone — icon overhaul complete, game pill landscape fix |
-| v75.x | Game pill landscape fix, popup header icons fixed |
-| v74.x | Players/Hole pill redesigns, player number style |
-| v73.x | Manage Players icons, info icons, opacity ternary fix |
-| v72.x | Gold PNG icon system introduced throughout |
-| v71.x | Haptic feedback, 6-Point overlay, help bar improvements |
-| v70.x | Round preview removed, game pill labels removed |
-| v68.x | Icon enlargement series |
+### v90.0 — July 2026 (Current)
+- **Colour-coded score strip** — Hole in One 🟢, Albatross 🟣, Eagle 🟠, Birdie 🔴, Par 🔵, Bogey ⬜, Double+ ⬛
+- **Score-to-par pill** on every player card — shows +3, -2, or EVEN live
+- **Cream par/score strip backgrounds** — dramatically improved readability
+- **Scorecards button** replaces Game Cards — one tap shows Live Standings + all game cards mid-round
+- **Taylor/Toma International Rules** — unsettled games void when International triggers; toggle on Nassau setup screens
+- **ME required gate** — mandatory setup before first round
+- **Career money + last GC round** on Manage Players cards (24hr cache)
+- **Pinch to Zoom** per-user setting
+- **Canyon Meadows Golf & Country Club** added (Calgary AB, 8 men's tees)
+- **Setup affordance cues** — pulse glow and "Tap to select" on empty player/tee pills
+- **Money pill** redesigned — white text on green/red/gold
+
+### v87.x — July 2026
+- Manage Players redesign with Golf Canada score history
+- Nassau 2v2 swing team mid-round fix
+- Handicap locked in history edit mode
+- International popup restored after hole 17
+
+### v86.x — July 2026
+- Picture Butte Golf Club added (3 courses)
+- GC member search redesign (separate first/last name fields)
+- Vegas setup screen fixes
+
+### v85.x and earlier
+See in-app release notes (Settings → Update App).
+
+---
+
+## Architecture
+
+### Single File
+The entire app — HTML, CSS, JavaScript, all 131 course datasets, and all embedded logos — lives in **one HTML file** (`pards-golf.html`). This makes it trivially deployable and cacheable as a PWA.
+
+### Deploy Files
+Every release pushes three files to this repo:
+| File | Purpose |
+|---|---|
+| `pards-golf.html` | The app |
+| `index.html` | Identical copy (so both URLs work) |
+| `pards-golf-vXX_X.html` | Versioned snapshot for rollback |
+
+### Update Checker
+The app fetches the live `index.html` from GitHub Pages every 90 seconds, regex-searches for the version string, and shows an update banner if a newer version is available. No GitHub API required.
+
+### Backend
+All Golf Canada API calls go through a **Cloudflare Worker** at `gc-proxy.bdapple.workers.dev` which handles:
+- Authentication tokens
+- Member search
+- Handicap lookup
+- Score history (last N rounds)
+- Facility detail (address, amenities)
+- Course search and detail
+
+### Storage
+All data is stored in `localStorage` — no server, no accounts, no sync. Backup is manual via JSON export.
+
+---
+
+## Companion Tools
+
+| Tool | URL | Purpose |
+|---|---|---|
+| Handicap Calculator | `/hcp-calculator.html` | Look up any player's adjusted handicap for any course/tee |
+| GC Member Search | `golfnet-member-search.html` | Search Golf Canada members, copy GC IDs |
+| GolfNet Course Lookup | `golfnet-lookup.html` | Look up full course detail by GolfNet ID |
+
+---
+
+## Technical Notes
+
+- **Requires Safari on iPhone** — uses iOS-specific PWA APIs, viewport-fit=cover, safe area insets
+- **Add to Home Screen** for best experience — runs full-screen with gold scorecard icon
+- **No build step** — plain HTML/CSS/JS, edit and deploy directly
+- **Syntax check** before every deploy using `node --check` on extracted script block
+
+---
+
+## Development
+
+Built iteratively by Bruce Comeau with Claude (Anthropic) as coding partner. All development happens in a single Claude project with full session continuity.
+
+*Pards Golf · v90.0 · bdcomeau.github.io/pardsgolf*
