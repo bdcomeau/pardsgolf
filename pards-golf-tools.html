@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Pards Golf Tools</title>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -158,13 +158,22 @@
   .crs-modal-sheet {
     background:var(--gray-1);
     width:100%;max-width:720px;
-    max-height:92dvh;
+    max-height:94dvh;
     border-radius:20px 20px 0 0;
     overflow-y:auto;-webkit-overflow-scrolling:touch;
     animation:cmSlide .22s cubic-bezier(.32,.72,0,1);
     padding-bottom:env(safe-area-inset-bottom,0);
   }
   @keyframes cmSlide { from{transform:translateY(70px);opacity:0} to{transform:translateY(0);opacity:1} }
+  /* Landscape: expand to true full-screen so all 18 holes are visible without scrolling */
+  @media (orientation:landscape) {
+    .crs-modal-overlay { align-items:stretch;background:rgba(0,0,0,.7); }
+    .crs-modal-sheet {
+      max-width:100%;max-height:100dvh;height:100dvh;
+      border-radius:0;
+    }
+    .crs-modal-drag { display:none; }
+  }
   .crs-modal-drag {
     width:40px;height:4px;background:rgba(0,0,0,.15);
     border-radius:2px;margin:10px auto 2px;
@@ -565,10 +574,12 @@ const SK = 'pards_gc';
    deploy: pards-tools-v1.0 -> v1.1 -> v1.2 ... Two occurrences in the file
    need the bump — this const, and nowhere else (the header badge reads it
    live via displayVersion()). */
-const CURRENT_VERSION = 'pards-tools-v1.13';
+const CURRENT_VERSION = 'pards-tools-v1.15';
 const LIVE_URL = 'https://bdcomeau.github.io/pardsgolf/pards-golf-tools.html';
 const VERSION_REGEX = /const CURRENT_VERSION = '(pards-tools-v[\d.]+)'/;
 const RELEASE_NOTES = [
+  'v1.15 — HCP Calc recent chips now load the player in one tap — no second tap on the result needed.',
+  'v1.14 — Course modal goes full-screen in landscape so all 18 holes are visible; pinch-to-zoom disabled.',
   'v1.13 — Course details now open in a slide-up modal sheet instead of inline below the search results.',
   'v1.12 — Global course search: switch to getByKeywords (all countries), show all results, fix facility lookup using correct facilityId from search data.',
   'v1.11 — Fix course ID mismatch: keyword search now uses getByKeywordAndLocation (correct courseIds) with national 5000 km radius.',
@@ -784,12 +795,45 @@ function recentChipClick(gcId) {
   document.getElementById('firstName').value = r.firstName;
   doMemberSearch();
 }
-function hcpRecentChipClick(gcId) {
+async function hcpRecentChipClick(gcId) {
   const r = loadRecent().find(x => x.gcId === gcId);
   if (!r) return;
   document.getElementById('searchFirst').value = r.firstName;
   document.getElementById('searchLast').value = r.lastName;
-  searchPlayer();
+  // Reset previous state
+  document.getElementById('searchResults').style.display='none';
+  document.getElementById('selectedPlayer').style.display='none';
+  document.getElementById('resultBox').style.display='none';
+  _selectedGid=null; _selectedIndex=null;
+  hcpStatus('searchStatus', 'Loading ' + r.fullName + '…');
+  try {
+    const { members } = await searchMembers(r.lastName, r.firstName, 0, 20);
+    // Auto-select — find exact gcId match first, then fall back to sole result
+    const match = members.find(m => String(m.golfCanadaCardId||m.cardId||m.id||'') === String(gcId));
+    if (match || members.length === 1) {
+      selectPlayer(match || members[0]);
+    } else {
+      // Edge case: name is ambiguous — show list for manual pick
+      hcpStatus('searchStatus', '');
+      const resultsEl = document.getElementById('searchResults');
+      resultsEl.innerHTML = '';
+      members.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'hcp-result-item';
+        const fullName = ((m.firstName||'')+' '+(m.lastName||'')).trim();
+        const gc = m.golfCanadaCardId||'';
+        const hdcp = (m.displayHandicap && m.displayHandicap!=='NA') ? m.displayHandicap : null;
+        const club = m.clubName||'';
+        const sub = [club, hdcp?'Index '+hdcp:''].filter(Boolean).join(' · ');
+        div.innerHTML = '<div class="hcp-result-name">'+esc(fullName)+'</div><div class="hcp-result-meta">GC '+esc(gc)+(sub?' · '+esc(sub):'')+'</div>';
+        div.onclick = ()=>selectPlayer(m);
+        resultsEl.appendChild(div);
+      });
+      resultsEl.style.display = 'block';
+    }
+  } catch(e) {
+    hcpStatus('searchStatus', e.message, 'error');
+  }
 }
 
 function esc(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
