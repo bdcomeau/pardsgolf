@@ -147,6 +147,56 @@
   .am { background:var(--gray-1);border-radius:4px;padding:3px 9px;font-size:11px;color:var(--text-muted); }
   .am.y { background:#dff0e8;color:var(--green-dark);font-weight:600; }
 
+  /* ---- Course Detail Modal ---- */
+  .crs-modal-overlay {
+    position:fixed;inset:0;z-index:900;
+    background:rgba(0,0,0,.55);
+    display:flex;align-items:flex-end;justify-content:center;
+    animation:cmFade .18s ease;
+  }
+  @keyframes cmFade { from{opacity:0} to{opacity:1} }
+  .crs-modal-sheet {
+    background:var(--gray-1);
+    width:100%;max-width:720px;
+    max-height:92dvh;
+    border-radius:20px 20px 0 0;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    animation:cmSlide .22s cubic-bezier(.32,.72,0,1);
+    padding-bottom:env(safe-area-inset-bottom,0);
+  }
+  @keyframes cmSlide { from{transform:translateY(70px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .crs-modal-drag {
+    width:40px;height:4px;background:rgba(0,0,0,.15);
+    border-radius:2px;margin:10px auto 2px;
+  }
+  .crs-modal-topbar {
+    position:sticky;top:0;z-index:10;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 16px 10px;
+    background:var(--green-dark);
+    border-bottom:2px solid var(--gold);
+  }
+  .crs-modal-title {
+    color:#fff;font-size:13px;font-weight:700;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 44px);
+  }
+  .crs-modal-close {
+    background:rgba(255,255,255,.18);border:none;border-radius:50%;
+    width:34px;height:34px;cursor:pointer;flex-shrink:0;
+    color:#fff;font-size:20px;line-height:1;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .crs-modal-close:active { background:rgba(255,255,255,.32); }
+  .crs-modal-body { padding:12px 12px 0; }
+  .crs-modal-ebar {
+    display:flex;flex-wrap:wrap;gap:8px;
+    padding:14px 16px 16px;
+    border-top:1px solid var(--gray-2);
+    background:#fff;
+    margin-top:12px;
+  }
+  .crs-modal-ebar span { font-size:11px;color:var(--text-muted);width:100%; }
+
   /* ---- New Course card layout ---- */
   .crs-card { background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.3);overflow:hidden;margin-bottom:8px; }
   .crs-hero { background:linear-gradient(135deg,#071510 0%,#0d3320 50%,var(--green-mid) 100%);padding:20px 22px;border-bottom:2px solid var(--gold);display:flex;align-items:flex-start;gap:14px; }
@@ -515,10 +565,13 @@ const SK = 'pards_gc';
    deploy: pards-tools-v1.0 -> v1.1 -> v1.2 ... Two occurrences in the file
    need the bump — this const, and nowhere else (the header badge reads it
    live via displayVersion()). */
-const CURRENT_VERSION = 'pards-tools-v1.10';
+const CURRENT_VERSION = 'pards-tools-v1.13';
 const LIVE_URL = 'https://bdcomeau.github.io/pardsgolf/pards-golf-tools.html';
 const VERSION_REGEX = /const CURRENT_VERSION = '(pards-tools-v[\d.]+)'/;
 const RELEASE_NOTES = [
+  'v1.13 — Course details now open in a slide-up modal sheet instead of inline below the search results.',
+  'v1.12 — Global course search: switch to getByKeywords (all countries), show all results, fix facility lookup using correct facilityId from search data.',
+  'v1.11 — Fix course ID mismatch: keyword search now uses getByKeywordAndLocation (correct courseIds) with national 5000 km radius.',
   'v1.10 — Courses tab: keyword course search via /course/getByKeywords — type a name, pick from results, scorecard loads automatically.',
   'v1.9 — Courses tab: full stacked scorecard — all tees shown at once with rating/slope summary, classic golf scorecard layout.',
   'v1.8 — Course Lookup simplified to a single GolfNet ID direct lookup.',
@@ -1212,28 +1265,14 @@ async function searchByKeyword(){
   showLookupStatus('<span class="spin dk"></span>Searching for "'+esc(kw)+'"…');
   try{
     const tok=await getToken();
-    let courses=[];
-
-    // Preferred: /course/getByKeywords (no location bias, national)
-    // Falls back to /course/search if the worker doesn't proxy that path yet
-    const r1=await fetch(wBase()+'/course/getByKeywords?'+new URLSearchParams({keywords:kw,skip:0,take:25}),
-      {headers:{Authorization:'Bearer '+tok}});
-    if(r1.ok){
-      const d=await r1.json();
-      courses=Array.isArray(d)?d:(d.data||d.courses||[]);
-    } else if(r1.status===404){
-      // Worker doesn't have this route yet — fall back to proximity search
-      // Use centre-of-Canada coords + huge radius to get national results
-      const r2=await fetch(wBase()+'/course/search?'+new URLSearchParams({keywords:kw,lat:'56.1304',lon:'-106.3468',proximity:5000,skip:0,take:25}),
-        {headers:{Authorization:'Bearer '+tok}});
-      if(!r2.ok)throw new Error('HTTP '+r2.status);
-      const d=await r2.json();
-      courses=d.data||[];
-    } else {
-      throw new Error('HTTP '+r1.status);
-    }
-
-    renderCourseResults(courses,kw);
+    // /course/getByKeywords — global search, no location bias, returns courseIds in `id`
+    // field and facilityIds in `facilityId` field (they can differ for multi-course facilities).
+    const r=await fetch(wBase()+'/course/getByKeywords?'+new URLSearchParams({
+      keywords:kw, skip:0, take:25
+    }),{headers:{Authorization:'Bearer '+tok}});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    renderCourseResults(d.data||[],kw);
   }catch(e){showLookupStatus('Search failed: '+e.message,true);}
   finally{btn.disabled=false;btn.textContent='Search';}
 }
@@ -1257,8 +1296,11 @@ function renderCourseResults(courses,kw){
     const loc=[c.city,c.region].filter(Boolean).join(', ');
     const type=fmtCourseType(c.type||c.courseType||'');
     const cls=c.class||c.courseClass||'';
-    const sub=[loc,type,cls].filter(Boolean).join(' · ');
-    return `<div class="rcard" id="rc${i}" onclick="loadFromSearch(${c.id},${i})">
+    const parLen=c.par?'Par '+c.par+(c.courseLength?' · '+c.courseLength+' yds':''):'';
+    const sub=[loc,type,cls,parLen].filter(Boolean).join(' · ');
+    // Pass both courseId (c.id) and facilityId (c.facilityId) — they can differ on multi-course facilities
+    const fid=c.facilityId||c.id;
+    return `<div class="rcard" id="rc${i}" onclick="loadFromSearch(${c.id},${fid},${i})">
       <div style="flex:1;min-width:0">
         <h3>${esc(c.name||c.facilityName||'Unknown')}</h3>
         ${sub?`<p>${esc(sub)}</p>`:''}
@@ -1268,7 +1310,7 @@ function renderCourseResults(courses,kw){
   }).join('');
 }
 
-async function loadFromSearch(id,idx){
+async function loadFromSearch(courseId,facilityId,idx){
   document.querySelectorAll('.rcard').forEach(c=>c.classList.remove('sel'));
   const card=document.getElementById('rc'+idx);
   if(card){
@@ -1277,8 +1319,9 @@ async function loadFromSearch(id,idx){
   }
   // Keep id1 in sync so directLookup / export bar still work
   const id1el=document.getElementById('id1');
-  if(id1el)id1el.value=id;
-  await fetchAndRender(id,null);
+  if(id1el)id1el.value=courseId;
+  // Pass facilityId separately so /facility is fetched with the correct ID
+  await fetchAndRender(courseId,null,facilityId);
 }
 
 async function directLookup(){
@@ -1294,7 +1337,8 @@ async function directLookup(){
 }
 
 /* /facility gives the clean address/phone/amenities/architect data; /course/get
-   gives tees+scorecard. Same GolfNet ID works as both courseId and facilityId.
+   gives tees+scorecard. courseId and facilityId can differ on multi-course facilities
+   (e.g. Glencoe Calgary has courseIds 25872/20286/23223 but facilityId 18675).
    Facility fetch failures degrade gracefully — the course/get data still renders. */
 async function fetchFacility(id, tok) {
   try {
@@ -1312,12 +1356,16 @@ async function fetchCourseGet(id, tok) {
   return j;
 }
 
-async function fetchAndRender(id1,id2){
+// facilityId1 is optional — when provided (from search results) it correctly identifies
+// the facility for multi-course venues where courseId ≠ facilityId.
+// Falls back to id1 when not provided (direct ID lookup path).
+async function fetchAndRender(id1,id2,facilityId1){
   courseData={};
   try{
     const tok=await getToken();
+    const fid1=facilityId1||id1;
 
-    const [c1, f1] = await Promise.all([ fetchCourseGet(id1, tok), fetchFacility(id1, tok) ]);
+    const [c1, f1] = await Promise.all([ fetchCourseGet(id1, tok), fetchFacility(fid1, tok) ]);
     courseData[1]={course:c1,facility:f1,id:id1};
 
     let c2=null;
@@ -1333,27 +1381,50 @@ async function fetchAndRender(id1,id2){
 }
 
 function renderCols(id1,c1,id2,c2){
-  const el=document.getElementById('detailCols');
-  el.className='cols '+(id2?'two':'one');
-  el.style.display='grid';
-  el.innerHTML=buildCol(1)+(id2?buildCol(2):'');
-
+  // Populate tee caches used by HCP Calc cross-tab
   [1,2].forEach(s=>{
     const c=courseData[s]&&courseData[s].course;
     window['_mt'+s]=(c&&c.tees||[]).filter(t=>t.type==='Mens');
     window['_wt'+s]=(c&&c.tees||[]).filter(t=>t.type==='Womens');
   });
 
-  const eb=document.getElementById('exportBar');
-  eb.style.display='flex';
-  eb.innerHTML=`
-    <button class="btn btn-g" onclick="copyJSON(1)">Copy #${id1} JSON</button><button class="btn btn-gold" onclick="downloadJSON(1)">⬇️ Download #${id1} JSON</button>
+  // Build modal content
+  const body=document.getElementById('courseModalBody');
+  const ebar=document.getElementById('courseModalEbar');
+  const title=document.getElementById('courseModalTitle');
+  const modal=document.getElementById('courseModal');
+
+  // Title = first course name
+  const d1=courseData[1]||{};
+  title.textContent=(d1.facility&&d1.facility.facilityName)||
+                    (d1.course&&(d1.course.name||d1.course.facilityName))||
+                    'Course Details';
+
+  body.innerHTML=buildCol(1)+(id2?buildCol(2):'');
+
+  ebar.style.display='flex';
+  ebar.innerHTML=`
+    <button class="btn btn-g" onclick="copyJSON(1)">Copy #${id1} JSON</button>
+    <button class="btn btn-gold" onclick="downloadJSON(1)">⬇️ Download #${id1} JSON</button>
     <button class="btn btn-g" onclick="copyPards(1)">Copy #${id1} Pards Format</button>
     <button class="btn btn-g" onclick="tryUseCourseInHcp(1)">Use #${id1} in HCP Calc →</button>
-    ${id2?`<button class="btn btn-g" onclick="copyJSON(2)">Copy #${id2} JSON</button><button class="btn btn-gold" onclick="downloadJSON(2)">⬇️ Download #${id2} JSON</button><button class="btn btn-g" onclick="copyPards(2)">Copy #${id2} Pards Format</button><button class="btn btn-g" onclick="tryUseCourseInHcp(2)">Use #${id2} in HCP Calc →</button>`:''}
+    ${id2?`<button class="btn btn-g" onclick="copyJSON(2)">Copy #${id2} JSON</button>
+    <button class="btn btn-gold" onclick="downloadJSON(2)">⬇️ Download #${id2} JSON</button>
+    <button class="btn btn-g" onclick="copyPards(2)">Copy #${id2} Pards Format</button>
+    <button class="btn btn-g" onclick="tryUseCourseInHcp(2)">Use #${id2} in HCP Calc →</button>`:''}
     <span>Paste Pards Format directly into course data</span>`;
 
-  el.scrollIntoView({behavior:'smooth',block:'start'});
+  // Open modal, lock scroll
+  body.scrollTop=0;
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeCourseModal(e){
+  // If called from backdrop click, only close when clicking the overlay itself
+  if(e && e.target!==document.getElementById('courseModal')) return;
+  document.getElementById('courseModal').style.display='none';
+  document.body.style.overflow='';
 }
 
 // Fallback boolean-flag amenities if /facility didn't return (or failed) — read straight off the course/get object, as the original tool did.
@@ -1664,5 +1735,18 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(checkForUpdate, 90000);  // then every 90s
 });
 </script>
+
+<!-- Course Detail Modal -->
+<div id="courseModal" class="crs-modal-overlay" style="display:none" onclick="closeCourseModal(event)">
+  <div class="crs-modal-sheet" onclick="event.stopPropagation()">
+    <div class="crs-modal-drag"></div>
+    <div class="crs-modal-topbar">
+      <span class="crs-modal-title" id="courseModalTitle">Course Details</span>
+      <button class="crs-modal-close" onclick="closeCourseModal()" aria-label="Close">×</button>
+    </div>
+    <div class="crs-modal-body" id="courseModalBody"></div>
+    <div class="crs-modal-ebar" id="courseModalEbar" style="display:none"></div>
+  </div>
+</div>
 </body>
 </html>
