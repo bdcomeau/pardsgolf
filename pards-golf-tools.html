@@ -96,6 +96,8 @@
   .mcard-copy:hover { background:var(--gold-light); }
   .mcard-hcp  { background:var(--green-mid);color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0; }
   .mcard-hcp:hover { background:var(--green-light); }
+  .mcard-rounds { background:#1a6fa8;color:#fff;border:none;border-radius:6px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0; }
+  .mcard-rounds:hover { background:#2589c9; }
   .raw-box { background:#1e1e1e;color:#d4d4d4;border-radius:6px;padding:14px;font-family:var(--font-m);font-size:11px;overflow:auto;max-height:320px;white-space:pre;margin-top:12px;display:none; }
   .toggle-raw { font-size:11px;color:var(--text-muted);cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block; }
 
@@ -632,10 +634,11 @@ const SK = 'pards_gc';
    deploy: pards-tools-v1.0 -> v1.1 -> v1.2 ... Two occurrences in the file
    need the bump — this const, and nowhere else (the header badge reads it
    live via displayVersion()). */
-const CURRENT_VERSION = 'pards-tools-v1.17';
+const CURRENT_VERSION = 'pards-tools-v1.18';
 const LIVE_URL = 'https://bdcomeau.github.io/pardsgolf/pards-golf-tools.html';
 const VERSION_REGEX = /const CURRENT_VERSION = '(pards-tools-v[\d.]+)'/;
 const RELEASE_NOTES = [
+  'v1.18 — Members: added blue "📊 Last 20 Rounds" button on each player card — opens the round history modal directly.',
   'v1.17 — Android homescreen install fixed: manifest now injected via Blob URL (replacing data: URI that Android Chrome ignores) and minimal service worker registered.',
   'v1.16 — HCP Calc: course search now queries the live GolfNet database (all courses worldwide) instead of a static 130-course list.',
   'v1.15 — HCP Calc recent chips now load the player in one tap — no second tap on the result needed.',
@@ -988,6 +991,7 @@ function renderMemberResults(members, keywords) {
           <span>Golf Canada ID</span>
         </div>
         <div class="mcard-actions">
+          <button class="mcard-rounds" onclick="event.stopPropagation();openPlayerModal(${i})">📊 Last 20 Rounds</button>
           <button class="mcard-copy" onclick="event.stopPropagation();copyId('${esc(String(gcId))}', ${i}, '${esc(fullName)}')">Copy ID</button>
           <button class="mcard-hcp" onclick="event.stopPropagation();useMemberInHcp(${i})">Use in HCP Calc →</button>
         </div>
