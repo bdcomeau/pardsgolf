@@ -22,10 +22,10 @@
     --font-d:'Georgia',serif; --font-b:system-ui,-apple-system,sans-serif; --font-m:'Courier New',monospace;
   }
   html, body { background:var(--green-darker); font-family:var(--font-b); color:var(--text); min-height:100vh; }
-  body { padding-bottom:78px; }
+  body { padding-bottom:16px; }
 
   /* ---- App header ---- */
-  .app-header { background:linear-gradient(135deg,var(--green-dark),var(--green-mid)); border-bottom:2px solid var(--gold); padding:max(16px, calc(16px + env(safe-area-inset-top))) 20px 16px; display:flex; align-items:center; gap:14px; position:sticky; top:0; z-index:20; }
+  .app-header { background:linear-gradient(135deg,var(--green-dark),var(--green-mid)); border-bottom:1px solid rgba(201,168,76,.3); padding:max(16px, calc(16px + env(safe-area-inset-top))) 20px 12px; display:flex; align-items:center; gap:14px; }
   .app-header .logo { width:40px;height:40px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden; }
   .app-header .logo img { width:100%;height:100%;object-fit:cover;border-radius:50%; }
   .app-header h1 { font-family:var(--font-d);color:#fff;font-size:19px;font-weight:normal;display:flex;align-items:center;gap:8px; }
@@ -356,7 +356,7 @@
   .pill-btn:hover { background:var(--green-light); }
 
   /* ---- Tab bar ---- */
-  .tabbar { position:fixed; left:0; right:0; bottom:0; z-index:30; display:flex; background:linear-gradient(135deg,var(--green-dark),var(--green-mid)); border-top:2px solid var(--gold); padding:6px 6px calc(6px + env(safe-area-inset-bottom)); }
+  .tabbar { display:flex; background:linear-gradient(135deg,var(--green-dark),var(--green-mid)); border-bottom:2px solid var(--gold); padding:4px 6px; }
   .tab-btn { flex:1; background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:2px; padding:8px 4px; cursor:pointer; color:rgba(245,230,184,.55); font-size:11px; font-weight:600; border-radius:10px; }
   .tab-btn .tab-icon { font-size:20px; }
   .tab-btn.active { color:var(--gold); background:rgba(201,168,76,.12); }
@@ -370,6 +370,7 @@
 </head>
 <body>
 
+<div style="position:sticky;top:0;z-index:20">
 <header class="app-header">
   <div class="logo" id="appLogo">⛳</div>
   <div>
@@ -377,6 +378,12 @@
     <p id="headerSub">Golf Canada &amp; GolfNet utilities</p>
   </div>
 </header>
+<nav class="tabbar">
+  <button class="tab-btn active" data-tab="member" onclick="switchTab('member')"><span class="tab-icon">🍁</span><span>Members</span></button>
+  <button class="tab-btn" data-tab="hcp" onclick="switchTab('hcp')"><span class="tab-icon">⛳</span><span>HCP Calc</span></button>
+  <button class="tab-btn" data-tab="lookup" onclick="switchTab('lookup')"><span class="tab-icon">🏛️</span><span>Courses</span></button>
+</nav>
+</div>
 
 <div class="update-banner" id="updateBanner">
   <span id="updateBannerText"></span>
@@ -529,12 +536,6 @@
 
 </main>
 
-<nav class="tabbar">
-  <button class="tab-btn active" data-tab="member" onclick="switchTab('member')"><span class="tab-icon">🍁</span><span>Members</span></button>
-  <button class="tab-btn" data-tab="hcp" onclick="switchTab('hcp')"><span class="tab-icon">⛳</span><span>HCP Calc</span></button>
-  <button class="tab-btn" data-tab="lookup" onclick="switchTab('lookup')"><span class="tab-icon">🏛️</span><span>Courses</span></button>
-</nav>
-
 <!-- Player detail popup (Member Search tab) -->
 <div class="modal-overlay" id="playerModalOverlay" onclick="if(event.target===this)closePlayerModal()">
   <div class="modal-card">
@@ -634,7 +635,7 @@ const SK = 'pards_gc';
    deploy: pards-tools-v1.0 -> v1.1 -> v1.2 ... Two occurrences in the file
    need the bump — this const, and nowhere else (the header badge reads it
    live via displayVersion()). */
-const CURRENT_VERSION = 'pards-tools-v1.18';
+const CURRENT_VERSION = 'pards-tools-v1.19';
 const LIVE_URL = 'https://bdcomeau.github.io/pardsgolf/pards-golf-tools.html';
 const VERSION_REGEX = /const CURRENT_VERSION = '(pards-tools-v[\d.]+)'/;
 const RELEASE_NOTES = [
